@@ -1,5 +1,5 @@
 import React, { Fragment, useMemo } from 'react';
-import { TouchableOpacity } from 'react-native';
+import { TouchableOpacity, ScrollView } from 'react-native';
 import { Text } from '../../components';
 import { showToast } from '../../utils';
 import { useDispatch } from 'react-redux';
@@ -9,8 +9,9 @@ function Index(props) {
   const dispatch = useDispatch();
   return useMemo(() => {
     return (
-      <Fragment>
+      <ScrollView showsVerticalScrollIndicator={false}>
         <Text>Home Screen</Text>
+        {Array.from({ length: 40 }).map(() => <Text>Home Screen</Text>)}
         <TouchableOpacity
           onPress={() => showToast({
             text: 'This is error toast',
@@ -19,10 +20,7 @@ function Index(props) {
           })}>
           <Text>Show Toast</Text>
         </TouchableOpacity>
-        <TouchableOpacity onPress={() => dispatch(userLogout())}>
-          <Text>Logout</Text>
-        </TouchableOpacity>
-      </Fragment>
+      </ScrollView>
     );
   }, [props])
 }

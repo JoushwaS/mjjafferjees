@@ -1,8 +1,9 @@
 import React from 'react';
-import { View, StyleSheet, TouchableOpacity } from 'react-native';
+import { View, StyleSheet, TouchableOpacity, ImageBackground, Image } from 'react-native';
 import { Text } from '.';
 import Navigation from '../navigation/root';
 import Metrix from '../config/metrix';
+import { IMAGES } from '../assets/images'
 
 function Index({
   containerStyle = {},
@@ -14,33 +15,35 @@ function Index({
   rightIcon = null,
   leftIcon = null,
 }) {
+
+
   return (
-    <View style={{ ...containerStyle, ...styles.container }}>
+    <ImageBackground resizeMode='center' source={IMAGES.header} style={{ ...containerStyle, ...styles.container }}>
       {backButton && <TouchableOpacity style={styles.leftIcon} onPress={onLeftPress}>
         <Text>Back</Text>
       </TouchableOpacity>}
-      <View style={styles.headerText}>
-        <Text style={textStyle}>
-          {text}
-        </Text>
+      <View style={styles.logoContainer}>
+        <Image style={styles.logo} resizeMode='contain' source={IMAGES.logoWhite} />
       </View>
       <TouchableOpacity style={styles.rightIcon} onPress={onRightPress}>
         {rightIcon}
       </TouchableOpacity>
-    </View>
+    </ImageBackground>
   );
 }
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
-    height: Metrix.VerticalSize(35),
-    backgroundColor: 'grey',
+    height: Metrix.VerticalSize(110),
   },
-  headerText: {
+  logoContainer: {
     justifyContent: 'center',
     alignItems: 'center',
-    height: Metrix.VerticalSize(35),
+  },
+  logo: {
+    height: Metrix.VerticalSize(110),
+    width: Metrix.HorizontalSize(140),
+
   },
   rightIcon: {
     position: 'absolute',

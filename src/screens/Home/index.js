@@ -2,14 +2,17 @@ import React from 'react';
 import { ScrollView } from 'react-native';
 import { styles } from './style';
 import Screen from './screen';
-import { Header } from '../../components'
+import { Header } from '../../components';
+import BottomTabs from '../../navigation/BottomTabs'
 
 function Index(props) {
 	return (
-		<ScrollView style={styles.container}>
+		<>
 			<Header text='Home' />
-			<Screen {...props} />
-		</ScrollView>
+			<BottomTabs >
+				<Screen {...props} />
+			</BottomTabs>
+		</>
 	);
 }
 

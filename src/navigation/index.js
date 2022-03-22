@@ -26,7 +26,7 @@ function MainStack() {
 				...TransitionPresets.SlideFromRightIOS,
 			}}
 			initialRouteName="home">
-			<Stack.Screen name="home" component={MainTab} />
+			<Stack.Screen name="home" component={Home} />
 		</Stack.Navigator>
 	);
 }
@@ -51,19 +51,6 @@ function MainTab() {
 		<BottomTabs.Navigator
 			initialRouteName={'1'}
 			screenOptions={{ headerShown: false }}
-			tabBarOptions={{
-				activeTintColor: Colors.Mid_blue,
-				inactiveTintColor: Colors.Cloudly_blue,
-				style: {
-					paddingTop: 5,
-					...Platform.select({
-						ios: { marginBottom: 0 },
-						android: { paddingBottom: 5 },
-					}),
-					backgroundColor: Colors.White,
-				},
-				labelStyle: { margin: 0, padding: 0, fontSize: 12 },
-			}}
 		>
 			<BottomTabs.Screen key={'1'} name={'Home'} component={() => <Home />} />
 			<BottomTabs.Screen key={'2'} name={'Signup'} component={() => <Signup />} />
