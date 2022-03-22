@@ -1,0 +1,6 @@
+module Pods_mjafferjees {
+  umbrella header "Pods-mjafferjees-umbrella.h"
+
+  export *
+  module * { export * }
+}

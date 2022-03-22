@@ -1,0 +1,5 @@
+export const createAction = (type, payload) => {
+	return { type: type, payload };
+};
+
+export * from './auth';
