@@ -1,7 +1,7 @@
 import React from 'react';
 import { useColorScheme } from 'react-native';
 import { createStackNavigator, TransitionPresets } from '@react-navigation/stack';
-import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
+// import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 // import { createDrawerNavigator } from '@react-navigation/drawer';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useSelector } from 'react-redux';
@@ -15,7 +15,7 @@ import { LoginScreen, Signup, Home } from '../screens';
 import { Colors } from '../config/theme';
 
 const Stack = createStackNavigator();
-const BottomTabs = createBottomTabNavigator();
+// const BottomTabs = createBottomTabNavigator();
 // const Drawer = createDrawerNavigator();
 
 function MainStack() {
@@ -46,17 +46,6 @@ function MainStack() {
 // }
 
 
-function MainTab() {
-	return (
-		<BottomTabs.Navigator
-			initialRouteName={'1'}
-			screenOptions={{ headerShown: false }}
-		>
-			<BottomTabs.Screen key={'1'} name={'Home'} component={() => <Home />} />
-			<BottomTabs.Screen key={'2'} name={'Signup'} component={() => <Signup />} />
-		</BottomTabs.Navigator>
-	);
-}
 
 function Navigation() {
 	const scheme = useColorScheme();

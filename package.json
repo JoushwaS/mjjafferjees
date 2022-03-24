@@ -10,14 +10,14 @@
     "lint": "eslint ."
   },
   "dependencies": {
-    "react": "17.0.2",
-    "react-native": "0.67.4",
     "@ramotion/react-native-circle-menu": "^1.0.0",
     "@react-native-async-storage/async-storage": "^1.16.1",
-    "@react-navigation/bottom-tabs": "^6.2.0",
+    "@react-navigation/drawer": "^6.3.1",
     "@react-navigation/native": "^6.0.8",
     "@react-navigation/stack": "^6.1.1",
     "axios": "^0.25.0",
+    "react": "17.0.2",
+    "react-native": "0.67.4",
     "react-native-circle-menu": "^1.0.10",
     "react-native-config": "^1.4.5",
     "react-native-gesture-handler": "^2.1.1",
