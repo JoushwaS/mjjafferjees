@@ -73,6 +73,7 @@ const Input = React.forwardRef((props, ref) => {
               maxLength={props.maxLength}
               keyboardType={props.keyboardType}
               ref={inputRef}
+              editable={props.editable}
               style={[styles.input, props.textInputStyle]}
               {...props}
             />
@@ -82,6 +83,7 @@ const Input = React.forwardRef((props, ref) => {
             placeholder={props.placeholder}
             secureTextEntry={props.secureTextEntry ? showPassword : false}
             maxLength={props.maxLength}
+            editable={props.editable}
             keyboardType={props.keyboardType}
             ref={inputRef}
             style={[styles.input, props.textInputStyle]}

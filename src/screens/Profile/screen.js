@@ -550,6 +550,7 @@ function Index(props) {
           />
           <TextInput
             placeholder="Enter Email Address"
+            editable={false}
             containLabel
             label="Email Address"
             value={email}

@@ -25,13 +25,17 @@ function Index(props) {
     activeOpacity: 0.5,
   };
 
+  const userId = useSelector((state) => state.auth.user?.id);
+
   const handleTabPress = (value) => {
     setActiveTab(value);
   };
 
   useEffect(() => {
+    // console.log(userId, "Hello this is user id");
     let data = {
       orderId: props.route.params.orderId,
+      userId,
     };
 
     getOrderDetail(data)
@@ -42,6 +46,7 @@ function Index(props) {
       })
       .catch(() => {});
   }, [refreshing]);
+
   const onRefresh = () => {
     setRefreshing(true);
   };

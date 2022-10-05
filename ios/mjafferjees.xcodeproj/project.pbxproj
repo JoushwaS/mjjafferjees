@@ -200,7 +200,6 @@
 				00E356EA1AD99517003FC87E /* Sources */,
 				00E356EB1AD99517003FC87E /* Frameworks */,
 				00E356EC1AD99517003FC87E /* Resources */,
-				2DD2905C8BBD0CB76F8168BD /* [CP] Embed Pods Frameworks */,
 				B838B41806B54260EF26FE15 /* [CP] Copy Pods Resources */,
 			);
 			buildRules = (
@@ -223,7 +222,6 @@
 				13B07F8C1A680F5B00A75B9A /* Frameworks */,
 				13B07F8E1A680F5B00A75B9A /* Resources */,
 				00DD1BFF1BD5951E006B06BC /* Bundle React Native code and images */,
-				70E8A6BE309A024F37A64AF7 /* [CP] Embed Pods Frameworks */,
 				4164BFD5E46956B6E2604CF6 /* [CP] Copy Pods Resources */,
 			);
 			buildRules = (
@@ -316,23 +314,6 @@
 			shellPath = /bin/sh;
 			shellScript = "set -e\n\nexport NODE_BINARY=node\n../node_modules/react-native/scripts/react-native-xcode.sh\n";
 		};
-		2DD2905C8BBD0CB76F8168BD /* [CP] Embed Pods Frameworks */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputFileListPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-mjafferjees-mjafferjeesTests/Pods-mjafferjees-mjafferjeesTests-frameworks-${CONFIGURATION}-input-files.xcfilelist",
-			);
-			name = "[CP] Embed Pods Frameworks";
-			outputFileListPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-mjafferjees-mjafferjeesTests/Pods-mjafferjees-mjafferjeesTests-frameworks-${CONFIGURATION}-output-files.xcfilelist",
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-mjafferjees-mjafferjeesTests/Pods-mjafferjees-mjafferjeesTests-frameworks.sh\"\n";
-			showEnvVarsInLog = 0;
-		};
 		4164BFD5E46956B6E2604CF6 /* [CP] Copy Pods Resources */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
@@ -348,23 +329,6 @@
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
 			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-mjafferjees/Pods-mjafferjees-resources.sh\"\n";
-			showEnvVarsInLog = 0;
-		};
-		70E8A6BE309A024F37A64AF7 /* [CP] Embed Pods Frameworks */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputFileListPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-mjafferjees/Pods-mjafferjees-frameworks-${CONFIGURATION}-input-files.xcfilelist",
-			);
-			name = "[CP] Embed Pods Frameworks";
-			outputFileListPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-mjafferjees/Pods-mjafferjees-frameworks-${CONFIGURATION}-output-files.xcfilelist",
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-mjafferjees/Pods-mjafferjees-frameworks.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
 		7D3F7B1EB2632765178FF16C /* [CP] Check Pods Manifest.lock */ = {
@@ -483,6 +447,7 @@
 			baseConfigurationReference = 7B431B624B9CF551E2917E1F /* Pods-mjafferjees-mjafferjeesTests.debug.xcconfig */;
 			buildSettings = {
 				BUNDLE_LOADER = "$(TEST_HOST)";
+				DEVELOPMENT_TEAM = WNZWY6P299;
 				GCC_PREPROCESSOR_DEFINITIONS = (
 					"DEBUG=1",
 					"$(inherited)",
@@ -511,6 +476,7 @@
 			buildSettings = {
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				COPY_PHASE_STRIP = NO;
+				DEVELOPMENT_TEAM = WNZWY6P299;
 				INFOPLIST_FILE = mjafferjeesTests/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 11.0;
 				LD_RUNPATH_SEARCH_PATHS = (
