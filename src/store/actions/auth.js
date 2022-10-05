@@ -1,25 +1,30 @@
-import {SIGNUP, LOGIN, LOGOUT} from '../types';
-import {createAction} from '.';
+import { SIGNUP, LOGIN, LOGOUT, OPENMODAL, SETPROFILE } from "../types";
 
-const userSignUp = payload => {
-  console.log('action', payload);
+const userSignUp = (payload) => {
   return {
     type: SIGNUP,
     payload,
   };
-  // createAction(SIGNUP, payload);
-};
-const userLogin = payload => {
-  createAction(LOGIN, payload);
 };
 
-const userLogout = payload => {
-  console.log('action', payload);
+const saveProfile = (payload) => {
   return {
-    type: LOGOUT,
+    type: SETPROFILE,
     payload,
   };
-  // createAction(LOGOUT, payload);
+};
+const userLogin = (payload) => {};
+
+const userLogout = () => {
+  return {
+    type: LOGOUT,
+  };
 };
 
-export {userSignUp, userLogin, userLogout};
+const opneModal = () => {
+  return {
+    type: OPENMODAL,
+  };
+};
+
+export { userSignUp, userLogin, userLogout, opneModal, saveProfile };

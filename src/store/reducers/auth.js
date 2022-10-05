@@ -6,28 +6,38 @@ import {
   LOGOUT,
   LOGOUT_FAIL,
   LOGOUT_SUCCESS,
-} from '../types';
+  GETWISHLIST,
+  SAVESHIPPING,
+  SETPROFILE,
+  SAVESHIPPINGADRESSS,
+} from "../types";
 
 const initialState = {
-  profileImage: '',
-  email: '',
-  createdAt: '',
-  updatedAt: '',
-  username: '',
-  password: '',
+  user: null,
   isAuthenticated: false,
+  token: null,
+  wishlist: [],
+  shippingAddress: [],
+  shipping: null,
 };
 
 export default (state = initialState, action) => {
+  // console.log("actionaction", action.payload, action.type);
   switch (action.type) {
     case SET_USER_DATA:
       return {
         ...state,
-        ...action.payload,
       };
     case SIGNUP:
       return {
         ...state,
+        user: action.payload.user,
+        token: action.payload.token,
+      };
+    case SETPROFILE:
+      return {
+        ...state,
+        user: action.payload,
       };
     case SIGNUP_SUCCESS:
       return {
@@ -36,13 +46,35 @@ export default (state = initialState, action) => {
         ...action.payload,
       };
 
+    case SAVESHIPPING:
+      return {
+        ...state,
+        shipping: action.payload,
+      };
+
+    case SAVESHIPPINGADRESSS:
+      return {
+        ...state,
+        shippingAddress: action.payload,
+      };
+
+    case GETWISHLIST:
+      return {
+        ...state,
+        wishlist: action.payload,
+      };
+
     case SIGNUP_FAIL:
       return {
         ...state,
       };
     case LOGOUT:
       return {
-        ...state,
+        user: null,
+        isAuthenticated: false,
+        token: null,
+        shipping: null,
+        wishlist: [],
       };
     case LOGOUT_SUCCESS:
       return {

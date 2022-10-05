@@ -1,9 +1,8 @@
-import React from 'react';
-import { Touchable } from 'react-native';
-import { StyleSheet, ActivityIndicator, TouchableOpacity } from 'react-native';
-import { Text } from '.';
-import metrix from '../config/metrix';
-import { Colors } from '../config/theme';
+import React from "react";
+import { StyleSheet, ActivityIndicator, TouchableOpacity } from "react-native";
+import { Text } from ".";
+import metrix from "../config/metrix";
+import { Colors, Fonts } from "../config/theme";
 
 function Index({
   textStyle = {},
@@ -11,10 +10,24 @@ function Index({
   loaderStyle = {},
   children,
   loading = false,
-  onPress = () => { }
+  onPress = () => {},
+  variant = "filled",
+  disabled = false,
 }) {
   return (
-    <TouchableOpacity onPress={onPress} activeOpacity={0.8} style={[buttonStyle, styles.button]}>
+    <TouchableOpacity
+      onPress={onPress}
+      activeOpacity={0.5}
+      disabled={disabled}
+      style={[
+        styles.button,
+        buttonStyle,
+        {
+          backgroundColor: variant === "filled" ? Colors.primary : Colors.White,
+          borderWidth: metrix.VerticalSize(2),
+        },
+      ]}
+    >
       {loading ? (
         <ActivityIndicator
           color={Colors.Theme_Blue}
@@ -23,23 +36,38 @@ function Index({
           style={loaderStyle}
         />
       ) : (
-          <Text style={[textStyle, styles.textStyle]}>{children}</Text>
-        )}
+        <Text
+          style={[
+            styles.textStyle,
+            {
+              color: variant === "filled" ? Colors.White : Colors.primary,
+            },
+            textStyle,
+          ]}
+        >
+          {children}
+        </Text>
+      )}
     </TouchableOpacity>
   );
 }
 
 const styles = StyleSheet.create({
   button: {
-    textAlign: 'center',
-    backgroundColor: Colors.Theme_Blue,
+    textAlign: "center",
     padding: metrix.VerticalSize(10),
-    borderRadius: metrix.VerticalSize(15)
+    paddingVertical: metrix.VerticalSize(15),
+    borderRadius: metrix.VerticalSize(25),
+    alignItems: "center",
+    justifyContent: "center",
+    // height: metrix.VerticalSize(40),
+    borderColor: Colors.primary,
   },
   textStyle: {
-    textAlign: 'center',
-    color: Colors.White
-  }
+    alignSelf: "center",
+    color: Colors.White,
+    fontFamily: Fonts.IS,
+  },
 });
 
 export default Index;
