@@ -16,7 +16,13 @@ then run this cmd
 
 discard all the files execpt index.android.bundle
 
+### For Play Store (.AAB)
+
 then run this cmd
+
+- cd android && ./gradlew bundleRelease
+
+### For apk
 
 - cd android && ./gradlew assembleRelease
 
