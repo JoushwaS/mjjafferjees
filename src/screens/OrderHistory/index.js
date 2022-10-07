@@ -23,6 +23,7 @@ import { getOrders, getAllOrders } from "../../config/api/cart";
 import { useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { formatPrice, showToast } from "../../utils";
+import moment from "moment";
 
 function Index(props) {
   const [activeTab, setActiveTab] = useState(0);
@@ -146,7 +147,7 @@ function Index(props) {
     setRefreshing(false);
     showToast({
       type: "error",
-      text: "Failed to fatech order history",
+      text: "Failed to fetch order history",
     });
   };
   useFocusEffect(
@@ -295,7 +296,7 @@ function Index(props) {
                     Order No. {item?.order_id}
                   </Text>
                   <Text style={styles.dateText}>
-                    {new Date(item.created_at).toLocaleDateString()}
+                    {moment(item.created_at).format("DD MMM YYYY")}
                   </Text>
                 </View>
                 <View style={styles.detailsBox}>
@@ -370,7 +371,13 @@ function Index(props) {
                       Order No. {item?.order_id}
                     </Text>
                     <Text style={styles.dateText}>
-                      {new Date(item.created_at).toLocaleDateString()}
+                      {moment(item.created_at).format("DD MMM YYYY")}
+                      {/* {console.log(
+                        "hi",
+                        new Date(item.created_at)
+                          .toLocaleDateString()
+                          .format('"MMM Do YY"')
+                      )} */}
                     </Text>
                   </View>
                   <View style={styles.detailsBox}>

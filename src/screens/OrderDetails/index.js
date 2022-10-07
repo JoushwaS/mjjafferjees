@@ -15,6 +15,7 @@ import { useEffect } from "react";
 import { getOrderDetail } from "../../config/api/cart";
 import { useSelector } from "react-redux";
 import { formatPrice } from "../../utils";
+import moment from "moment";
 
 function Index(props) {
   const [activeTab, setActiveTab] = useState(0);
@@ -52,6 +53,7 @@ function Index(props) {
   };
 
   const renderOrders = ({ item, index }) => {
+    console.log(item, "this is my item");
     return (
       <View style={styles.detailCard}>
         <View>
@@ -63,9 +65,18 @@ function Index(props) {
             }}
           />
         </View>
+
         <View>
           <Text style={styles.detailText}>
             {item?.quantity}x {item?.products?.name}
+          </Text>
+          <Text
+            style={
+              ([styles.detailText],
+              { color: "gray", fontSize: metrix.CustomFontSize(12) })
+            }
+          >
+            Color : {item?.product_variation?.color_name}
           </Text>
           {/* <Text style={styles.detailText}>No. of items 02</Text> */}
           <Text style={styles.detailText}>
@@ -113,7 +124,7 @@ function Index(props) {
                   Order No. {orderDetail?.order_id}
                 </Text>
                 <Text style={{ ...styles.dateText, color: "grey" }}>
-                  {new Date(orderDetail?.created_at).toLocaleDateString()}
+                  {moment(orderDetail.created_at).format("DD MMM YYYY")}
                 </Text>
               </View>
               <StatusButton type={orderDetail?.status} />
@@ -145,11 +156,19 @@ function Index(props) {
                 </Text>
               </View>
               <View style={styles.detailsBox}>
+                <Text style={styles.dateText}>Shipping Charges</Text>
+                <Text style={styles.dateText}>
+                  {renderPrice(formatPrice(orderDetail?.shipping_charges))}
+                </Text>
+              </View>
+
+              <View style={styles.detailsBox}>
                 <Text style={styles.dateText}>Discount</Text>
                 <Text style={styles.dateText}>
                   - {renderPrice(formatPrice(orderDetail?.discount))}
                 </Text>
               </View>
+
               <View style={styles.detailsBox}>
                 <Text style={styles.dateText}>Total</Text>
                 <Text style={styles.dateText}>

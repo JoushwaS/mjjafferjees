@@ -40,7 +40,9 @@ const Input = React.forwardRef((props, ref) => {
         style={[
           styles.container,
           props.Viewstyle,
-          { height: metrix.VerticalSize(props.height ? props.height : 55) },
+          {
+            height: metrix.VerticalSize(props.height ? props.height : 55),
+          },
         ]}
       >
         {props.auth ? (

@@ -307,8 +307,8 @@ function Index(props) {
           {step === 1
             ? "Please enter your email"
             : step === 2
-            ? "Please enter the OTP send to your Mobile Number"
-            : "Set you new password"}
+            ? "Please enter the OTP send to your Email Address"
+            : "Set your new password"}
         </Text>
         {step === 1 ? (
           <TextInput

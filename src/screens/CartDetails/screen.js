@@ -39,10 +39,12 @@ import LottieView from "lottie-react-native";
 import noproducts from "./noproducts.json";
 import metrix from "../../config/metrix";
 import { getCoupons, verifyCart, cartCheckout } from "../../config/api/cart";
-import { showToast } from "../../utils";
+import { getItem, showToast, removeItem } from "../../utils";
 import { hideloader, showloader } from "../../store/actions/common";
 import { store } from "../../store";
 import { formatPrice } from "../../utils/index";
+import { setItem } from "../../utils/index";
+import { Alert } from "react-native";
 
 function Index(props) {
   const dispatch = useDispatch();
@@ -77,12 +79,13 @@ function Index(props) {
     activeOpacity: 0.5,
   };
 
-  const handleRemovePromo = () => {
+  const handleRemovePromo = async () => {
     setcouponValid(false);
     setCouponId(0);
     setSelectedPromo("");
     setActiveIndex(-1);
     getCart();
+    await removeItem("promo");
   };
 
   const getAllCoupons = () => {
@@ -133,6 +136,7 @@ function Index(props) {
         placements: val?.placements,
         variation_placement: val?.variation_placement,
         placementImage: val?.placmentImage,
+        // discount: val?.discount,
       };
       if (val.giftset_id) {
         obj["giftset_id"] = val?.giftset_id;
@@ -195,13 +199,19 @@ function Index(props) {
       });
   };
 
+  const checkCoupon = async () => {
+    //chk value in async
+    const id = await getItem("promo");
+    getCart(id ? id : couponId);
+    NetworkInfo.getIPV4Address().then((ipv4Address) => {
+      console.log(ipv4Address);
+      setipAddress(ipv4Address);
+    });
+  };
+
   useFocusEffect(
     useCallback(() => {
-      getCart(couponId);
-      NetworkInfo.getIPV4Address().then((ipv4Address) => {
-        console.log(ipv4Address);
-        setipAddress(ipv4Address);
-      });
+      checkCoupon();
       return () => {};
     }, [])
   );
@@ -336,6 +346,7 @@ function Index(props) {
             <Button
               onPress={() => {
                 dispatch(_verifyCart(cartDetails));
+                console.log("cartDetails", cartDetails);
                 if (token !== null) {
                   // Navigation.navigate("AuthStack", {
                   //   screen: SCREENS.REGISTER_SCREEN,
@@ -526,12 +537,16 @@ function Index(props) {
     getCart(couponId);
   };
 
-  const handlePromoCodePress = (item, i) => {
+  const handlePromoCodePress = async (item, i) => {
     // alert(JSON.stringify(item));
+    // console.log(item);
     // return;
     setSelectedPromo(item);
     setCouponId(item.id);
     // setLoading(true);
+    // Set item
+    await setItem("promo", item.id.toString());
+
     getCart(item.id);
     setActiveIndex(i);
     setModalVisible(false);

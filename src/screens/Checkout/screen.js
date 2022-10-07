@@ -38,7 +38,7 @@ import { formatPrice } from "../../utils/index";
 
 import style from "../OrderCompletedPopup/style";
 import { store } from "../../store";
-import { showToast } from "../../utils";
+import { showToast, removeItem } from "../../utils";
 import { ActivityIndicator } from "react-native";
 import { IMAGES } from "../../assets/images";
 import { getProfile } from "../../config/api/auth";
@@ -158,7 +158,7 @@ function Index(props) {
     email: "",
     address: "",
   });
-
+  console.log("this is cart", cart);
   const copyToClipboard = () => {
     console.log("copyy");
     Clipboard.setString(

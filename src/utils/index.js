@@ -49,3 +49,4 @@ export const formatPrice = (n) => {
 export const setItem = async (key, value) =>
   await AsyncStorage.setItem(key, value);
 export const getItem = async (key) => await AsyncStorage.getItem(key);
+export const removeItem = async (key) => await AsyncStorage.removeItem(key);

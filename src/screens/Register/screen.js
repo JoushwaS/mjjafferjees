@@ -107,7 +107,6 @@ function Index(props) {
           <Image source={ICONS.logopurple} style={styles.logo} />
           <Text style={styles.headingText}>Login Now</Text>
         </View>
-
         <TextInput
           placeholder="Enter your email"
           containLabel
@@ -124,7 +123,6 @@ function Index(props) {
           label="Password"
           secureTextEntry
         />
-
         <View style={{ alignItems: "center" }}>
           <TouchableOpacity onPress={handleReset} activeOpacity={0.5}>
             <Text style={styles.resetText}>Reset Password</Text>

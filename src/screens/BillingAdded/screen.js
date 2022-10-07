@@ -22,7 +22,7 @@ import { SCREENS } from "../../config/constants/screens";
 import { placeOrder } from "../../config/api/cart";
 import { saveProfile } from "../../store/actions";
 import { getProfile } from "../../config/api/auth";
-import { showToast } from "../../utils";
+import { showToast, removeItem } from "../../utils";
 
 function Index(props) {
   const dispatch = useDispatch();
@@ -265,6 +265,8 @@ function Index(props) {
     placeOrder(data)
       .then((res) => {
         console.log("res_placeOrder", res.data);
+        removeItem("promo");
+
         let params = {
           id: props.route.params.user_id,
         };
@@ -294,6 +296,7 @@ function Index(props) {
         });
       });
   };
+
   return (
     <View style={styles.container}>
       {/* <OrderCompleted
