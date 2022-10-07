@@ -5,6 +5,7 @@ import Screen from "./screen";
 import { Header } from "../../components";
 import { useSelector, useDispatch } from "react-redux";
 import { ChildcategoriesData } from "../../config/api/categories";
+import { productDetail } from "../../config/api/products";
 import { useFocusEffect } from "@react-navigation/native";
 import Navigator from "../../navigation/root";
 import { Colors } from "../../config/theme";
@@ -22,6 +23,7 @@ function Index(props) {
     useCallback(() => {
       let params = { slug: props?.route?.params?.slug, page: pageCount };
       getChildcategoriesData(params);
+      console.log(params, "this is param");
       return () => {
         setRefreshing(true);
       };
@@ -39,12 +41,14 @@ function Index(props) {
     // dispatch(showloader());
     setRefreshing(true);
     ChildcategoriesData(slug)
+      // productDetail(slug)
       .then((response) => {
         set_next_page_url(response.data?.data?.next_page_url);
         let filterStatus = response.data?.data?.data?.filter((item) => {
           return item?.status == "Active";
         });
         if (pageCount > 1) {
+          // console.log(response, "response is here");
           setChildCategories((childcategories) => [
             ...childcategories,
             ...filterStatus,
@@ -76,7 +80,7 @@ function Index(props) {
   }, [props?.route?.params?.slug]);
 
   const dispatch = useDispatch();
-
+  // console.log(props.route.params.categoryName, "this is slug");
   return (
     <View style={styles.container}>
       <Header showSearch backButton />

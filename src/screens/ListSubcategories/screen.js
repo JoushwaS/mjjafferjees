@@ -46,7 +46,12 @@ function Index({
       <CategoryCard
         data={item}
         onPress={(categoryName) => {
-          Navigation.navigate(SCREENS.SUBCATEGORIES, {
+          console.log("this is subcategories", categoryName);
+          // Navigation.navigate(SCREENS.SUBCATEGORIES, {
+          //   categoryName,
+          //   slug: item?.item?.seo_slugs?.slug,
+          // });
+          Navigation.navigate(SCREENS.PRODUCT_LISTING_SCREEN, {
             categoryName,
             slug: item?.item?.seo_slugs?.slug,
           });
