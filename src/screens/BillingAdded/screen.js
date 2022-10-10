@@ -234,7 +234,7 @@ function Index(props) {
   const _placeOrder = () => {
     let ipAddress;
     NetworkInfo.getIPV4Address().then((ipv4Address) => {
-      console.log(ipv4Address);
+      // console.log(ipv4Address);
       ipAddress = ipv4Address;
     });
     let data = {
@@ -264,9 +264,8 @@ function Index(props) {
 
     placeOrder(data)
       .then((res) => {
-        console.log("res_placeOrder", res.data);
+        // console.log("res_placeOrder", res.data);
         removeItem("promo");
-
         let params = {
           id: props.route.params.user_id,
         };
