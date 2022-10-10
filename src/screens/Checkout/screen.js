@@ -11,22 +11,15 @@ import {
   View,
   RefreshControl,
   ScrollView,
-  FlatList,
 } from "react-native";
-import {
-  Text,
-  TextInput,
-  Button,
-  IconButton,
-  CustomInput,
-} from "../../components";
+import { Text, TextInput, Button, IconButton } from "../../components";
 import { styles } from "./style";
 import Navigation from "../../navigation/root";
 import Modal from "../../screens/ProductsListing/modal";
 import { useFocusEffect } from "@react-navigation/native";
 import Clipboard from "@react-native-clipboard/clipboard";
 import metrix from "../../config/metrix";
-import OrderCompleted from "../OrderCompletedPopup/screen";
+// import OrderCompleted from "../OrderCompletedPopup/screen";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 import { ICONS } from "../../assets/icons";
 import { Colors } from "../../config/theme";
@@ -36,9 +29,9 @@ import { getAllCitiesList } from "../../config/api/general";
 import { validateLink } from "../../utils";
 import { formatPrice } from "../../utils/index";
 
-import style from "../OrderCompletedPopup/style";
+// import style from "../OrderCompletedPopup/style";
 import { store } from "../../store";
-import { showToast, removeItem } from "../../utils";
+import { showToast } from "../../utils";
 import { ActivityIndicator } from "react-native";
 import { IMAGES } from "../../assets/images";
 import { getProfile } from "../../config/api/auth";
@@ -158,11 +151,14 @@ function Index(props) {
     email: "",
     address: "",
   });
-  console.log("this is cart", cart);
+  // console.log("this is cart", cart);
   const copyToClipboard = () => {
-    console.log("copyy");
+    showToast({
+      type: "success",
+      text: "Bank Account details Copied to Clipboard",
+    });
     Clipboard.setString(
-      " Bank: Habib Metropolitan Bank Ltd Account No.: 6-01-25-20311-714-123540"
+      "Bank: Habib Metropolitan Bank Ltd Account No.: 6-01-25-20311-714-123540"
     );
   };
 
