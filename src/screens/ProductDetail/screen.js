@@ -348,7 +348,6 @@ function Index({
               alignItems: "center",
               justifyContent: "center",
               borderRadius: metrix.VerticalSize(10),
-
               borderWidth: metrix.VerticalSize(3),
             }}
           >
@@ -360,7 +359,6 @@ function Index({
                 height: 0,
                 // marginRight: metrix.HorizontalSize(4),
                 borderRadius: metrix.VerticalSize(10),
-
                 backgroundColor: "transparent",
                 borderLeftWidth: metrix.VerticalSize(55),
                 borderBottomWidth: metrix.VerticalSize(55),
