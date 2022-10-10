@@ -568,9 +568,7 @@ function Index(props) {
 
           <TextInput
             placeholder="Enter Address"
-            multiline
             containLabel
-            height={metrix.VerticalSize(62)}
             value={Address}
             onChangeText={(text) => setAddress(text)}
             Viewstyle={styles.textContainer}
