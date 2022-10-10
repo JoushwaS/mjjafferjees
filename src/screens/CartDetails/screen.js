@@ -94,11 +94,10 @@ function Index(props) {
       data.push({ id: val?.id });
     });
 
-    console.log("data 1", data);
     getCoupons(data)
       .then((response) => {
         setCoupons(response.data.data);
-        console.log("setCoupons", coupons);
+        // console.log("setCoupons", response.data);
         setModalVisible(true);
 
         return response;
