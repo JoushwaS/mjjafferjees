@@ -17,7 +17,7 @@ import {
   FlatList,
 } from "react-native";
 import { Text, Button, CustomInput, CustomInputCoupon } from "../../components";
-// import { showToast } from "../../utils";
+import { showToast, setItem, getItem, removeItem } from "../../utils";
 import { IMAGES } from "../../assets/images";
 import { styles } from "./style";
 import { useFocusEffect } from "@react-navigation/native";
@@ -39,12 +39,9 @@ import LottieView from "lottie-react-native";
 import noproducts from "./noproducts.json";
 import metrix from "../../config/metrix";
 import { getCoupons, verifyCart, cartCheckout } from "../../config/api/cart";
-import { getItem, showToast, removeItem } from "../../utils";
 import { hideloader, showloader } from "../../store/actions/common";
 import { store } from "../../store";
 import { formatPrice } from "../../utils/index";
-import { setItem } from "../../utils/index";
-import { Alert } from "react-native";
 import { Colors } from "../../config/theme";
 
 function Index(props) {
