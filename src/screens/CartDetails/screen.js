@@ -11,7 +11,7 @@ import {
   View,
   Animated,
   RefreshControl,
-  Easing,
+  ActivityIndicator,
   ScrollView,
   TextInput,
   FlatList,
@@ -45,6 +45,7 @@ import { store } from "../../store";
 import { formatPrice } from "../../utils/index";
 import { setItem } from "../../utils/index";
 import { Alert } from "react-native";
+import { Colors } from "../../config/theme";
 
 function Index(props) {
   const dispatch = useDispatch();
@@ -114,11 +115,15 @@ function Index(props) {
   };
 
   const parseErrorCoupon = (errorText) => {
-    if (errorText.includes("Rs.")) {
-      const err = errorText.split("Rs.");
-      return `${err[0]} ${renderPrice(err[1])}`;
-    } else {
-      return errorText;
+    try {
+      if (errorText.includes("Rs.")) {
+        const err = errorText.split("Rs.");
+        return `${err[0]} ${renderPrice(err[1])}`;
+      } else {
+        return errorText;
+      }
+    } catch (error) {
+      return error.message;
     }
   };
 
@@ -600,6 +605,12 @@ function Index(props) {
   return (
     // <View style={styles.container}>
     <View style={styles.ContainerPadding}>
+      {cart.length === 0 && cartItems.length > 0 && (
+        <ActivityIndicator
+          color={Colors.primary}
+          size="large"
+        ></ActivityIndicator>
+      )}
       <Modal
         viewRef={viewRef}
         modalVisible={modalVisible}
@@ -644,7 +655,7 @@ function Index(props) {
           </ScrollView>
         </View>
       </Modal>
-      {cartDetails !== null && (
+      {cartDetails && (
         <FlatList
           data={cart}
           refreshControl={

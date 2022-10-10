@@ -20,8 +20,7 @@ import PrivacyPolicy from "./PrivacyPolicy";
 import Faqs from "./Faqs";
 import LeatherCare from "./LeatherCare";
 import StoreLocator from "./StoreLocator";
-import WebPayment from "./WebPayment";
-
+import WebPayment from "./Webpayment";
 import OrderHistory from "./OrderHistory";
 import OrderDetails from "./OrderDetails";
 import OurHistory from "./OurHistory";
