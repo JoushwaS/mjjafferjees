@@ -194,6 +194,7 @@ function Index(props) {
         dispatch(hideloader());
         setSelectedPromo("");
         setCouponId(0);
+        setActiveIndex(-1);
         setTimeout(() => {
           showToast({
             text:
