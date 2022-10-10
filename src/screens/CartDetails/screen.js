@@ -185,7 +185,7 @@ function Index(props) {
         dispatch(hideloader());
         // return response;
       })
-      .catch((error) => {
+      .catch(async (error) => {
         setLoading(false);
         console.log(
           "error?.response?.data?.error",
@@ -195,6 +195,7 @@ function Index(props) {
         setSelectedPromo("");
         setCouponId(0);
         setActiveIndex(-1);
+        await removeItem("promo");
         setTimeout(() => {
           showToast({
             text:
