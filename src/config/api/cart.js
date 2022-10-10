@@ -1,8 +1,6 @@
 import Axios from ".";
 
 export const getCoupons = (data) => {
-  console.log("data 2", data);
-
   return Axios.post("/api/coupons", { data });
 };
 
