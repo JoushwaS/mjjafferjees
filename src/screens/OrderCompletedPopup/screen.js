@@ -21,6 +21,7 @@ import { IMAGES } from "../../assets/images";
 import { ICONS } from "../../assets/icons";
 import Navigation from "../../navigation/root";
 import { SCREENS } from "../../config/constants/screens";
+import { showToast } from "../../utils";
 
 function Index(props) {
   const progress = useRef(new Animated.Value(0)).current;
@@ -73,6 +74,10 @@ function Index(props) {
     }).then(
       (uri) => {
         savePicture(uri);
+        showToast({
+          text: "Screenshot saved successfully",
+          type: "success",
+        });
       },
       (error) => console.error("Oops, snapshot failed", error)
     );
