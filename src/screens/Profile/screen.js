@@ -321,17 +321,14 @@ function Index(props) {
       const { data: updateProfileData } = await updateProfile(formData);
       // console.log("updateProfileData", updateProfileData);
       dispatch(hideloader());
-      console.log("updateProfileData.errors", updateProfileData.errors);
       setTimeout(() => {
+        const err = Object.keys(updateProfileData.errors);
+        console.log("err", updateProfileData?.errors[err[0]][0]);
         if (updateProfileData.errors) {
           showToast({
             type: "error",
             text:
-              (updateProfileData?.errors?.email &&
-                updateProfileData?.errors?.email[0]) ||
-              (updateProfileData?.errors?.phone &&
-                updateProfileData?.errors?.phone[0]) ||
-              "Input Validation failed",
+              updateProfileData?.errors[err[0]][0] || "Input Validation failed",
           });
         } else {
           var StoredState = store.getState();
