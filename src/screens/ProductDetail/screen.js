@@ -306,6 +306,10 @@ function Index({
     }
   };
   const renderColours = ({ item, index }) => {
+    console.log(
+      "item?.color_options?.hex_value?.length",
+      item?.color_options?.hex_value?.length
+    );
     switch (item?.color_options?.hex_value?.length) {
       case 1:
         return (
@@ -348,6 +352,7 @@ function Index({
               alignItems: "center",
               justifyContent: "center",
               borderRadius: metrix.VerticalSize(10),
+
               borderWidth: metrix.VerticalSize(3),
             }}
           >
@@ -359,6 +364,7 @@ function Index({
                 height: 0,
                 // marginRight: metrix.HorizontalSize(4),
                 borderRadius: metrix.VerticalSize(10),
+
                 backgroundColor: "transparent",
                 borderLeftWidth: metrix.VerticalSize(55),
                 borderBottomWidth: metrix.VerticalSize(55),
@@ -427,7 +433,6 @@ function Index({
           >
             <TouchableOpacity
               onPress={() => getChangeProduct(item?.id)}
-              // 5c
               style={
                 {
                   // borderRadius: metrix.VerticalSize(10),
@@ -443,16 +448,15 @@ function Index({
                     position: "absolute",
                     right: 0,
                     height: 0,
-
                     backgroundColor: "transparent",
                     borderStyle: "solid",
-                    borderLeftWidth: 27,
-                    borderBottomWidth: 27,
+                    borderLeftWidth: metrix.VerticalSize(28),
+                    borderBottomWidth: metrix.VerticalSize(28),
                     borderTopLeftRadius: metrix.VerticalSize(15),
                     borderLeftColor: "transparent",
                     borderRightColor: "transparent",
                     borderBottomStartRadius: metrix.VerticalSize(10),
-                    // borderBottomColor: item?.color_options?.hex_value[0],
+                    borderBottomColor: item?.color_options?.hex_value[0],
                   }}
                 ></View>
                 <View
@@ -464,12 +468,12 @@ function Index({
                     height: 0,
                     backgroundColor: "transparent",
                     borderStyle: "solid",
-                    borderLeftWidth: 27,
+                    borderLeftWidth: metrix.VerticalSize(27),
                     borderTopLeftRadius: metrix.VerticalSize(10),
                     borderTopEndRadius: metrix.VerticalSize(10),
                     borderTopStartRadius: metrix.VerticalSize(10),
 
-                    borderBottomWidth: 27,
+                    borderBottomWidth: metrix.VerticalSize(27),
                     borderLeftColor: "transparent",
                     borderRightColor: "transparent",
                     borderBottomColor: item?.color_options?.hex_value[0],
@@ -482,25 +486,20 @@ function Index({
                     width: 0,
                     height: 0,
                     backgroundColor: "transparent",
-                    borderLeftWidth: 25,
-                    borderRightWidth: 27,
+                    borderLeftWidth: metrix.VerticalSize(27),
+                    borderRightWidth: metrix.VerticalSize(27),
                     borderLeftColor: "transparent",
-                    borderTopLeftRadius: metrix.VerticalSize(15),
                     borderTopRightColor: "transparent",
                     borderTopRightWidth: 0,
                     borderTopEndRadius: metrix.VerticalSize(10),
                     borderTopStartRadius: metrix.VerticalSize(10),
-
-                    borderTopWidth: 25,
+                    borderTopWidth: metrix.VerticalSize(27),
                     borderRightColor: item?.color_options?.hex_value[1],
                     borderTopColor: item?.color_options?.hex_value[2],
-                    // borderTopColor: "red",
                     borderBottomColor: item?.color_options?.hex_value[3],
-                    // borderBottomColor: "red",
                     borderBottomEndRadius: metrix.VerticalSize(10),
                     borderBottomStartRadius: metrix.VerticalSize(10),
-
-                    borderBottomWidth: 25,
+                    borderBottomWidth: metrix.VerticalSize(27),
                   }}
                 ></View>
               </View>
@@ -545,8 +544,8 @@ function Index({
                     height: 0,
                     backgroundColor: "transparent",
                     borderStyle: "solid",
-                    borderLeftWidth: 25,
-                    borderBottomWidth: 25,
+                    borderLeftWidth: metrix.VerticalSize(25),
+                    borderBottomWidth: metrix.VerticalSize(25),
                     borderTopLeftRadius: metrix.VerticalSize(10),
                     borderLeftColor: "transparent",
                     borderRightColor: "transparent",
@@ -563,12 +562,12 @@ function Index({
                     height: 0,
                     backgroundColor: "transparent",
                     borderStyle: "solid",
-                    borderLeftWidth: 25,
+                    borderLeftWidth: metrix.VerticalSize(25),
                     borderTopLeftRadius: metrix.VerticalSize(10),
                     borderTopEndRadius: metrix.VerticalSize(10),
                     borderTopStartRadius: metrix.VerticalSize(10),
 
-                    borderBottomWidth: 25,
+                    borderBottomWidth: metrix.VerticalSize(25),
                     borderLeftColor: "transparent",
                     borderRightColor: "transparent",
                     borderBottomColor: item?.color_options?.hex_value[1],
@@ -581,16 +580,15 @@ function Index({
                     width: 0,
                     height: 0,
                     backgroundColor: "transparent",
-                    borderLeftWidth: 25,
-                    borderRightWidth: 25,
+                    borderLeftWidth: metrix.VerticalSize(25),
+                    borderRightWidth: metrix.VerticalSize(25),
                     borderLeftColor: "transparent",
                     borderTopLeftRadius: metrix.VerticalSize(10),
                     borderTopRightColor: "transparent",
                     borderTopRightWidth: 0,
                     borderTopEndRadius: metrix.VerticalSize(10),
                     borderTopStartRadius: metrix.VerticalSize(10),
-
-                    borderTopWidth: 25,
+                    borderTopWidth: metrix.VerticalSize(25),
                     borderRightColor: item?.color_options?.hex_value[2],
                     borderTopColor: item?.color_options?.hex_value[3],
                     // borderTopColor: "red",
@@ -599,7 +597,7 @@ function Index({
                     borderBottomEndRadius: metrix.VerticalSize(10),
                     borderBottomStartRadius: metrix.VerticalSize(10),
 
-                    borderBottomWidth: 25,
+                    borderBottomWidth: metrix.VerticalSize(25),
                   }}
                 ></View>
               </View>
