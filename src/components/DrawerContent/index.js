@@ -16,7 +16,7 @@ const DrawerContent = (props) => {
   const progress = 1;
   const dispatch = useDispatch();
   const { user } = useSelector((state) => state.auth);
-  console.log("usereee", user);
+  // console.log("usereee", user);
   const opacity = Animated.interpolateNode(progress, {
     inputRange: [0, 1],
     outputRange: [-5, 1],
