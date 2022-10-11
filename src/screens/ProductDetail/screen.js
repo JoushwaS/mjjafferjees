@@ -348,11 +348,9 @@ function Index({
                 variantId == item.id ? Colors.primary : "transparent",
               marginRight: metrix.HorizontalSize(4),
               padding: metrix.VerticalSize(8),
-              // paddingHorizontal: metrix.HorizontalSize(4),
               alignItems: "center",
               justifyContent: "center",
               borderRadius: metrix.VerticalSize(10),
-
               borderWidth: metrix.VerticalSize(3),
             }}
           >
@@ -362,9 +360,7 @@ function Index({
                 transform: [{ rotate: "90deg" }],
                 width: 0,
                 height: 0,
-                // marginRight: metrix.HorizontalSize(4),
                 borderRadius: metrix.VerticalSize(10),
-
                 backgroundColor: "transparent",
                 borderLeftWidth: metrix.VerticalSize(55),
                 borderBottomWidth: metrix.VerticalSize(55),
