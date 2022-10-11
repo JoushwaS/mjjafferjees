@@ -263,42 +263,39 @@ function Index({
   };
 
   const handleAddToCart = () => {
-    if (checkProductInCart()) {
-      Navigation.navigate(SCREENS.CART_DETAILS_SCREEN);
+    let addProduct;
+    // alert(JSON.stringify(product.variations[0].combination_id));
+    if (showPlacement) {
+      addProduct = {
+        ...product,
+        quantity: quantity,
+        giftset_id: product.variations[0].giftset_id,
+        combination_id: product.variations[0].combination_id,
+        containPlacement: true,
+        variation_placement: product?.variation_placement,
+        placements: { ...placementDetails, id: uuid.v4() },
+      };
     } else {
-      let addProduct;
-      // alert(JSON.stringify(product.variations[0].combination_id));
-      if (showPlacement) {
-        addProduct = {
-          ...product,
-          quantity: quantity,
-          giftset_id: product.variations[0].giftset_id,
-          combination_id: product.variations[0].combination_id,
-          containPlacement: true,
-          variation_placement: product?.variation_placement,
-          placements: { ...placementDetails, id: uuid.v4() },
-        };
-      } else {
-        addProduct = {
-          ...product,
-          quantity: quantity,
-          giftset_id: product.variations[0].giftset_id,
-          combination_id: product.variations[0].combination_id,
-          containPlacement: false,
-          variation_placement: product?.variation_placement,
-        };
-      }
-      // console.log("product==>", product);
-      // alert(JSON.stringify(addProduct));
-      dispatch(addToCart(addProduct));
-      showToast({
-        type: "success",
-        text: "Product Added to cart",
-      });
-      setshowViewName(false);
-      _setshowPlacement();
-      // Navigation.navigate(SCREENS.CART_DETAILS_SCREEN);
+      addProduct = {
+        ...product,
+        quantity: quantity,
+        giftset_id: product.variations[0].giftset_id,
+        combination_id: product.variations[0].combination_id,
+        containPlacement: false,
+        variation_placement: product?.variation_placement,
+      };
     }
+    // console.log("product==>", product);
+    // alert(JSON.stringify(addProduct));
+    dispatch(addToCart(addProduct));
+    showToast({
+      type: "success",
+      text: "Product Added to cart",
+    });
+    setshowViewName(false);
+    _setshowPlacement();
+    setQuantity(1);
+    // Navigation.navigate(SCREENS.CART_DETAILS_SCREEN);
   };
   const increaseQuantity = () => {
     // if (quantity < 5) {
@@ -786,13 +783,29 @@ function Index({
                   {_renderPrice(renderPrice())}
                 </Text>
               </View>
-              <Button
-                onPress={handleAddToCart}
-                buttonStyle={styles.buttonStyle}
-                variant="filled"
-              >
-                {checkProductInCart() ? "View Cart" : "Add To Cart"}
-              </Button>
+              <View>
+                <Button
+                  onPress={handleAddToCart}
+                  buttonStyle={{
+                    ...styles.buttonStyle,
+                    marginBottom: metrix.VerticalSize(10),
+                  }}
+                  variant="filled"
+                >
+                  {"Add To Cart"}
+                </Button>
+                {checkProductInCart() && (
+                  <Button
+                    onPress={() =>
+                      Navigation.navigate(SCREENS.CART_DETAILS_SCREEN)
+                    }
+                    buttonStyle={styles.buttonStyle}
+                    variant="filled"
+                  >
+                    {"View Cart"}
+                  </Button>
+                )}
+              </View>
             </View>
           </View>
           <View style={{ alignItems: "center" }}>

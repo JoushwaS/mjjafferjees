@@ -251,8 +251,9 @@ function Index({
   };
 
   const checkProductInCart = () => {
+    console.log("product==>", product);
     const found = cartItems.findIndex((item) => item.id === product.id);
-    console.log("found", found);
+    // console.log("found", found);
     if (found !== -1) {
       return true;
     } else {
@@ -261,39 +262,36 @@ function Index({
   };
 
   const handleAddToCart = () => {
-    if (checkProductInCart()) {
-      Navigation.navigate(SCREENS.CART_DETAILS_SCREEN);
+    let addProduct;
+    if (showPlacement) {
+      addProduct = {
+        ...product,
+        quantity: quantity,
+        product_id: product.id,
+        product_variation_id: variantId,
+        containPlacement: true,
+        variation_placement: product?.variation_placement,
+        placements: { ...placementDetails, id: uuid.v4() },
+      };
     } else {
-      let addProduct;
-      if (showPlacement) {
-        addProduct = {
-          ...product,
-          quantity: quantity,
-          product_id: product.id,
-          product_variation_id: variantId,
-          containPlacement: true,
-          variation_placement: product?.variation_placement,
-          placements: { ...placementDetails, id: uuid.v4() },
-        };
-      } else {
-        addProduct = {
-          ...product,
-          quantity: quantity,
-          product_id: product.id,
-          containPlacement: false,
-          variation_placement: product?.variation_placement,
-          product_variation_id: variantId,
-        };
-      }
-      dispatch(addToCart(addProduct));
-      showToast({
-        type: "success",
-        text: "Product Added to cart",
-      });
-      setshowViewName(false);
-      _setshowPlacement();
-      // Navigation.navigate(SCREENS.CART_DETAILS_SCREEN);
+      addProduct = {
+        ...product,
+        quantity: quantity,
+        product_id: product.id,
+        containPlacement: false,
+        variation_placement: product?.variation_placement,
+        product_variation_id: variantId,
+      };
     }
+    dispatch(addToCart(addProduct));
+    showToast({
+      type: "success",
+      text: "Product Added to cart",
+    });
+    setshowViewName(false);
+    _setshowPlacement();
+    setQuantity(1);
+    // Navigation.navigate(SCREENS.CART_DETAILS_SCREEN);
   };
   const increaseQuantity = () => {
     // if (quantity < 5) {
@@ -750,13 +748,29 @@ function Index({
                   {renderPrice(product?.formated_price)}
                 </Text>
               </View>
-              <Button
-                onPress={handleAddToCart}
-                buttonStyle={styles.buttonStyle}
-                variant="filled"
-              >
-                {checkProductInCart() ? "View Cart" : "Add To Cart"}
-              </Button>
+              <View style={{}}>
+                <Button
+                  onPress={handleAddToCart}
+                  buttonStyle={{
+                    ...styles.buttonStyle,
+                    marginBottom: metrix.VerticalSize(10),
+                  }}
+                  variant="filled"
+                >
+                  {"Add To Cart"}
+                </Button>
+                {checkProductInCart() && (
+                  <Button
+                    onPress={() =>
+                      Navigation.navigate(SCREENS.CART_DETAILS_SCREEN)
+                    }
+                    buttonStyle={styles.buttonStyle}
+                    variant="filled"
+                  >
+                    {"View Cart"}
+                  </Button>
+                )}
+              </View>
             </View>
           </View>
           <View style={{ alignItems: "center" }}>
