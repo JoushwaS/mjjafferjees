@@ -38,12 +38,19 @@ function Index({
 
   const dispatch = useDispatch();
   const renderColor = () => {
+    // console.log("data?.color_options", data?.color_options);
     if (data?.color_options?.length) {
-      let color = "";
-      data?.color_options?.map(
-        (c, i) => (color = color + ` ${i !== 0 ? "|" : ""} ${c.option_value}`)
-      );
-      return color;
+      let color = [];
+      data?.color_options?.map((c, i) => {
+        let found = color.findIndex((j) => {
+          return j == c.option_value;
+        });
+        if (found === -1) {
+          color.push(c.option_value);
+        }
+      });
+      // console.log("color", color);
+      return color.toString();
     }
     return data?.color_options?.option_value;
   };
