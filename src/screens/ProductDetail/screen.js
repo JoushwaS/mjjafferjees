@@ -306,10 +306,10 @@ function Index({
     }
   };
   const renderColours = ({ item, index }) => {
-    console.log(
-      "item?.color_options?.hex_value?.length",
-      item?.color_options?.hex_value?.length
-    );
+    // console.log(
+    //   "item?.color_options?.hex_value?.length",
+    //   item?.color_options?.hex_value?.length
+    // );
     switch (item?.color_options?.hex_value?.length) {
       case 1:
         return (
