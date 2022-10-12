@@ -244,6 +244,8 @@ function Index(props) {
       .then((response) => {
         setFilteredCityShip(response.data?.data);
         setFilteredCountryBill(response.data?.data);
+        setBillingCities(response?.data?.data);
+        setCities(response?.data?.data);
       })
       .catch(() => {});
     var StoredState = store.getState();
@@ -276,7 +278,6 @@ function Index(props) {
         getAllCitiesList(StoredState.auth.user.country_id)
           .then((response) => {
             // console.log("response?.data=>response?.data", response?.data);
-            // setBillingCities(response?.data?.data);
             // setFilteredCountryBill(response?.data?.data);
             let cityind = response.data?.data.findIndex((elem) => {
               return elem.id == StoredState.auth.user.city_id;
@@ -385,7 +386,7 @@ function Index(props) {
       .then((response) => {
         setshowCountryBillingLoader(false);
         setBillingCities(response.data?.data);
-        setFilterCountryBill(response.data?.data);
+        setFilteredCountryBill(response.data?.data);
         setcountryBillingmodalVisible(false);
         setshowCityBillingLoader(false);
       })
@@ -537,11 +538,11 @@ function Index(props) {
   };
 
   const renderShippingDetails = () => {
-    console.log(
-      "SavedshippingAddressSavedshippingAddress",
-      SavedshippingAddress,
-      store.getState().auth.shippingAddress
-    );
+    // console.log(
+    //   "SavedshippingAddressSavedshippingAddress",
+    //   SavedshippingAddress,
+    //   store.getState().auth.shippingAddress
+    // );
     return (
       <View style={styles.shippingViewContainer}>
         <View
@@ -1043,7 +1044,7 @@ function Index(props) {
           </ScrollView>
         </View>
       </Modal>
-
+      {/*  Billing City Modal */}
       <Modal
         viewRef={cityBillingviewRef}
         modalVisible={cityBillingmodalVisible}
@@ -1088,7 +1089,6 @@ function Index(props) {
           </ScrollView>
         </View>
       </Modal>
-
       <Modal
         viewRef={countryShippingviewRef}
         modalVisible={countryShippingmodalVisible}
@@ -1133,7 +1133,6 @@ function Index(props) {
           </ScrollView>
         </View>
       </Modal>
-
       <Modal
         viewRef={cityShippingviewRef}
         modalVisible={cityShippingmodalVisible}
@@ -1177,7 +1176,6 @@ function Index(props) {
           </ScrollView>
         </View>
       </Modal>
-
       <KeyboardAwareScrollView
         keyboardShouldPersistTaps={"handled"}
         bouncesZoom={false}
