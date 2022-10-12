@@ -56,11 +56,11 @@ export const ICONS = {
   arrowDown: require("../icons/arrow_down.png"),
   arrowUpWhite: require("../icons/arrowUpWhite.png"),
 
-  phoneIcon: require("../icons/phoneIcon.png"),
+  // phoneIcon: require("../icons/phoneIcon.png"),
   screenshot: require("../icons/screenshot.png"),
 
-  emailIcon: require("../icons/emailIcon.png"),
-  locationIcon: require("../icons/locationIcon.png"),
+  // emailIcon: require("../icons/emailIcon.png"),
+  // locationIcon: require("../icons/locationIcon.png"),
   orderIcon: require("../icons/orderIcon.png"),
   notificationIcon: require("../icons/notificationIcon.png"),
 };

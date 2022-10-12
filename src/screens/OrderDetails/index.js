@@ -182,7 +182,7 @@ function Index(props) {
                 <Image
                   style={styles.icon}
                   resizeMode="contain"
-                  source={ICONS.phoneIcon}
+                  source={ICONS.call}
                 />
                 <Text style={{ ...styles.dateText, color: "grey" }}>
                   {orderDetail?.payment_mobile}
@@ -192,7 +192,7 @@ function Index(props) {
                 <Image
                   style={styles.icon}
                   resizeMode="contain"
-                  source={ICONS.emailIcon}
+                  source={ICONS.mail}
                 />
                 <Text style={{ ...styles.dateText, color: "grey" }}>
                   {orderDetail?.payment_email}
@@ -202,7 +202,7 @@ function Index(props) {
                 <Image
                   style={styles.icon}
                   resizeMode="contain"
-                  source={ICONS.locationIcon}
+                  source={ICONS.location}
                 />
                 <Text
                   style={{
