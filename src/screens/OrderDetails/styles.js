@@ -48,7 +48,6 @@ export const styles = StyleSheet.create({
   },
   listView: {
     paddingVertical: metrix.VerticalSize(23),
-    paddingHorizontal: metrix.HorizontalSize(14),
   },
   listView2: {
     paddingBottom: metrix.VerticalSize(23),
@@ -71,7 +70,6 @@ export const styles = StyleSheet.create({
   },
   detailCard: {
     backgroundColor: Colors.textInputView,
-    marginBottom: metrix.VerticalSize(13),
     borderRadius: metrix.VerticalSize(10),
     paddingVertical: metrix.VerticalSize(20),
     paddingHorizontal: metrix.HorizontalSize(20),
@@ -89,6 +87,7 @@ export const styles = StyleSheet.create({
     height: metrix.VerticalSize(20),
     width: metrix.HorizontalSize(20),
     marginRight: metrix.HorizontalSize(15),
+    marginTop: metrix.HorizontalSize(5),
   },
   title: {
     fontSize: metrix.CustomFontSize(20),

@@ -18,30 +18,35 @@ import { formatPrice } from "../../utils";
 import moment from "moment";
 
 function Index(props) {
-  const [activeTab, setActiveTab] = useState(0);
   const [refreshing, setRefreshing] = useState(true);
 
   const [orderDetail, setOrderDetail] = useState(null);
-  const touchableProps = {
-    activeOpacity: 0.5,
-  };
 
   const userId = useSelector((state) => state.auth.user?.id);
 
-  const handleTabPress = (value) => {
-    setActiveTab(value);
+  const renderColor = (data) => {
+    if (data?.length) {
+      let color = [];
+      data?.map((c, i) => {
+        let found = color.findIndex((j) => {
+          return j == c?.product_variation?.color_name;
+        });
+        if (found === -1) {
+          color.push(c?.product_variation?.color_name);
+        }
+      });
+      return color.toString();
+    }
   };
 
   useEffect(() => {
-    // console.log(userId, "Hello this is user id");
     let data = {
       orderId: props.route.params.orderId,
       userId,
     };
-
     getOrderDetail(data)
       .then((response) => {
-        console.log("ressss", response.data.data);
+        // console.log("ressss", response.data.data);
         setOrderDetail(response.data.data);
         setRefreshing(false);
       })
@@ -53,7 +58,11 @@ function Index(props) {
   };
 
   const renderOrders = ({ item, index }) => {
-    console.log(item, "this is my item");
+    console.log(
+      item?.gift_sets?.giftsets_variations[0]?.product_variation
+        .product_images[0].product_image,
+      "this is my item"
+    );
     return (
       <View style={styles.detailCard}>
         <View>
@@ -61,14 +70,17 @@ function Index(props) {
             style={styles.image}
             resizeMode="cover"
             source={{
-              uri: item?.product_variation?.product_images[0]?.product_image,
+              uri:
+                item?.product_variation?.product_images[0]?.product_image ||
+                item?.gift_sets?.giftsets_variations[0]?.product_variation
+                  .product_images[0]?.product_image,
             }}
           />
         </View>
 
         <View>
           <Text style={styles.detailText}>
-            {item?.quantity}x {item?.products?.name}
+            {item?.quantity} x {item?.products?.name || item?.gift_sets?.name}
           </Text>
           <Text
             style={
@@ -76,11 +88,16 @@ function Index(props) {
               { color: "gray", fontSize: metrix.CustomFontSize(12) })
             }
           >
-            Color : {item?.product_variation?.color_name}
+            Color :
+            {item?.product_variation?.color_name ||
+              renderColor(item?.gift_sets?.giftsets_variations)}
           </Text>
-          {/* <Text style={styles.detailText}>No. of items 02</Text> */}
           <Text style={styles.detailText}>
-            {renderPrice(formatPrice(item?.products?.price))}
+            {renderPrice(
+              formatPrice(
+                item?.products?.price || item?.gift_sets?.combination_price
+              )
+            )}
           </Text>
         </View>
       </View>
@@ -142,7 +159,6 @@ function Index(props) {
               keyExtractor={(item, index) => index.toString()}
               renderItem={renderOrders}
             />
-
             <View
               style={{
                 ...styles.orderCard,
