@@ -16,6 +16,7 @@ export const ICONS = {
   refresh: require("../icons/refresh.png"),
 
   callfill: require("../icons/callfill.png"),
+  currency: require("../icons/currency.png"),
 
   mail: require("../icons/mail.png"),
   edit: require("../icons/edit.png"),

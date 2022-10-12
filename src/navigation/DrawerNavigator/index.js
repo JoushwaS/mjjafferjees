@@ -123,7 +123,7 @@ const DrawerNavigator = (props) => {
     },
     {
       name: `Currency (${currency})`,
-      icon: ICONS.setlocation,
+      icon: ICONS.currency,
       children: [{ name: "PKR" }, { name: "USD" }, { name: "EUR" }],
     },
     {
@@ -218,7 +218,7 @@ const DrawerNavigator = (props) => {
     },
     {
       name: `Currency (${currency})`,
-      icon: ICONS.setlocation,
+      icon: ICONS.currency,
       children: [{ name: "PKR" }, { name: "USD" }, { name: "EUR" }],
     },
     {
