@@ -18,7 +18,7 @@ export const styles = StyleSheet.create({
     borderRadius: metrix.VerticalSize(10),
   },
   buttonStyle: {
-    width: metrix.HorizontalSize(105),
+    width: metrix.HorizontalSize(120),
   },
   detailsrowContainer: {
     marginTop: metrix.VerticalSize(10),
