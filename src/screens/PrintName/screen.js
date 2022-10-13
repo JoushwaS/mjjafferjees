@@ -107,7 +107,7 @@ function Index({
 
   useEffect(() => {
     if (details !== null) {
-      console.log("details", details);
+      // console.log("details", details);
       let fontind = product?.fonts.findIndex((val) => {
         return val?.personalization_fonts?.font_Value == details?.placementFont;
       });
@@ -237,7 +237,7 @@ function Index({
           "props?.route?.params?.productDetail",
           props?.route?.params?.productDetail
         );
-        Navigation.navigate(SCREENS.CART_DETAILS_SCREEN, {
+        Navigation.navigate(SCREENS.PRODUCT_DETAIL_SCREEN, {
           varientId: product_variation_id,
           productId,
           placementDetails: placement,
@@ -267,7 +267,7 @@ function Index({
             placement
           )
         );
-        Navigation.navigate(SCREENS.CART_DETAILS_SCREEN, {
+        Navigation.navigate(SCREENS.PRODUCT_DETAIL_SCREEN, {
           varientId: product_variation_id,
           productId,
           placementDetails: placement,
@@ -298,7 +298,6 @@ function Index({
         }
         Navigation.goBack();
       }
-      // navigation.state.params.getProductData(product_variation_id);
     }
   };
   return (
@@ -310,6 +309,7 @@ function Index({
       }
     >
       <Text style={styles.headingText}>Print My Name</Text>
+      {console.log("giftsets_variations", giftsets_variations)}
       {giftsets_variations && giftsets_variations.length > 0 && (
         <ScrollView showsHorizontalScrollIndicator={false} horizontal={true}>
           <View style={styles.tab}>
