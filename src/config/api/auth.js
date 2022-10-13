@@ -4,6 +4,10 @@ export const RegisterUser = (data) => {
   return Axios.post("/api/send_otp", data);
 };
 
+export const RegisterNow = (data) => {
+  return Axios.post("/api/register  ", data);
+};
+
 export const loginUser = (data) => {
   return Axios.post("/api/authlogin", data);
 };

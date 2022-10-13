@@ -34,6 +34,7 @@ export default styles = StyleSheet.create({
   buttonStyle: {
     width: "45%",
     marginTop: metrix.VerticalSize(30),
+    alignSelf: "center",
   },
   forgotPWText: {
     fontSize: metrix.CustomFontSize(15),

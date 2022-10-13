@@ -233,10 +233,10 @@ function Index({
       // dispatch(addPlacement(productId, product_variation_id, placement));
       // Navigation.navigate(SCREENS.CART_DETAILS_SCREEN);
       if (props?.route?.params?.productDetail == true) {
-        console.log(
-          "props?.route?.params?.productDetail",
-          props?.route?.params?.productDetail
-        );
+        // console.log(
+        //   "props?.route?.params?.productDetail",
+        //   props?.route?.params?.productDetail
+        // );
         Navigation.navigate(SCREENS.PRODUCT_DETAIL_SCREEN, {
           varientId: product_variation_id,
           productId,
@@ -255,10 +255,10 @@ function Index({
           placementEmbossing: product?.colors[activeColorIndex].color,
           placmentImage: productImage,
         };
-        console.log(
-          "updatePlacementupdatePlacement",
-          store.getState().cart.cartItems
-        );
+        // console.log(
+        //   "updatePlacementupdatePlacement",
+        //   store.getState().cart.cartItems
+        // );
         dispatch(
           updatePlacement(
             product_variation_id,
@@ -273,7 +273,7 @@ function Index({
           placementDetails: placement,
         });
       } else {
-        console.log(productId, product_variation_id, placement, giftset_id);
+        // console.log(productId, product_variation_id, placement, giftset_id);
         // return;
         if (giftset_id) {
           // alert(
@@ -309,7 +309,6 @@ function Index({
       }
     >
       <Text style={styles.headingText}>Print My Name</Text>
-      {console.log("giftsets_variations", giftsets_variations)}
       {giftsets_variations && giftsets_variations.length > 0 && (
         <ScrollView showsHorizontalScrollIndicator={false} horizontal={true}>
           <View style={styles.tab}>

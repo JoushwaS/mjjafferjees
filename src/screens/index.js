@@ -40,6 +40,7 @@ import AddNewAddress from "./AddNewAddress";
 import SaveShippingAddress from "./SaveShippingAddress";
 import GiftDetail from "./GiftDetail";
 import Splash from "./Splash";
+import RegisterNow from "./RegisterNow";
 
 export {
   LoginScreen,
@@ -84,4 +85,5 @@ export {
   WebPayment,
   GiftDetail,
   Splash,
+  RegisterNow,
 };

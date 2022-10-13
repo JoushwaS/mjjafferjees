@@ -48,12 +48,17 @@ function Index({
     console.log("handlePrintMyNamePress", {
       product,
     });
+    const selectedIndex = product?.variations.findIndex(
+      (item) => variantId == item.combination_id
+    );
+    console.log("product?.variations.length", selectedIndex);
     Navigation.navigate(SCREENS.PRINT_NAME_SCREEN, {
       // productId: product.id,
       product_variation_id: variantId,
       // combination_id,
       giftset_id: product.id,
       productDetail: true,
+      selectedIndex,
     });
 
     // Navigation.navigate(SCREENS.PRINT_NAME_SCREEN, {
@@ -740,7 +745,7 @@ function Index({
 
   const checkProductInCart = () => {
     const found = cartItems.findIndex((item) => item.id === product.id);
-    console.log("found", found);
+    // console.log("found", found);
     if (found !== -1) {
       return true;
     } else {

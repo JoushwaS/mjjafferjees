@@ -71,7 +71,6 @@ function Index(props) {
   };
 
   const getProductData = () => {
-    // alert(JSON.stringify(props?.route?.params));
     setRefreshing(true);
     if (props?.route?.params?.giftset_id) {
       giftDetail({
@@ -81,10 +80,19 @@ function Index(props) {
         .then((response) => {
           setRefreshing(false);
           if (response?.data?.data) {
-            const filteredGiftset =
-              response.data?.data[0]?.giftsets_variations.filter(
-                (item) => item?.products?.placement.toLowerCase() !== "none"
-              );
+            console.log(
+              "response?.data?.data",
+              response.data?.data[0].variations[
+                props?.route?.params?.selectedIndex
+              ].varient
+            );
+            // return;
+            const filteredGiftset = response.data?.data[0]?.variations[
+              props?.route?.params?.selectedIndex || 0
+            ]?.varient.filter(
+              (item) => item?.products?.placement.toLowerCase() !== "none"
+            );
+            // console.log("filteredGiftset", filteredGiftset);
             setGiftsetsVariations(filteredGiftset);
             if (filteredGiftset.length > 0) {
               setSelectedData({

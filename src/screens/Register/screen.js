@@ -56,12 +56,12 @@ function Index(props) {
             dispatch(getWishlistProducts(response?.data?.data?.data));
           })
           .catch(() => {});
-        if (props.route.params.cartDetails != null) {
+        if (props?.route?.params?.cartDetails != null) {
           Navigation.navigate(SCREENS.CHECKOUT_SCREEN, {
             invoice: data.invoice_no,
             userId: data.user.id,
-            cartDetails: props.route.params.cartDetails,
-            couponId: props.route.params.couponId,
+            cartDetails: props.route?.params?.cartDetails,
+            couponId: props.route?.params?.couponId,
           });
         } else {
           showToast({
@@ -90,8 +90,15 @@ function Index(props) {
 
   const handleReset = () => {
     Navigation.navigate(SCREENS.VERIFICATION_CODE, {
-      cartDetails: props.route.params.cartDetails,
-      couponId: props.route.params.couponId,
+      cartDetails: props.route.params?.cartDetails,
+      couponId: props.route.params?.couponId,
+    });
+  };
+
+  const handleSignUp = () => {
+    Navigation.navigate(SCREENS.REGISTER_NOW, {
+      cartDetails: props.route.params?.cartDetails,
+      couponId: props.route.params?.couponId,
     });
   };
 
@@ -123,14 +130,26 @@ function Index(props) {
           label="Password"
           secureTextEntry
         />
-        <View style={{ alignItems: "center" }}>
-          <TouchableOpacity onPress={handleReset} activeOpacity={0.5}>
-            <Text style={styles.resetText}>Reset Password</Text>
+        <View
+          style={{
+            alignItems: "center",
+          }}
+        >
+          <TouchableOpacity onPress={handleSignUp} activeOpacity={0.5}>
+            <Text style={styles.resetText}>Don't have an account? Sign Up</Text>
           </TouchableOpacity>
-          <Button buttonStyle={styles.buttonStyle} onPress={onSubmit}>
-            Login
-          </Button>
         </View>
+
+        <Button buttonStyle={styles.buttonStyle} onPress={onSubmit}>
+          Login
+        </Button>
+        <TouchableOpacity
+          style={{ alignSelf: "center" }}
+          onPress={handleReset}
+          activeOpacity={0.5}
+        >
+          <Text style={styles.resetText}>Reset Password</Text>
+        </TouchableOpacity>
       </View>
     </KeyboardAwareScrollView>
   );

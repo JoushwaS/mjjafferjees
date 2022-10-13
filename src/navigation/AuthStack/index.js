@@ -5,6 +5,7 @@ import {
   ForgotPassword,
   Register,
   VerificationCode,
+  RegisterNow,
 } from "../../screens";
 import { SCREENS } from "../../config/constants/screens";
 
@@ -14,6 +15,7 @@ const HomeNavigator = () => {
   return (
     <AuthStack.Navigator screenOptions={{ headerShown: false }}>
       <AuthStack.Screen name={SCREENS.REGISTER_SCREEN} component={Register} />
+      <AuthStack.Screen name={SCREENS.REGISTER_NOW} component={RegisterNow} />
       <AuthStack.Screen
         name={SCREENS.VERIFICATION_CODE}
         component={VerificationCode}
