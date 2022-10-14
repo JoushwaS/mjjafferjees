@@ -128,7 +128,7 @@ function Index({
     );
   };
 
-  console.log("placementDetails==>", placementDetails);
+  // console.log("placementDetails==>", placementDetails);
 
   const renderNameDetails = () => {
     return (
@@ -269,13 +269,17 @@ function Index({
 
   const handleAddToCart = () => {
     let addProduct;
+    const selectedIndex = product?.variations.findIndex(
+      (item) => variantId == item.combination_id
+    );
     // alert(JSON.stringify(product.variations[0].combination_id));
     if (showPlacement) {
       addProduct = {
         ...product,
         quantity: quantity,
-        giftset_id: product.variations[0].giftset_id,
-        combination_id: product.variations[0].combination_id,
+        selectedIndex,
+        giftset_id: product.variations[selectedIndex].giftset_id,
+        combination_id: product.variations[selectedIndex].combination_id,
         containPlacement: true,
         variation_placement: product?.variation_placement,
         placements: { ...placementDetails, id: uuid.v4() },
@@ -284,8 +288,9 @@ function Index({
       addProduct = {
         ...product,
         quantity: quantity,
-        giftset_id: product.variations[0].giftset_id,
-        combination_id: product.variations[0].combination_id,
+        selectedIndex,
+        giftset_id: product.variations[selectedIndex].giftset_id,
+        combination_id: product.variations[selectedIndex].combination_id,
         containPlacement: false,
         variation_placement: product?.variation_placement,
       };

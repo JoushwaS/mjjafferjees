@@ -109,6 +109,7 @@ function Index({
           ) : null}
         </View>
       </View>
+      {console.log("data==>", data)}
       <View style={styles.QuantityViewRow}>
         <Quantity
           quantity={data?.quantity}
@@ -223,6 +224,7 @@ function Index({
                 product_variation_id: data?.product_variation_id,
                 combination_id: data?.combination_id,
                 giftset_id: data?.giftset_id,
+                selectedIndex: data?.selectedIndex,
               });
             }}
             buttonStyle={styles.buttonStyle}

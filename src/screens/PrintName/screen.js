@@ -200,10 +200,10 @@ function Index({
     // }
     return { uri: productImage };
 
-    if (details !== null) {
-      return { uri: details?.placmentImage };
-    } else {
+    if (details) {
       return { uri: productImage };
+    } else {
+      return { uri: details?.placmentImage };
     }
   };
 
@@ -375,7 +375,7 @@ function Index({
           //   },
           // ]}
           // resizeMode="contain"
-          source={getImage()}
+          source={getImage}
         />
 
         {/* <Text

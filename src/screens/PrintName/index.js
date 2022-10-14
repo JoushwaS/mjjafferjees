@@ -79,9 +79,9 @@ function Index(props) {
       })
         .then((response) => {
           setRefreshing(false);
-          if (response?.data?.data) {
+          if (response?.data?.data && response.data?.data[0]?.variations) {
             console.log(
-              "response?.data?.data",
+              "response?.data?.data==>",
               response.data?.data[0].variations[
                 props?.route?.params?.selectedIndex
               ].varient

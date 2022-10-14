@@ -47,10 +47,11 @@ import { Colors } from "../../config/theme";
 function Index(props) {
   const dispatch = useDispatch();
   const cartItems = useSelector((state) => state.cart.cartItems);
+  console.log("=====>", cartItems);
   const token = useSelector((state) => state.auth.token);
   const user = useSelector((state) => state.auth.user);
 
-  const _cart = useSelector((state) => state.cart.cart);
+  // const _cart = useSelector((state) => state.cart.cart);
   const placements = useSelector((state) => state.cart.placement);
 
   const [modalVisible, setModalVisible] = useState(false);
@@ -129,14 +130,15 @@ function Index(props) {
 
     setLoading(true);
     // dispatch(showloader());
-    // console.log("cartItems==>", cartItems);
     store.getState().cart.cartItems.map((val, ind) => {
       let obj = {
         quantity: val?.quantity,
+        selectedIndex: val?.selectedIndex,
         name: val?.name,
         placements: val?.placements,
         variation_placement: val?.variation_placement,
         placementImage: val?.placmentImage,
+
         // discount: val?.discount,
       };
       if (val.giftset_id) {
@@ -349,7 +351,6 @@ function Index(props) {
             <Button
               onPress={() => {
                 dispatch(_verifyCart(cartDetails));
-                console.log("cartDetails", cartDetails);
                 if (token !== null) {
                   // Navigation.navigate("AuthStack", {
                   //   screen: SCREENS.REGISTER_SCREEN,
@@ -367,7 +368,7 @@ function Index(props) {
                   // console.log("CHEckOUT", JSON.stringify(data));
                   cartCheckout(data)
                     .then((response) => {
-                      console.log("cartCheckout", response.data);
+                      // console.log("cartCheckout", response.data);
                       Navigation.navigate(SCREENS.CHECKOUT_SCREEN, {
                         invoice: response.data.invoice_no,
                         cartDetails,
@@ -475,16 +476,18 @@ function Index(props) {
           placements,
           combination_id,
           giftset_id,
-        }) =>
+          selectedIndex,
+        }) => {
           handlePrintMyNamePress(
             id,
             product_variation_id,
             hasPlacement,
             placements,
             combination_id,
-            giftset_id
-          )
-        }
+            giftset_id,
+            selectedIndex
+          );
+        }}
         removeGiftset={(giftset_id) => removeGiftset(giftset_id)}
         removeName={(id, product_variation_id, hasPlacement, placements) => {
           removeMyNamePress(id, product_variation_id, hasPlacement, placements);
@@ -502,7 +505,8 @@ function Index(props) {
     hasPlacement,
     placements,
     combination_id,
-    giftset_id
+    giftset_id,
+    selectedIndex
   ) => {
     if (hasPlacement == true) {
       Navigation.navigate(SCREENS.PRINT_NAME_SCREEN, {
@@ -511,6 +515,7 @@ function Index(props) {
         details: placements,
         combination_id,
         giftset_id,
+        selectedIndex,
       });
     } else {
       Navigation.navigate(SCREENS.PRINT_NAME_SCREEN, {
@@ -518,6 +523,7 @@ function Index(props) {
         product_variation_id,
         combination_id,
         giftset_id,
+        selectedIndex,
       });
     }
   };
@@ -653,6 +659,7 @@ function Index(props) {
           </ScrollView>
         </View>
       </Modal>
+      {console.log("cart==>", cart)}
       {cartDetails && (
         <FlatList
           data={cart}
