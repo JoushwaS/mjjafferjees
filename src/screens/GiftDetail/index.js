@@ -15,7 +15,7 @@ import { store } from "../../store";
 function Index(props) {
   const dispatch = useDispatch();
   const placement = useSelector((state) => state.cart.placement);
-  console.log("placement", placement);
+  // console.log("placement", placement);
   const [productData, setProductDetail] = useState(null);
   const [productColors, setproductColors] = useState([]);
 
