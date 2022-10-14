@@ -74,7 +74,6 @@ export const styles = StyleSheet.create({
     paddingVertical: metrix.VerticalSize(20),
     paddingHorizontal: metrix.HorizontalSize(20),
     flexDirection: "row",
-    justifyContent: "space-between",
   },
   orderCard: {
     backgroundColor: Colors.textInputView,

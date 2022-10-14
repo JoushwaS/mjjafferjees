@@ -77,18 +77,21 @@ function Index(props) {
             }}
           />
         </View>
-
-        <View>
+        <View
+          style={{
+            marginHorizontal: metrix.HorizontalSize(12),
+          }}
+        >
           <Text style={styles.detailText}>
             {item?.quantity} x {item?.products?.name || item?.gift_sets?.name}
           </Text>
           <Text
             style={
               ([styles.detailText],
-              { color: "gray", fontSize: metrix.CustomFontSize(12) })
+              { color: "grey", fontSize: metrix.CustomFontSize(13) })
             }
           >
-            Color :
+            Color :{" "}
             {item?.product_variation?.color_name ||
               renderColor(item?.gift_sets?.giftsets_variations)}
           </Text>
@@ -99,6 +102,19 @@ function Index(props) {
               )
             )}
           </Text>
+          {item?.personalization_text ? (
+            <>
+              <Text style={styles.detailText}>Customization</Text>
+              <Text
+                style={
+                  ([styles.detailText],
+                  { color: "grey", fontSize: metrix.CustomFontSize(13) })
+                }
+              >
+                {`${item?.personalization_text} | ${item?.personalization_placement}`}
+              </Text>
+            </>
+          ) : null}
         </View>
       </View>
     );
@@ -132,6 +148,7 @@ function Index(props) {
           <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
         }
       >
+        {console.log("orderDetail", orderDetail)}
         {orderDetail !== null ? (
           <>
             <Text style={styles.title}>Order Details</Text>
