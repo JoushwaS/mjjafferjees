@@ -118,7 +118,6 @@ function Index({
           ) : null}
         </View>
       </View>
-      {console.log("data==>", data)}
       <View style={styles.QuantityViewRow}>
         <Quantity
           quantity={data?.quantity}
@@ -205,7 +204,6 @@ function Index({
             >
               {buttonText}
             </Button>
-
             <Button
               onPress={() => {
                 if (data?.giftset_id) {

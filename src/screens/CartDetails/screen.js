@@ -507,24 +507,26 @@ function Index(props) {
     giftset_id,
     selectedIndex
   ) => {
-    if (hasPlacement == true) {
-      Navigation.navigate(SCREENS.PRINT_NAME_SCREEN, {
-        productId: id,
-        product_variation_id,
-        details: placements,
-        combination_id,
-        giftset_id,
-        selectedIndex,
-      });
-    } else {
-      Navigation.navigate(SCREENS.PRINT_NAME_SCREEN, {
-        productId: id,
-        product_variation_id,
-        combination_id,
-        giftset_id,
-        selectedIndex,
-      });
-    }
+    try {
+      if (hasPlacement == true) {
+        Navigation.navigate(SCREENS.PRINT_NAME_SCREEN, {
+          productId: id,
+          product_variation_id,
+          details: placements,
+          combination_id,
+          giftset_id,
+          selectedIndex,
+        });
+      } else {
+        Navigation.navigate(SCREENS.PRINT_NAME_SCREEN, {
+          productId: id,
+          product_variation_id,
+          combination_id,
+          giftset_id,
+          selectedIndex,
+        });
+      }
+    } catch (error) {}
   };
   const removeMyNamePress = (
     id,
@@ -532,17 +534,19 @@ function Index(props) {
     hasPlacement,
     placements
   ) => {
-    if (hasPlacement == true) {
-      dispatch(removePlacement(id, product_variation_id, placements.id));
-      getCart(couponId);
-    }
+    try {
+      if (hasPlacement == true) {
+        dispatch(removePlacement(id, product_variation_id, placements.id));
+        getCart(couponId);
+      }
+    } catch (error) {}
   };
 
   const removeGiftset = (giftset_id) => {
-    // alert(giftset_id);
-    // return;
-    dispatch(removeGiftsetPlacement(giftset_id));
-    getCart(couponId);
+    try {
+      dispatch(removeGiftsetPlacement(giftset_id));
+      getCart(couponId);
+    } catch (error) {}
   };
 
   const handlePromoCodePress = async (item, i) => {
