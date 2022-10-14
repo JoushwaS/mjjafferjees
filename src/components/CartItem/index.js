@@ -181,8 +181,10 @@ function Index({
           >
             <Button
               onPress={() => {
+                console.log("data==>", data);
                 if (data?.placements) {
                   onPress({
+                    combination_id: data?.combination_id,
                     id: data?.product_id,
                     product_variation_id: data?.product_variation_id,
                     hasPlacement: true,
@@ -192,6 +194,7 @@ function Index({
                 } else {
                   onPress({
                     id: data?.product_id,
+                    combination_id: data?.combination_id,
                     product_variation_id: data?.product_variation_id,
                     hasPlacement: false,
                     placements: data?.placements,

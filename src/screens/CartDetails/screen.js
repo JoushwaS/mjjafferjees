@@ -508,6 +508,16 @@ function Index(props) {
     selectedIndex
   ) => {
     try {
+      console.log({
+        id,
+        product_variation_id,
+        hasPlacement,
+        placements,
+        combination_id,
+        giftset_id,
+        selectedIndex,
+      });
+      // return;
       if (hasPlacement == true) {
         Navigation.navigate(SCREENS.PRINT_NAME_SCREEN, {
           productId: id,

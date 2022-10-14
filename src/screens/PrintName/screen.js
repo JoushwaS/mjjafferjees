@@ -106,23 +106,27 @@ function Index({
   };
 
   useEffect(() => {
-    if (details !== null) {
-      // console.log("details", details);
-      let fontind = product?.fonts.findIndex((val) => {
-        return val?.personalization_fonts?.font_Value == details?.placementFont;
-      });
-      let placemntind = product?.placements.findIndex((val) => {
-        return val?.name == details?.placementType;
-      });
-      let colorNameind = product?.colors.findIndex((val) => {
-        return val?.color == details?.placementEmbossing;
-      });
-      // fontind ? setActiveFont(fontind) : null;
-      // placemntind ? setActivePlacement(placemntind) : null;
-      // colorNameind ? setActiveColor(colorNameind) : null;
-    } else {
-      setproductImage(product?.image);
-    }
+    try {
+      if (details !== null) {
+        // console.log("details", details);
+        let fontind = product?.fonts.findIndex((val) => {
+          return (
+            val?.personalization_fonts?.font_Value == details?.placementFont
+          );
+        });
+        let placemntind = product?.placements.findIndex((val) => {
+          return val?.name == details?.placementType;
+        });
+        let colorNameind = product?.colors.findIndex((val) => {
+          return val?.color == details?.placementEmbossing;
+        });
+        // fontind ? setActiveFont(fontind) : null;
+        // placemntind ? setActivePlacement(placemntind) : null;
+        // colorNameind ? setActiveColor(colorNameind) : null;
+      } else {
+        setproductImage(product?.image);
+      }
+    } catch (error) {}
   }, [details, product]);
 
   const handleFontChange = (type) => {
