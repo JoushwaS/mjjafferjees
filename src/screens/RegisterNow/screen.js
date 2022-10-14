@@ -136,15 +136,24 @@ function Index(props) {
             label="Email"
           />
         ) : (
-          <TextInput
-            placeholder="Enter your password"
-            containLabel
-            maxLength={10}
-            value={password}
-            onChangeText={(text) => setPassword(text)}
-            label="Password"
-            secureTextEntry
-          />
+          <>
+            <Text
+              style={{
+                textAlign: "center",
+              }}
+            >
+              Please enter the password sent to your email
+            </Text>
+            <TextInput
+              placeholder="Enter your password"
+              containLabel
+              maxLength={10}
+              value={password}
+              onChangeText={(text) => setPassword(text)}
+              label="Password"
+              secureTextEntry
+            />
+          </>
         )}
         <View
           style={{
@@ -159,7 +168,7 @@ function Index(props) {
           </TouchableOpacity>
         </View>
         <Button buttonStyle={styles.buttonStyle} onPress={onSubmit}>
-          Login
+          Register
         </Button>
         <TouchableOpacity
           style={{ alignSelf: "center" }}
