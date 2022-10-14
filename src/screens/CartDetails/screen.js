@@ -47,7 +47,6 @@ import { Colors } from "../../config/theme";
 function Index(props) {
   const dispatch = useDispatch();
   const cartItems = useSelector((state) => state.cart.cartItems);
-  console.log("=====>", cartItems);
   const token = useSelector((state) => state.auth.token);
   const user = useSelector((state) => state.auth.user);
 
@@ -209,7 +208,7 @@ function Index(props) {
     const id = await getItem("promo");
     getCart(id ? id : couponId);
     NetworkInfo.getIPV4Address().then((ipv4Address) => {
-      console.log(ipv4Address);
+      // console.log(ipv4Address);
       setipAddress(ipv4Address);
     });
   };
@@ -560,6 +559,7 @@ function Index(props) {
     setActiveIndex(i);
     setModalVisible(false);
   };
+
   const emptyList = () => {
     if (cartItems.length == 0) {
       return (
@@ -607,7 +607,6 @@ function Index(props) {
   };
 
   return (
-    // <View style={styles.container}>
     <View style={styles.ContainerPadding}>
       {cart.length === 0 && cartItems.length > 0 && (
         <ActivityIndicator
@@ -659,7 +658,6 @@ function Index(props) {
           </ScrollView>
         </View>
       </Modal>
-      {console.log("cart==>", cart)}
       {cartDetails && (
         <FlatList
           data={cart}
@@ -683,7 +681,6 @@ function Index(props) {
         ></FlatList>
       )}
     </View>
-    // </View>
   );
 }
 

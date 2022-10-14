@@ -101,7 +101,16 @@ function Index({
           <Text style={styles.productprice}>
             {renderPrice(data?.each_price)}
           </Text>
+          {/* {console.log("data?.placements", data?.placements)} */}
           <Text style={styles.productprice}>Color: {renderColor()}</Text>
+          {data?.placements?.length > 0 ? (
+            <Text style={styles.productprice}>
+              {data?.placements.map(
+                (p) =>
+                  `${p.placementName}, ${p.placementFontValue},  ${p.placementEmbossing},  ${p.placementType}`
+              )}
+            </Text>
+          ) : null}
           {data?.placements?.placementName ? (
             <Text style={styles.productprice}>
               {`${data?.placements?.placementName}, ${data?.placements?.placementFontValue},  ${data?.placements?.placementEmbossing},  ${data?.placements?.placementType}`}
