@@ -128,7 +128,7 @@ function Index({
     );
   };
 
-  console.log("placementDetails?.idplacementDetails?.id", placementDetails);
+  console.log("placementDetails==>", placementDetails);
 
   const renderNameDetails = () => {
     return (
