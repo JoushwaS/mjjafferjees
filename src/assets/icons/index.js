@@ -1,4 +1,6 @@
 export const ICONS = {
+  eye: require("../icons/Hide.png"),
+
   tab1: require("../icons/tab1.png"),
   tab2: require("../icons/tab2.png"),
   tab3: require("../icons/tab3.png"),

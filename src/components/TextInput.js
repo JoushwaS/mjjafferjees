@@ -1,12 +1,19 @@
 import React, { useState, useRef, useImperativeHandle } from "react";
-import { TextInput, View, StyleSheet, Pressable } from "react-native";
+import {
+  TextInput,
+  View,
+  StyleSheet,
+  Image,
+  TouchableOpacity,
+} from "react-native";
 import metrix from "../config/metrix";
 import { Colors, Fonts } from "../config/theme";
 import Text from "./Text";
 import CountryPicker from "react-native-country-picker-modal";
+import { ICONS } from "../assets/icons";
 
 const Input = React.forwardRef((props, ref) => {
-  const [showPassword, setPassword] = useState(true);
+  const [showPassword, setPassword] = useState(false);
   const [countryCode, setCountryCode] = useState("PK");
   const [countryModal, setcountryModal] = useState(false);
   const [withCountryNameButton, setWithCountryNameButton] = useState(false);
@@ -29,6 +36,9 @@ const Input = React.forwardRef((props, ref) => {
     setCountry(country);
     setwithCallingCodeButton("+" + country?.callingCode[0]);
     props?.setCode("+" + country?.callingCode[0]);
+  };
+  const handleEyeBtn = () => {
+    setPassword((prev) => !prev);
   };
   return (
     <View style={{ marginTop: metrix.VerticalSize(20) }}>
@@ -70,28 +80,57 @@ const Input = React.forwardRef((props, ref) => {
               />
             )}
             <TextInput
+              {...props}
               placeholder={props.placeholder}
-              secureTextEntry={props.secureTextEntry ? showPassword : false}
+              secureTextEntry={
+                !showPassword && props.secureTextEntry ? true : false
+              }
               maxLength={props.maxLength}
               keyboardType={props.keyboardType}
               ref={inputRef}
               editable={props.editable}
               style={[styles.input, props.textInputStyle]}
-              {...props}
+              onChangeText={props.onChangeText}
+              value={props.value}
             />
           </View>
         ) : (
           <TextInput
+            {...props}
             placeholder={props.placeholder}
-            secureTextEntry={props.secureTextEntry ? showPassword : false}
+            secureTextEntry={
+              !showPassword && props.secureTextEntry ? true : false
+            }
             maxLength={props.maxLength}
             editable={props.editable}
             keyboardType={props.keyboardType}
             ref={inputRef}
             style={[styles.input, props.textInputStyle]}
-            {...props}
+            onChangeText={props.onChangeText}
+            value={props.value}
           />
         )}
+
+        {props.secureTextEntry ? (
+          <TouchableOpacity
+            onPress={handleEyeBtn}
+            activeOpacity={0.5}
+            style={{
+              position: "absolute",
+              right: metrix.HorizontalSize(10),
+              top: metrix.VerticalSize(15),
+            }}
+          >
+            <Image
+              style={{
+                height: metrix.VerticalSize(25),
+                width: metrix.VerticalSize(25),
+              }}
+              resizeMode="contain"
+              source={ICONS.eye}
+            ></Image>
+          </TouchableOpacity>
+        ) : null}
 
         {props.isError && (
           <Text style={styles.errorText}>{props.errorText}</Text>
@@ -114,7 +153,6 @@ const styles = StyleSheet.create({
   container: {
     backgroundColor: Colors.textInputView,
     borderRadius: metrix.VerticalSize(5),
-
     alignItems: "center",
   },
   inputText: {
@@ -127,7 +165,6 @@ const styles = StyleSheet.create({
     paddingHorizontal: metrix.HorizontalSize(8),
     flex: 1,
     fontFamily: Fonts.IR,
-    // position: "absolute",
     width: "100%",
     backgroundColor: Colors.textInputView,
     borderRadius: metrix.VerticalSize(5),

@@ -36,13 +36,17 @@ function Index(props) {
             email,
             ip_address: ipv4,
           });
-          // console.log("data", data);
           if (data?.data) {
             showToast({
               type: "success",
               text: data.data,
             });
             setStep(2);
+          } else {
+            showToast({
+              type: "error",
+              text: data?.errors?.email[0] || "Something went wrong",
+            });
           }
         } else {
           showToast({
@@ -98,7 +102,7 @@ function Index(props) {
         }
       }
     } catch (error) {
-      console.log("error", error);
+      console.log("error", error.response);
       showToast({
         type: "error",
         text: error?.response?.data?.error || error.message,

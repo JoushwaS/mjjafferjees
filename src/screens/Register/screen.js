@@ -124,7 +124,7 @@ function Index(props) {
         <TextInput
           placeholder="Enter your password"
           containLabel
-          maxLength={10}
+          maxLength={32}
           value={password}
           onChangeText={(text) => setPassword(text)}
           label="Password"
