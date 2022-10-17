@@ -172,8 +172,8 @@ function Index({
       // return;
       sendProductPersonalization(data)
         .then((response) => {
-          // console.log("sendProductPersonalization", response.data);
-          if (response.data.length !== 0) {
+          console.log("sendProductPersonalization", response.data);
+          if (response.data) {
             setproductImage(response.data);
           } else {
             setproductImage("");
@@ -379,7 +379,7 @@ function Index({
           //   },
           // ]}
           // resizeMode="contain"
-          source={getImage}
+          source={getImage()}
         />
 
         {/* <Text
