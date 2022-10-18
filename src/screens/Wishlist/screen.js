@@ -64,7 +64,7 @@ function Index({ products, onRefresh, refreshing, userId, setRefreshing }) {
 
   const handleVariationPress = (item) => {
     setModalVisible(false);
-
+    clearFilters();
     Navigation.navigate(SCREENS.PRODUCT_DETAIL_SCREEN, {
       productId: item?.product_id,
       varientId: item?.id,
