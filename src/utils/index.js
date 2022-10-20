@@ -39,11 +39,10 @@ export const validateLink = (link) => {
 };
 
 export const formatPrice = (n) => {
-  n = parseFloat(n).toFixed(2);
-  var withCommas = Number(n).toLocaleString("en");
-  // var parts = x.toString().split(".");
-  // parts[0] = parts[0].replace(/\B(?=(\d{3})+(?!\d))/g, ",");
-  return withCommas;
+  const parts = n.toString().split(".");
+  const numberPart = parts[0];
+  const thousands = /\B(?=(\d{3})+(?!\d))/g;
+  return numberPart.replace(thousands, ",");
 };
 
 export const setItem = async (key, value) =>
