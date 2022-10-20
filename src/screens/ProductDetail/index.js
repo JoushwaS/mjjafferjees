@@ -56,17 +56,17 @@ function Index(props) {
       productId: props?.route?.params?.productId,
       varientId: props?.route?.params?.varientId,
     };
-    console.log("props?.route?.params?.varientId,", props);
+    // console.log("props?.route?.params?.varientId,", props);
     setRefreshing(true);
     await productDetail(slug)
       .then((response) => {
         // filtering data to only when we have image...
         setRefreshing(false);
         if (response?.data?.data) {
-          console.log(
-            "props?.route?.params?.placementDetails====",
-            props?.route?.params?.placementDetails
-          );
+          // console.log(
+          //   "props?.route?.params?.placementDetails====",
+          //   props?.route?.params?.placementDetails
+          // );
           if (props?.route?.params?.placementDetails) {
             setshowPlacement(true);
             setplacementDetails(props?.route?.params?.placementDetails);

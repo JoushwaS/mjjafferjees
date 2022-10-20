@@ -193,7 +193,7 @@ function Index({
   };
 
   const addWishlist = async (item, isPresent) => {
-    console.log("isPresentisPresent wish", isPresent);
+    // console.log("isPresentisPresent wish", isPresent);
     if (user !== null) {
       let data = {
         product_id: item?.id,
@@ -202,14 +202,14 @@ function Index({
       if (!isPresent) {
         await addToWishlist(data)
           .then((resposneWishlit) => {
-            console.log("resposneWishlitresposneWishlit", resposneWishlit);
+            // console.log("resposneWishlitresposneWishlit", resposneWishlit);
             let params = {
               userId: user?.id,
             };
             getWishlist(params)
               .then((response) => {
                 dispatch(getWishlistProducts(response?.data?.data?.data));
-                console.log("state.auth.userwishlistwishlist", wishlist);
+                // console.log("state.auth.userwishlistwishlist", wishlist);
               })
               .catch(() => {});
             showToast({
@@ -230,14 +230,14 @@ function Index({
         };
         removeFromWishlist(data)
           .then((resposneWishlit) => {
-            console.log("removeFromWishlistWishlit", resposneWishlit);
+            // console.log("removeFromWishlistWishlit", resposneWishlit);
             let params = {
               userId: user?.id,
             };
             getWishlist(params)
               .then((response) => {
                 dispatch(getWishlistProducts(response?.data?.data?.data));
-                console.log("state.auth.userwishlistwishlist", wishlist);
+                // console.log("state.auth.userwishlistwishlist", wishlist);
               })
               .catch(() => {});
             showToast({

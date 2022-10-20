@@ -49,7 +49,7 @@ function Index(props) {
     getWishlist(_params)
       .then((response) => {
         dispatch(getWishlistProducts(response?.data?.data?.data));
-        console.log("state.auth.userwishlistwishlist", wishlist);
+        // console.log("state.auth.userwishlistwishlist", wishlist);
       })
       .catch(() => {});
     searchProduct(params)
@@ -62,19 +62,20 @@ function Index(props) {
         let filterStatus = response?.data?.data?.data.filter((item) => {
           if (item?.status === "Active") {
             minMax.push(Number(item.price));
-            item?.product_variation.map((val) => {
-              let ind = productColors.findIndex((valInd) => {
-                return valInd.id == val?.color_options?.id;
+            item?.product_variation &&
+              item?.product_variation?.map((val) => {
+                let ind = productColors.findIndex((valInd) => {
+                  return valInd.id == val?.color_options?.id;
+                });
+                console.log("indind", ind);
+                if (ind == -1) {
+                  productColors.push(val?.color_options);
+                }
               });
-              console.log("indind", ind);
-              if (ind == -1) {
-                productColors.push(val?.color_options);
-              }
-            });
             return item?.status === "Active";
           }
         });
-        console.log("filterStatusfilterStatusfilterStatus", filterStatus);
+        // console.log("filterStatusfilterStatusfilterStatus", filterStatus);
         if (pageCount > 1) {
           setProducts((products) => [...products, ...filterStatus]);
         } else {
@@ -94,7 +95,8 @@ function Index(props) {
         setRefreshing(false);
         return response;
       })
-      .catch(() => {
+      .catch((err) => {
+        console.log("err", err.message);
         setRefreshing(false);
         showToast({
           text: "Something went wrong !",
