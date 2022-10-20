@@ -810,7 +810,7 @@ function Index(props) {
             placeholder="Enter Name"
             value={billingName}
             selectTextOnFocus={true}
-            onSubmitEditing={() => billingPhoneRef.focus()}
+            // onSubmitEditing={() => billingPhoneRef?.focus()}
             ref={billingNameRef}
             onChangeText={(text) => setbillingName(text)}
             containLabel
@@ -820,7 +820,7 @@ function Index(props) {
             placeholder="Enter Mobile Number"
             containLabel
             ref={billingPhoneRef}
-            onSubmitEditing={() => billingEmailRef.focus()}
+            // onSubmitEditing={() => billingEmailRef?.focus()}
             keyboardType="numeric"
             value={billingMobile}
             onChangeText={(text) => setbillingMobile(text)}
@@ -831,7 +831,7 @@ function Index(props) {
             placeholder="Enter Email Address"
             containLabel
             ref={billingEmailRef}
-            onSubmitEditing={() => billingEmailRef.focus()}
+            // onSubmitEditing={() => billingEmailRef.focus()}
             value={billingEmail}
             onChangeText={(text) => setbillingEmail(text)}
             label="Email Address"
