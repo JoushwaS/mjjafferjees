@@ -58,10 +58,11 @@ const getCurrenctRates = (currency) => async (dispatch) => {
         apikey: "dtBVqtXCnIAO7lqWc9mgHHCLeXuOAcEF",
       },
     });
-    console.log("response", response.data?.info?.rate);
+    // console.log("response", response.data?.info?.rate);
     dispatch(setCurrencyData(currency, response.data?.info?.rate));
   } catch (error) {
     console.log("error", error.response);
+    dispatch(setCurrencyData("PKR", "1"));
     showToast({
       type: "error",
       text: "Failed to fetch conversion rates" || error.message,
