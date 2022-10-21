@@ -117,7 +117,7 @@ const DrawerNavigator = (props) => {
       icon: ICONS.drawer6,
     },
     {
-      name: "Cooperate Enquiry",
+      name: "Corporate Inquiries",
       routeName: SCREENS.COOPERATE_ENQUIRY,
       icon: ICONS.drawer6,
     },
@@ -212,7 +212,7 @@ const DrawerNavigator = (props) => {
       icon: ICONS.drawer6,
     },
     {
-      name: "Cooperate Enquiry",
+      name: "Corporate Inquiries",
       routeName: SCREENS.COOPERATE_ENQUIRY,
       icon: ICONS.drawer6,
     },
