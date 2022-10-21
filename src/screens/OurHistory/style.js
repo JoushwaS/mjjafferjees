@@ -21,6 +21,7 @@ export const styles = StyleSheet.create({
     marginHorizontal: metrix.HorizontalSize(25),
   },
   descriptionText: {
+    marginTop: metrix.VerticalSize(15),
     fontSize: metrix.CustomFontSize(14),
     fontFamily: Fonts.IS,
     marginHorizontal: metrix.HorizontalSize(25),

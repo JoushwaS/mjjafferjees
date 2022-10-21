@@ -12,32 +12,32 @@ function Index(props) {
     {
       year: "1880",
       text: "Hassan Ali, the great grandfather, was the son of Noorbhoy who originally established the business of Allied Items including Leather products in Quetta (Pakistan).",
-      image: "",
+      image: IMAGES.history2,
     },
     {
       year: "1935 - 1939",
       text: "A catastrophic earthquake collapsed the city of Quetta in 1935 after which, Hassan Ali shouldered the responsibility of migrating and relocating the business, named",
-      image: "",
+      image: IMAGES.history1,
     },
     {
       year: "1940s - 1960s",
       text: " The name of the business was changed to 'Jafferjee & Co' sons of Hassan Ali namely; Asghar Ali, Tahir Ali and Anwar Ali, joined the business. In the 1950s an embossing machine was acquired to personalize Leather Goods.",
-      image: "",
+      image: IMAGES.history3,
     },
     {
       year: "1960s - 1974",
       text: "Special Vulcanized Swedish Fiber was obtained to make travel suitcases,and embossed exotic leather was acquired from, what was then, East Pakistan. In 1974 Arshad Ali  (son of Tahir Ali grandson of Hassan Ali) of the 4th generation joined the  business of 'Jafferjee & Co'",
-      image: "",
+      image: IMAGES.history4,
     },
     {
       year: "1990s",
       text: "The first business separation took place in which Arshad Ali and his cousins moved and started 'Jafferjees'. The first store was inaugurated in Karachi, Clifton on 20th April 1990.",
-      image: "",
+      image: IMAGES.history6,
     },
     {
       year: "2008 - 2016",
       text: "Murtaza Hassan Ali son of Arshad Ali, of the 5th generation joined 'Jafferjees' in 2008. With the induction of new blood, new designs, fashion shows and nationwide expansion took place.",
-      image: "",
+      image: IMAGES.history5,
     },
     {
       year: "2016 - Present",
@@ -89,11 +89,14 @@ function Index(props) {
           <Text style={styles.subheadingText}>
             {historyData[activeIndex]?.year || ""}
           </Text>
-          <Image
-            source={IMAGES.history1}
-            style={styles.coverImage}
-            resizeMode="contain"
-          />
+          {historyData[activeIndex]?.image ? (
+            <Image
+              source={historyData[activeIndex]?.image}
+              style={styles.coverImage}
+              resizeMode="contain"
+            />
+          ) : null}
+
           <Text style={styles.descriptionText}>
             {historyData[activeIndex]?.text || ""}
           </Text>

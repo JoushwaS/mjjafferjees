@@ -53,6 +53,11 @@ export const IMAGES = {
   arrowRight: require("./arrow-right-black.png"),
   arrowLeft: require("./arrow-left-black.png"),
   history1: require("./history1.png"),
+  history2: require("./history-2.jpeg"),
+  history3: require("./history-3.png"),
+  history4: require("./history-4.png"),
+  history5: require("./history-5.png"),
+  history6: require("./history-6.png"),
 
   corporate1: require("./corporate1.png"),
   corporate2: require("./corporate2.png"),
