@@ -13,7 +13,7 @@ var StoredState = store.getState();
 console.log("StoredStateStoredStateStoredState", StoredState.auth.token);
 const instance = axios.create({
   baseURL,
-
+  timeout: 5000,
   headers: {
     "Content-Type": "application/json",
     Authorization: StoredState.auth.token && `Bearer ${StoredState.auth.token}`,
