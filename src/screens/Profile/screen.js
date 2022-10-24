@@ -322,9 +322,9 @@ function Index(props) {
       // console.log("updateProfileData", updateProfileData);
       dispatch(hideloader());
       setTimeout(() => {
-        const err = Object.keys(updateProfileData.errors);
-        console.log("err", updateProfileData?.errors[err[0]][0]);
+        // console.log("err", updateProfileData?.errors[err[0]][0]);
         if (updateProfileData.errors) {
+          const err = Object?.keys(updateProfileData?.errors);
           showToast({
             type: "error",
             text:
