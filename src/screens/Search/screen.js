@@ -73,12 +73,18 @@ function Index({
 
   const handleFilterPress = () => setFilterVisible(true);
   const handleCardPress = (item) => {
-    let filterVariations = item?.product_variation.filter((_item) => {
-      return _item?.variation_status === "Active";
-    });
-    setSingleProduct(item);
-    setVariations(filterVariations);
-    setModalVisible(true);
+    if (item?.giftset) {
+      setSingleProduct(item);
+      setVariations(item?.variations);
+      setModalVisible(true);
+    } else {
+      let filterVariations = item?.product_variation?.filter((_item) => {
+        return _item?.variation_status === "Active";
+      });
+      setSingleProduct(item);
+      setVariations(filterVariations);
+      setModalVisible(true);
+    }
   };
 
   const handleVariationPress = (item) => {
@@ -157,39 +163,78 @@ function Index({
       </Fragment>
     );
   };
+  const handleGiftVariationPress = (item) => {
+    setModalVisible(false);
+    Navigation.navigate(SCREENS.GIFT_DETAIL_SCREEN, {
+      gifsetId: item?.giftset_id,
+      combination_id: item?.combination_id,
+    });
+  };
 
   const renderVariations = ({ item, index }) => {
-    const coverFilter = item?.product_images.find(
-      (_item) => !_.isEmpty(_item?.image_type)
-    );
-    return (
-      <TouchableOpacity
-        style={styles.variationCard}
-        {...TouchableProps}
-        onPress={() => handleVariationPress(item)}
-      >
-        <FastImage
-          Imagestyle={styles.variationImg}
-          cover
-          indicatorStyle={{
-            position: "absolute",
-            top: 0,
-            right: 0,
-            left: 0,
-            bottom: 0,
-          }}
-          // style={styles.image}
-          source={{
-            uri: coverFilter
-              ? coverFilter?.product_image
-              : item?.product_images[0]?.product_image,
-          }}
-        />
-        <Text style={{ paddingTop: metrix.VerticalSize(5) }}>
-          {item?.color_options?.option_value}
-        </Text>
-      </TouchableOpacity>
-    );
+    if (singleProduct?.giftset) {
+      return (
+        <TouchableOpacity
+          style={styles.variationCard}
+          {...TouchableProps}
+          onPress={() => handleGiftVariationPress(item)}
+        >
+          <FastImage
+            Imagestyle={styles.variationImg}
+            cover
+            indicatorStyle={{
+              position: "absolute",
+              top: 0,
+              right: 0,
+              left: 0,
+              bottom: 0,
+            }}
+            // style={styles.image}
+            source={{
+              uri:
+                item?.feature == null
+                  ? item?.varient[0]?.giftsets_images[0]?.product_image
+                  : item?.feature?.product_image,
+            }}
+          />
+          <Text style={styles.colorText}>
+            {item?.color_options?.option_value}
+          </Text>
+        </TouchableOpacity>
+      );
+    } else {
+      const coverFilter = item?.product_images.find(
+        (_item) => !_.isEmpty(_item?.image_type)
+      );
+      return (
+        <TouchableOpacity
+          style={styles.variationCard}
+          {...TouchableProps}
+          onPress={() => handleVariationPress(item)}
+        >
+          <FastImage
+            Imagestyle={styles.variationImg}
+            cover
+            indicatorStyle={{
+              position: "absolute",
+              top: 0,
+              right: 0,
+              left: 0,
+              bottom: 0,
+            }}
+            // style={styles.image}
+            source={{
+              uri: coverFilter
+                ? coverFilter?.product_image
+                : item?.product_images[0]?.product_image,
+            }}
+          />
+          <Text style={{ paddingTop: metrix.VerticalSize(5) }}>
+            {item?.color_options?.option_value}
+          </Text>
+        </TouchableOpacity>
+      );
+    }
   };
 
   const addWishlist = async (item, isPresent) => {

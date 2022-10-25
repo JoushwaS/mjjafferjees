@@ -34,7 +34,7 @@ function Index({
   const TouchableProps = {
     activeOpacity: 0.5,
   };
-  // console.log("dataaa,data?.placements", data?.placements);
+  console.log("dataaa==>>", data);
 
   const dispatch = useDispatch();
   const renderColor = () => {
@@ -181,7 +181,6 @@ function Index({
           >
             <Button
               onPress={() => {
-                console.log("data==>", data);
                 if (data?.placements) {
                   onPress({
                     combination_id: data?.combination_id,

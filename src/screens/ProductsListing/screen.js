@@ -98,7 +98,7 @@ function Index({
       setVariations(item?.variations);
       setModalVisible(true);
     } else {
-      let filterVariations = item?.product_variation.filter((_item) => {
+      let filterVariations = item?.product_variation?.filter((_item) => {
         return _item?.variation_status === "Active";
       });
       setSingleProduct(item);
@@ -195,7 +195,6 @@ function Index({
   };
 
   const handleGiftVariationPress = (item) => {
-    console.log("item?.giftset_id", item);
     setModalVisible(false);
     Navigation.navigate(SCREENS.GIFT_DETAIL_SCREEN, {
       gifsetId: item?.giftset_id,
