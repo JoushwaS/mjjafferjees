@@ -119,7 +119,7 @@ function Index(props) {
         return errorText;
       }
     } catch (error) {
-      return error.message;
+      return errorText;
     }
   };
 

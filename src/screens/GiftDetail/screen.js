@@ -717,11 +717,13 @@ function Index({
   const { currency, conversionRate } = useSelector((state) => state.common);
 
   const getImages = () => {
-    const obj = product?.variations.find((item) => {
-      return variantId == item.combination_id;
-    });
-    return obj?.combinationImages;
-    setcarouselImages(obj?.product_images);
+    try {
+      const obj = product?.variations.find((item) => {
+        return variantId == item.combination_id;
+      });
+      return obj?.combinationImages;
+      setcarouselImages(obj?.product_images);
+    } catch (error) {}
   };
 
   const renderPrice = () => {

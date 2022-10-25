@@ -16,14 +16,14 @@ function Index(props) {
   const dispatch = useDispatch();
   const placement = useSelector((state) => state.cart.placement);
   console.log("placement", placement);
-  const [productData, setProductDetail] = useState(null);
+  const [productData, setProductDetail] = useState({});
   const [variantId, setproductVariation] = useState(
     props?.route?.params?.varientId
   );
 
   const [refreshing, setRefreshing] = useState(true);
   const [showPlacement, setshowPlacement] = useState(false);
-  const [placementDetails, setplacementDetails] = useState(null);
+  const [placementDetails, setplacementDetails] = useState({});
 
   // useEffect(() => {
   //   setRefreshing(true);
@@ -146,6 +146,7 @@ function Index(props) {
 
   const _setshowPlacement = () => {
     setshowPlacement(false);
+    setplacementDetails({});
   };
   return (
     <View

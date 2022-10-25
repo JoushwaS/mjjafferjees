@@ -210,7 +210,6 @@ function Index({
             <Text>Name : {placementDetails?.placementName}</Text>
             <Text>Color : {placementDetails?.placementEmbossing}</Text>
           </View>
-
           <View style={styles.detailsrowContainer}>
             <Text>Font: {placementDetails?.placementFontValue}</Text>
             <Text>Placement : {placementDetails?.placementType}</Text>
@@ -233,7 +232,6 @@ function Index({
           <Button
             onPress={
               () => _setshowPlacement()
-
               //  removePlacement(product.id, variantId, placementDetails?.id)
             }
             buttonStyle={styles.removebuttonStyle}
@@ -687,11 +685,13 @@ function Index({
   };
 
   const getImages = () => {
-    const obj = product?.product_variation.find((item) => {
-      return variantId == item.id;
-    });
-    return obj?.product_images;
-    setcarouselImages(obj?.product_images);
+    try {
+      const obj = product?.product_variation?.find((item) => {
+        return variantId == item.id;
+      });
+      return obj?.product_images;
+      setcarouselImages(obj?.product_images);
+    } catch (error) {}
   };
   const { currency, conversionRate } = useSelector((state) => state.common);
 
