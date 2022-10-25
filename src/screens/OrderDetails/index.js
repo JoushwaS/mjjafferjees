@@ -218,7 +218,7 @@ function Index(props) {
                   source={ICONS.call}
                 />
                 <Text style={{ ...styles.dateText, color: "grey" }}>
-                  {orderDetail?.payment_mobile}
+                  {orderDetail?.shipping_mobile}
                 </Text>
               </View>
               <View style={styles.deliveryDetailRow}>
@@ -228,7 +228,7 @@ function Index(props) {
                   source={ICONS.mail}
                 />
                 <Text style={{ ...styles.dateText, color: "grey" }}>
-                  {orderDetail?.payment_email}
+                  {orderDetail?.shipping_email}
                 </Text>
               </View>
               <View style={styles.deliveryDetailRow}>
