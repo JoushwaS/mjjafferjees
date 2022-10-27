@@ -15,7 +15,7 @@ export default styles = StyleSheet.create({
     flex: 1,
   },
   filterView: {
-    width: metrix.HorizontalSize(300),
+    width: metrix.HorizontalSize(320),
     height: metrix.VerticalSize(
       isIphoneX() && Platform.OS == "ios" ? 955 : 955
     ),
@@ -23,7 +23,7 @@ export default styles = StyleSheet.create({
     right: 0,
     backgroundColor: Colors.White,
     paddingVertical: metrix.VerticalSize(25),
-    paddingHorizontal: metrix.HorizontalSize(25),
+    paddingHorizontal: metrix.HorizontalSize(20),
     opacity: 0.95,
     zIndex: 500,
   },
@@ -78,6 +78,7 @@ export default styles = StyleSheet.create({
     alignItems: "center",
     // marginRight: metrix.HorizontalSize(5),
     marginBottom: metrix.VerticalSize(10),
+    marginRight: metrix.VerticalSize(6),
   },
   categoryButton: {
     height: metrix.VerticalSize(35),

@@ -242,7 +242,6 @@ export default function Index({
                 borderRightColor: item?.hex_value[1],
                 borderTopColor: item?.hex_value[0],
                 borderBottomColor: item?.hex_value[2],
-
                 borderBottomWidth: metrix.VerticalSize(20),
                 borderRadius: metrix.VerticalSize(20),
               }}
@@ -473,7 +472,7 @@ export default function Index({
                 renderRail={renderRail}
                 renderRailSelected={renderselectedRail}
                 onValueChanged={(low, high, fromUser) => {
-                  console.log("low,hihh", low, high);
+                  // console.log("low,hihh", low, high);
                   if (fromUser) {
                     setMinPrice(low);
                     setMaxPrice(high);
@@ -497,6 +496,7 @@ export default function Index({
             showsHorizontalScrollIndicator={false}
             showsVerticalScrollIndicator={false}
             ListFooterComponent={footer}
+            style={{}}
             keyExtractor={(item, index) => index.toString()}
             renderItem={({ item, index }) => renderColours(item, index)}
           ></FlatList>
