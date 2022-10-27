@@ -115,7 +115,7 @@ export default function Index({
           // console.log("resonsee canera", response.assets[0]);
           if (response?.didCancel) {
           } else {
-            profilepicture(response.assets[0]);
+            profilepicture((response?.assets && response?.assets[0]) || "");
           }
 
           // console.log('handleOnSelectCamera response', response);
@@ -135,10 +135,10 @@ export default function Index({
           includeBase64: true,
         },
         (response) => {
-          console.log("resonsee canera", response);
+          // console.log("resonsee canera", response);
           if (response?.didCancel) {
           } else {
-            profilepicture(response.assets[0]);
+            profilepicture((response?.assets && response?.assets[0]) || "");
           }
           // console.log('handleOnSelectPhoto response', response);
           //   if (handleOnSelectImage && response?.assets) {

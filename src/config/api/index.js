@@ -13,7 +13,7 @@ var StoredState = store.getState();
 console.log("StoredStateStoredStateStoredState", StoredState.auth.token);
 const instance = axios.create({
   baseURL,
-  timeout: 5000,
+  timeout: 10000,
   headers: {
     "Content-Type": "application/json",
     Authorization: StoredState.auth.token && `Bearer ${StoredState.auth.token}`,
@@ -98,7 +98,7 @@ instance.interceptors.response.use(
         });
       }
     } else {
-      console.log("last else in axios");
+      console.log("last else in axios", error.response);
       // showToast({
       //   text: error.message || "Something went wrong",
       //   type: "error",

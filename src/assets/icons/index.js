@@ -46,7 +46,7 @@ export const ICONS = {
 
   search: require("../icons/search.png"),
   leftarrow: require("../icons/leftarrow.png"),
-  profilegrey: require("../icons/profilegrey.png"),
+  profilegrey: require("../icons/user.png"),
 
   rightarrow: require("../icons/rightarrow.png"),
   downarrow: require("../icons/downarrow.png"),

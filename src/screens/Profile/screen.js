@@ -30,7 +30,7 @@ import metrix from "../../config/metrix";
 import { getAllCitiesList } from "../../config/api/general";
 import { updateProfile, getProfile } from "../../config/api/auth";
 import Navigator from "../../navigation/root";
-import { showToast } from "../../utils";
+import { showToast, placeHolderBase64 } from "../../utils";
 import { saveProfile } from "../../store/actions";
 import { Fonts, Colors } from "../../config/theme";
 import { NetworkInfo } from "react-native-network-info";
@@ -56,7 +56,7 @@ function Index(props) {
 
   const [profile, setProfile] = useState("");
   const [Address, setAddress] = useState("");
-  console.log("Details", Details);
+  // console.log("Details", Details);
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [gender, setGender] = useState("");
@@ -129,7 +129,7 @@ function Index(props) {
       dispatch(showloader());
       getProfile(params)
         .then((res) => {
-          console.log("res.data.data[0]", res.data.data[0]);
+          // console.log("res.data.data[0]", res.data.data[0]);
           dispatch(saveProfile(res.data.data[0]));
           let ind = StoredState.common.countries.findIndex((elem) => {
             return elem?.id == res.data.data[0]?.country_id;
@@ -161,7 +161,7 @@ function Index(props) {
           dispatch(hideloader());
         })
         .catch((error) => {
-          console.log("StoredState.errorerror", error);
+          // console.log("StoredState.errorerror", error);
           if (token !== null) {
             showToast({
               text: "Login to see your profile!",
@@ -317,7 +317,11 @@ function Index(props) {
       if (profile.base64) {
         console.log("base 64 img is true");
         formData["image"] = `data:${profile?.type};base64,${profile.base64}`;
+      } else {
+        formData["image"] = placeHolderBase64;
       }
+      console.log("formdata", formData);
+      // return;
       const { data: updateProfileData } = await updateProfile(formData);
       // console.log("updateProfileData", updateProfileData);
       dispatch(hideloader());
