@@ -229,10 +229,13 @@ function Index({
         placementFont: product?.fonts[activeFontIndex]?.font_id,
         placementFontValue:
           product?.fonts[activeFontIndex]?.personalization_fonts?.font_Value,
+        placementFontName:
+          product?.fonts[activeFontIndex]?.personalization_fonts?.font_Value,
         placementColor: product?.colors[activeColorIndex].code,
         placementType: product?.placements[activePlacementIndex].name,
         placementEmbossing: product?.colors[activeColorIndex].color,
-        placmentImage: productImage,
+        placementColorName: product?.colors[activeColorIndex].color,
+        productPlacementImage: productImage,
       };
       // dispatch(addPlacement(productId, product_variation_id, placement));
       // Navigation.navigate(SCREENS.CART_DETAILS_SCREEN);
@@ -253,11 +256,13 @@ function Index({
           placementFont: product?.fonts[activeFontIndex]?.font_id,
           placementFontValue:
             product?.fonts[activeFontIndex]?.personalization_fonts?.font_Value,
-
+          placementFontName:
+            product?.fonts[activeFontIndex]?.personalization_fonts?.font_Value,
           placementColor: product?.colors[activeColorIndex].code,
           placementType: product?.placements[activePlacementIndex].name,
           placementEmbossing: product?.colors[activeColorIndex].color,
-          placmentImage: productImage,
+          placementColorName: product?.colors[activeColorIndex].color,
+          productPlacementImage: productImage,
         };
         // console.log(
         //   "updatePlacementupdatePlacement",
