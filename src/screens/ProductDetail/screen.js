@@ -841,7 +841,6 @@ function Index({
                 {showPlacement ? "Edit My Name" : "Print My Name"}
               </Button>
             )} */}
-            {console.log("checkPlacementInCart", checkPlacementInCart())}
             {showPlacement ? viewDetails() : null}
           </View>
           {/* {console.log("product", product.short_desc)} */}

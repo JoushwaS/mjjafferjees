@@ -109,23 +109,22 @@ function Index(props) {
         if (response?.data?.data) {
           setProductDetail(response?.data?.data);
 
-          // if (store.getState().cart?.placement.length > 0) {
-          //   let ind = store.getState().cart?.placement.findIndex((val) => {
-          //     return val?.productVarientId == varientId;
-          //   });
-          //   if (ind > -1) {
-          //     setshowPlacement(true);
-          //     setplacementDetails(store.getState().cart?.placement[ind]);
-          //   } else {
-          //     setshowPlacement(false);
-          //     setplacementDetails(null);
-          //   }
-          // } else {
-          //   setshowPlacement(false);
-
-          //   setplacementDetails(null);
-          //   setProductDetail(response?.data?.data);
-          // }
+          if (store.getState().cart?.placement.length > 0) {
+            let ind = store.getState().cart?.placement.findIndex((val) => {
+              return val?.productVarientId == varientId;
+            });
+            if (ind > -1) {
+              setshowPlacement(true);
+              setplacementDetails(store.getState().cart?.placement[ind]);
+            } else {
+              setshowPlacement(false);
+              setplacementDetails(null);
+            }
+          } else {
+            setshowPlacement(false);
+            setplacementDetails(null);
+            setProductDetail(response?.data?.data);
+          }
 
           return response;
         } else {
