@@ -26,7 +26,7 @@ export const styles = StyleSheet.create({
   },
   image: {
     height: metrix.VerticalSize(130),
-    width: metrix.VerticalSize(130),
+    width: metrix.VerticalSize(115),
     borderRadius: metrix.VerticalSize(10),
   },
   dateText: {

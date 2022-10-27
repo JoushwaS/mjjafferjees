@@ -111,7 +111,7 @@ function Index(props) {
                   { color: "grey", fontSize: metrix.CustomFontSize(13) })
                 }
               >
-                {`${item?.personalization_text} | ${item?.personalization_placement}`}
+                {`${item?.personalization_text} | ${item?.personalization_font_id} | ${item?.personalization_placement} | ${item?.personalization_embose_id}`}
               </Text>
             </>
           ) : null}
