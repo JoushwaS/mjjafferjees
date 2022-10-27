@@ -27,7 +27,7 @@ export const styles = StyleSheet.create({
   },
   viewname: {
     fontFamily: Fonts.IS,
-    marginTop: metrix.VerticalSize(10),
+    marginVertical: metrix.VerticalSize(5),
     fontSize: metrix.CustomFontSize(16),
   },
   wallet: {

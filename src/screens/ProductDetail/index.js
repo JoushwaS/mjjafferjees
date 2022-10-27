@@ -138,7 +138,6 @@ function Index(props) {
   };
   const _removePlacement = (id, variantID, placementDetailsid) => {
     // setRefreshing(true);
-
     dispatch(removePlacement(id, variantID, placementDetailsid));
     getChangeProduct(variantID);
     // setRefreshing(false);

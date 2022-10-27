@@ -1,4 +1,4 @@
-import React, { useState, Fragment } from "react";
+import React, { useState, Fragment, useCallback } from "react";
 import {
   TouchableOpacity,
   Image,
@@ -9,6 +9,7 @@ import {
   RefreshControl,
   FlatList,
 } from "react-native";
+import { useFocusEffect } from "@react-navigation/native";
 import { Text, Button, FastImage } from "../../components";
 // import { showToast } from "../../utils";
 import { useDispatch } from "react-redux";
@@ -230,10 +231,10 @@ function Index({
             Edit My Name
           </Button>
           <Button
-            onPress={
-              () => _setshowPlacement()
-              //  removePlacement(product.id, variantId, placementDetails?.id)
-            }
+            onPress={() => {
+              _setshowPlacement();
+              removePlacement(product.id, variantId, placementDetails?.id);
+            }}
             buttonStyle={styles.removebuttonStyle}
             variant="outlined"
             textStyle={{ color: Colors.text }}
@@ -249,7 +250,6 @@ function Index({
   };
 
   const checkProductInCart = () => {
-    console.log("product==>", product);
     const found = cartItems.findIndex((item) => item.id === product.id);
     // console.log("found", found);
     if (found !== -1) {
@@ -605,7 +605,11 @@ function Index({
   const viewDetails = () => {
     return (
       <View style={styles.sortView}>
-        <View style={{ alignItems: "center" }}>
+        <View
+          style={{
+            alignItems: "center",
+          }}
+        >
           <TouchableOpacity
             onPress={() => opneViewName(!viewname)}
             {...touchableProps}
@@ -658,30 +662,30 @@ function Index({
   };
 
   const renderPrintButton = () => {
-    // if (!showPlacement) {
-    if (product?.variation_placement !== null) {
-      return (
-        <Button
-          buttonStyle={styles.printNameButtonStyle}
-          onPress={handlePrintMyNamePress}
-          variant="outlined"
-        >
-          Print My Name
-        </Button>
-      );
+    if (!showPlacement) {
+      if (product?.variation_placement !== null) {
+        return (
+          <Button
+            buttonStyle={styles.printNameButtonStyle}
+            onPress={handlePrintMyNamePress}
+            variant="outlined"
+          >
+            Print My Name
+          </Button>
+        );
+      }
+    } else {
+      return null;
     }
-    // } else {
-    //   return null;
-    // }
-    // return (
-    //   <Button
-    //     buttonStyle={styles.printNameButtonStyle}
-    //     onPress={handlePrintMyNamePress}
-    //     variant="outlined"
-    //   >
-    //     Print My Name
-    //   </Button>
-    // );
+    return (
+      <Button
+        buttonStyle={styles.printNameButtonStyle}
+        onPress={handlePrintMyNamePress}
+        variant="outlined"
+      >
+        Print My Name
+      </Button>
+    );
   };
 
   const getImages = () => {
@@ -694,6 +698,21 @@ function Index({
     } catch (error) {}
   };
   const { currency, conversionRate } = useSelector((state) => state.common);
+
+  const checkPlacementInCart = () => {
+    const found = cartItems.findIndex((item) => item?.id == product?.id);
+    if (cartItems[found]?.placements) return true;
+    else return false;
+  };
+
+  useFocusEffect(
+    useCallback(() => {
+      if (checkPlacementInCart()) {
+      } else {
+        _setshowPlacement();
+      }
+    }, [])
+  );
 
   const renderPrice = (price) => {
     try {
@@ -822,7 +841,8 @@ function Index({
                 {showPlacement ? "Edit My Name" : "Print My Name"}
               </Button>
             )} */}
-            {showPlacement == true ? viewDetails() : null}
+            {console.log("checkPlacementInCart", checkPlacementInCart())}
+            {showPlacement ? viewDetails() : null}
           </View>
           {/* {console.log("product", product.short_desc)} */}
           <View style={styles.containerPadding}>
