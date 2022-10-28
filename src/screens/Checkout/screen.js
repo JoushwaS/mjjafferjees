@@ -269,18 +269,18 @@ function Index(props) {
     );
     if (StoredState.auth?.user?.country_id !== null) {
       let ind = StoredState.common.countries.findIndex((elem) => {
-        return elem?.id == StoredState.auth.user.country_id;
+        return elem?.id == StoredState?.auth?.user?.country_id;
       });
       setrefreshing(false);
 
       if (ind > -1) {
         setBillingCountry(countries[ind]);
-        getAllCitiesList(StoredState.auth.user.country_id)
+        getAllCitiesList(StoredState?.auth?.user?.country_id)
           .then((response) => {
             // console.log("response?.data=>response?.data", response?.data);
             // setFilteredCountryBill(response?.data?.data);
             let cityind = response.data?.data.findIndex((elem) => {
-              return elem.id == StoredState.auth.user.city_id;
+              return elem.id == StoredState?.auth?.user?.city_id;
             });
             if (cityind > -1) {
               setBillingCity(response.data?.data[cityind]);
@@ -298,20 +298,20 @@ function Index(props) {
       };
       getProfile(params).then((res) => {
         dispatch(saveProfile(res.data.data[0]));
-        let ind = StoredState.common.countries.findIndex((elem) => {
+        let ind = StoredState?.common?.countries.findIndex((elem) => {
           return elem?.id == res.data.data[0].country_id;
         });
         setrefreshing(false);
 
         if (ind > -1) {
           setBillingCountry(countries[ind]);
-          getAllCitiesList(StoredState.auth.user.country_id)
+          getAllCitiesList(StoredState?.auth?.user?.country_id)
             .then((response) => {
               console.log("response?.data=>response?.data", response?.data);
               // setBillingCities(response?.data?.data);
               // setFilteredCountryBill(response?.data?.data);
               let cityind = response.data?.data.findIndex((elem) => {
-                return elem.id == StoredState.auth.user.city_id;
+                return elem.id == StoredState?.auth?.user?.city_id;
               });
               if (cityind > -1) {
                 setBillingCity(response.data?.data[cityind]);
