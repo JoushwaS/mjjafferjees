@@ -11,7 +11,7 @@ function Index(props) {
   return (
     <ScrollView style={styles.container}>
       <View style={styles.contentPadding}>
-        <Text style={styles.headingText}>Corperate Inquiries</Text>
+        <Text style={styles.headingText}>Corporate Inquiries</Text>
         <Text style={styles.subscribeText}>
           The perfect way to show your appreciation! Handcrafted, personalized
           leather products! You can personalize with your name, monogram, logo
