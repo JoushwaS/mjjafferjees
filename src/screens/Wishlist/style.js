@@ -111,14 +111,14 @@ export const styles = StyleSheet.create({
     justifyContent: "space-between",
   },
   variationCard: {
-    height: metrix.VerticalSize(120),
-    width: metrix.HorizontalSize(120),
+    // height: metrix.VerticalSize(170),
+    width: metrix.HorizontalSize(170),
     alignItems: "center",
     marginTop: metrix.VerticalSize(15),
   },
   variationImg: {
-    height: metrix.VerticalSize(100),
-    width: metrix.VerticalSize(100),
+    height: metrix.VerticalSize(150),
+    width: metrix.VerticalSize(140),
     borderRadius: metrix.VerticalSize(15),
   },
   fiterAppliedRow: {
