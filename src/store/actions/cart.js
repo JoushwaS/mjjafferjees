@@ -15,7 +15,7 @@ import {
 } from "../types";
 
 const addToCart = (payload) => {
-  console.log("payloadpayload", payload);
+  // console.log("payloadpayload", payload);
   return {
     type: ADDTOCART,
     payload,
@@ -23,7 +23,7 @@ const addToCart = (payload) => {
 };
 
 const removeFromCart = (id, product_variation_id, hasPlacement, placements) => {
-  console.log("id, product_variation_id", id, product_variation_id);
+  // console.log("id, product_variation_id", id, product_variation_id);
   return {
     type: REMOVEFROMCART,
     id,
