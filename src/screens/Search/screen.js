@@ -89,6 +89,7 @@ function Index({
 
   const handleVariationPress = (item) => {
     setModalVisible(false);
+    setSearch("");
     clearFilters();
     Navigation.navigate(SCREENS.PRODUCT_DETAIL_SCREEN, {
       productId: item?.product_id,
@@ -165,6 +166,7 @@ function Index({
   };
   const handleGiftVariationPress = (item) => {
     setModalVisible(false);
+    setSearch("");
     Navigation.navigate(SCREENS.GIFT_DETAIL_SCREEN, {
       gifsetId: item?.giftset_id,
       combination_id: item?.combination_id,
