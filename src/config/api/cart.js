@@ -19,7 +19,7 @@ export const verifyCart = (cart, couponId) => {
 };
 
 export const placeOrder = (data) => {
-  console.log("datadata", data?.cartDetails);
+  // console.log("datadata", data?.cartDetails);
   return Axios.post("/api/checkout", data);
 };
 

@@ -261,6 +261,7 @@ function Index(props) {
       comments: props.route.params.comments,
       invoice_no: props.route.params.invoiceno,
     };
+    // console.log("data==>", JSON.stringify(data));
 
     placeOrder(data)
       .then((res) => {
@@ -290,7 +291,7 @@ function Index(props) {
       })
       .catch((e) => {
         showToast({
-          text: e.response.data.error || "Something went wrong",
+          text: e.response.data.error || e.message,
           type: "error",
         });
       });
