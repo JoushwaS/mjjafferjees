@@ -24,6 +24,7 @@ import { showToast } from "../../utils";
 import { IMAGES } from "../../assets/images";
 import { store } from "../../store";
 import { hideloader, showloader } from "../../store/actions/common";
+import metrix from "../../config/metrix";
 
 function Index({ _shippingAddress }) {
   const [shippingName, setshippingName] = useState("");
