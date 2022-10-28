@@ -27,6 +27,7 @@ import {
   ProductDetail,
   PrintName,
   ProductListing,
+  GiftDetail,
 } from "../../screens";
 import { SCREENS } from "../../config/constants/screens";
 
@@ -44,6 +45,10 @@ const HomeNavigator = () => {
       <HomeStack.Screen
         name={SCREENS.PRODUCT_DETAIL_SCREEN}
         component={ProductDetail}
+      />
+      <HomeStack.Screen
+        name={SCREENS.GIFT_DETAIL_SCREEN}
+        component={GiftDetail}
       />
       <HomeStack.Screen
         name={SCREENS.PRINT_NAME_SCREEN}
