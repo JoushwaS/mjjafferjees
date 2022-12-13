@@ -34,9 +34,12 @@ function Index({
   const TouchableProps = {
     activeOpacity: 0.5,
   };
-  console.log("dataaa==>>", data);
+  // console.log("dataaa==>>", data.variation_placement);
 
   const dispatch = useDispatch();
+  const isProductVariation = () => {
+    return data.variation_placement !== "";
+  };
   const renderColor = () => {
     // console.log("data?.color_options", data?.color_options);
     if (data?.color_options?.length) {
@@ -54,7 +57,29 @@ function Index({
     }
     return data?.color_options?.option_value;
   };
-
+  const cartItems = useSelector((state) => state.cart.cartItems);
+  const placementInCartDetails = () => {
+    const found = cartItems.findIndex((item) => item?.id == data?.product_id);
+    // console.log(cartItems[found]?.placements);
+    if (cartItems[found]?.placements) {
+      // console.log(cartItems[found]?.placements);
+    } else {
+      console.log("nothing");
+    }
+  };
+  placementInCartDetails();
+  // console.log(
+  //   "cart item placementInCartDetails>>>>>>>>>",
+  //   placementInCartDetails()
+  // );
+  // console.log("check for placement set data", data);
+  // const isPlacmement = () => {
+  //   if (data) {
+  //     return Object.keys(placementDetails).length !== 0;
+  //   } else {
+  //     return false;
+  //   }
+  // };
   const { currency, conversionRate } = useSelector((state) => state.common);
 
   const renderPrice = (price) => {

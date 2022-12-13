@@ -17,16 +17,12 @@ import { getWishlist } from "../../config/api/products";
 import { getWishlistProducts } from "../../store/actions/common";
 import { useDispatch } from "react-redux";
 import axios from "axios";
+import { getCoupons, verifyCart, cartCheckout } from "../../config/api/cart";
+
 import { baseURL } from "../../config/constants";
 
 function Index(props) {
   const dispatch = useDispatch();
-
-  useEffect(() => {
-    NetworkInfo.getIPV4Address().then((ipv4Address) => {
-      setipv4(ipv4Address);
-    });
-  }, []);
 
   const onSubmit = async () => {
     try {
@@ -62,6 +58,7 @@ function Index(props) {
             ip_address: ipv4,
           });
           console.log("loginres", data);
+          // return;
           if (data?.errors) {
             showToast({
               type: "error",
@@ -81,6 +78,38 @@ function Index(props) {
             })
             .catch(() => {});
           if (props?.route?.params?.cartDetails != null) {
+            if (data.token !== null) {
+              console.log("here joushwa >>>>>", data.user.id);
+
+              const data2 = {
+                cartDetails: props.route?.params?.cartDetails,
+                ip_address: ipv4,
+                user_id: data.user.id,
+                invoice_no: null,
+              };
+              console.log(">>>>>>>>>>>>>>>", data2);
+              // return;
+              cartCheckout(data2)
+                .then((response) => {
+                  console.log("response jjoushwa>>>>>", response.data);
+                  console.log("cartCheckout", response.data);
+
+                  if (response.data.invoice_no) {
+                    Navigation.navigate(SCREENS.CHECKOUT_SCREEN, {
+                      invoice: response.data.invoice_no,
+                      cartDetails: props.route?.params?.cartDetails,
+                      couponId: props.route?.params?.couponId,
+                      // selectedPromo,
+                    });
+                  } else {
+                    console.log(response.data);
+                  }
+                })
+                .catch((error) => {
+                  console.log("error==>", error.message);
+                });
+            }
+            return;
             Navigation.navigate(SCREENS.CHECKOUT_SCREEN, {
               invoice: data.invoice_no,
               userId: data.user.id,
@@ -118,7 +147,11 @@ function Index(props) {
   const handleReset = () => {
     Navigation.navigate(SCREENS.VERIFICATION_CODE);
   };
-
+  useEffect(() => {
+    NetworkInfo.getIPV4Address().then((ipv4Address) => {
+      setipv4(ipv4Address);
+    });
+  }, []);
   return (
     <KeyboardAwareScrollView style={styles.containerStyle}>
       <View style={styles.ContainerPadding}>

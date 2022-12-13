@@ -37,7 +37,9 @@ export const showToast = ({
 export const validateLink = (link) => {
   return emailRegex.test(link);
 };
-
+export const colorTrace = (msg, color) => {
+  console.log("%c" + msg, "color:" + color + ";font-weight:bold;");
+};
 export const formatPrice = (n) => {
   const parts = n.toString().split(".");
   const numberPart = parts[0];

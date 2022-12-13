@@ -697,6 +697,12 @@ function Index(props) {
             });
           } else {
             // alert(JSON.stringify(user));
+            console.log("here 1");
+            console.log(
+              "props.route.params.invoice>>>>>>>>>>>>>>>>>>>>",
+              props.route.params.invoice
+            );
+            // console.log(">>>>", props?.route?.params?.cartDetails.sub_total);
             // return;
             Navigation.navigate(SCREENS.BILLING_ADDED, {
               shipping: {
@@ -714,6 +720,15 @@ function Index(props) {
                 address: billingAddress,
                 country: selectedBillingCountry,
                 city: selectedBillingCity,
+              },
+
+              cartDetails: {
+                sub_total: props?.route?.params?.cartDetails.sub_total,
+                discount: props?.route?.params?.cartDetails.discount,
+                total: props?.route?.params?.cartDetails.total,
+                formatted_total:
+                  props?.route?.params?.cartDetails.formatted_total,
+                data: props?.route?.params?.cartDetails.data,
               },
               shipping_charges: selectedBillingCity?.shipping_charges,
               invoiceno: props.route.params.invoice,
@@ -766,6 +781,12 @@ function Index(props) {
               text: "Shipping is only valid for Pakistan",
             });
           } else {
+            console.log("here 2");
+            console.log(
+              "props.route.params.invoice>>>>>>>>>>>>>>>>>>>>",
+              props.route.params.invoice
+            );
+            // return;
             Navigation.navigate(SCREENS.BILLING_ADDED, {
               shipping: {
                 name: shippingName,

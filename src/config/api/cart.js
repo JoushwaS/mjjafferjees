@@ -1,17 +1,31 @@
 import Axios from ".";
-
+import { colorTrace } from "../../utils/index";
 export const getCoupons = (data) => {
   return Axios.post("/api/coupons", { data });
 };
 
-export const verifyCart = (cart, couponId) => {
-  console.log("cart, placement, couponId", cart, couponId);
-
-  let data = {
-    cart: cart,
+export const verifyCart = (data, couponId) => {
+  // let data = data;
+  let temp = {
+    cart: [
+      {
+        name: "Marion Gift Set",
+        placementImage: undefined,
+        placements: undefined,
+        product_id: 483,
+        product_variation_id: 6211,
+        quantity: 1,
+        selectedIndex: undefined,
+        variation_placement: "Outside",
+      },
+    ],
+    placements: [],
   };
+
+  console.log("JOUSHWA FINAL", data);
+  // return;
   if (couponId) {
-    data["coupon_id"] = couponId;
+    data.coupon_id = couponId;
   }
   return Axios.post("/api/verify_cart", {
     data,
@@ -19,12 +33,11 @@ export const verifyCart = (cart, couponId) => {
 };
 
 export const placeOrder = (data) => {
-  // console.log("datadata", data?.cartDetails);
   return Axios.post("/api/checkout", data);
 };
 
 export const cartCheckout = (data) => {
-  console.log("dataaa cart", data);
+  // console.log("dataaa cart", data);
   return Axios.post("/api/cartCheckout", data);
 };
 

@@ -12,7 +12,7 @@ import Navigation from "../../navigation/root";
 import { useDispatch, useSelector } from "react-redux";
 import { clearCart } from "../../store/actions/cart";
 import { NetworkInfo } from "react-native-network-info";
-
+import { colorTrace } from "../../utils/index";
 import metrix from "../../config/metrix";
 import OrderCompleted from "../OrderCompletedPopup/screen";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
@@ -27,8 +27,10 @@ import { showToast, removeItem } from "../../utils";
 function Index(props) {
   const dispatch = useDispatch();
 
+  // console.log(, props.route.params);
   const _shipping = props.route.params.shipping;
   const _billing = props.route.params.billing;
+  const _invoice = props.route.params.invoiceno;
 
   const TouchableProps = {
     activeOpacity: 0.5,
@@ -54,7 +56,7 @@ function Index(props) {
   const [activeindex, setActiveIndex] = useState(0);
   const [sameBilling, setsameBilling] = useState(false);
   const [terms, setTerms] = useState(false);
-
+  const [ipAddressState, setIpAddressState] = useState("");
   const [shipping, setshippingAdded] = useState(false);
   const [billing, setbillingAdded] = useState(false);
   const [filterVisible, setFilterVisible] = useState(false);
@@ -231,11 +233,16 @@ function Index(props) {
     );
   };
 
-  const _placeOrder = () => {
-    let ipAddress;
+  const _placeOrder = async () => {
+    // let ipAddress;
     NetworkInfo.getIPV4Address().then((ipv4Address) => {
-      // console.log(ipv4Address);
-      ipAddress = ipv4Address;
+      console.log("ip address", ipv4Address);
+      setIpAddressState(ipv4Address);
+    });
+
+    console.log("hello>>>>>>>>>>>", {
+      ipAddressState,
+      invoice: _invoice,
     });
     let data = {
       shipping: {
@@ -249,7 +256,7 @@ function Index(props) {
         city: _billing.city.id,
       },
       user_id: props.route.params.user_id,
-      ip_address: ipAddress,
+      ip_address: ipAddressState,
 
       cartDetails: {
         ...cart,
@@ -259,11 +266,11 @@ function Index(props) {
       request_source: "mobile",
       payment_method: props.route.params.paymentMode,
       comments: props.route.params.comments,
-      invoice_no: props.route.params.invoiceno,
+      invoice_no: _invoice,
     };
-    // console.log("data==>", JSON.stringify(data));
-
-    placeOrder(data)
+    console.log("data??????????==>", data);
+    // return;
+    await placeOrder(data)
       .then((res) => {
         // console.log("res_placeOrder", res.data);
         removeItem("promo");
@@ -290,6 +297,7 @@ function Index(props) {
         }
       })
       .catch((e) => {
+        console.log("error log>>>", e);
         showToast({
           text: e.response.data.error || e.message,
           type: "error",

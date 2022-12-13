@@ -97,7 +97,7 @@ function Index(props) {
     getCoupons(data)
       .then((response) => {
         setCoupons(response.data.data);
-        // console.log("setCoupons", response.data);
+        console.log("setCoupons", response.data);
         setModalVisible(true);
 
         return response;
@@ -122,8 +122,10 @@ function Index(props) {
       return errorText;
     }
   };
-
+  // console.log("log in cart details<>>>>", placements);
   const getCart = async (_couponId) => {
+    // console.log("_couple id joushwa<>>>>", couponId);
+    // return;
     var data = {};
     var cart = [];
 
@@ -137,8 +139,6 @@ function Index(props) {
         placements: val?.placements,
         variation_placement: val?.variation_placement,
         placementImage: val?.placmentImage,
-
-        // discount: val?.discount,
       };
       if (val.giftset_id) {
         obj["giftset_id"] = val?.giftset_id;
@@ -163,8 +163,12 @@ function Index(props) {
       cart: cart,
       placements,
     };
-    verifyCart(cart, _couponId ? _couponId : null)
+
+    const couponCondition = couponId ? couponId : _couponId ? _couponId : null;
+
+    await verifyCart(data, couponCondition)
       .then((response) => {
+        console.log("joushwa here true", response);
         if (couponValid == false) {
           if (couponId !== 0 || _couponId) {
             setcouponValid(true);
@@ -184,10 +188,7 @@ function Index(props) {
       })
       .catch(async (error) => {
         setLoading(false);
-        console.log(
-          "error?.response?.data?.error",
-          error?.response?.data?.error
-        );
+        console.log("error?.response?.data?.error", error.response);
         dispatch(hideloader());
         setSelectedPromo("");
         setCouponId(0);
@@ -201,12 +202,61 @@ function Index(props) {
           });
         }, 500);
       });
+    // }
   };
+  const handleCheckoutCart = () => {
+    dispatch(_verifyCart(cartDetails));
+    if (token !== null) {
+      // Navigation.navigate("AuthStack", {
+      //   screen: SCREENS.REGISTER_SCREEN,
+      //   params: {
+      //     cartDetails,
+      //   },
+      // });
+      let data = {
+        cartDetails: cartDetails,
+        ip_address: ipAddress,
+        user_id: user?.id,
+        invoice_no: null,
+      };
+      // alert(JSON.stringify(data));
+      // console.log("CHEckOUT", JSON.stringify(data));
+      cartCheckout(data)
+        .then((response) => {
+          console.log("response jjoushwa>>>>>", response.data);
+          // console.log("cartCheckout", response.data);
 
+          // return;
+          if (response.data.invoice_no) {
+            Navigation.navigate(SCREENS.CHECKOUT_SCREEN, {
+              invoice: response.data.invoice_no,
+              cartDetails,
+              couponId,
+              selectedPromo,
+            });
+          } else {
+            console.log(response.data);
+          }
+        })
+        .catch((error) => {
+          console.log("error==>", error.message);
+        });
+    } else {
+      console.log("here 2");
+      // return;
+      Navigation.navigate("AuthStack", {
+        screen: SCREENS.REGISTER_SCREEN,
+        params: {
+          cartDetails,
+          couponId,
+        },
+      });
+    }
+  };
   const checkCoupon = async () => {
     //chk value in async
     const id = await getItem("promo");
-    getCart(id ? id : couponId);
+    await getCart(id ? id : couponId);
     NetworkInfo.getIPV4Address().then((ipv4Address) => {
       // console.log(ipv4Address);
       setipAddress(ipv4Address);
@@ -349,44 +399,7 @@ function Index(props) {
             </Button>
             <Button
               onPress={() => {
-                dispatch(_verifyCart(cartDetails));
-                if (token !== null) {
-                  // Navigation.navigate("AuthStack", {
-                  //   screen: SCREENS.REGISTER_SCREEN,
-                  //   params: {
-                  //     cartDetails,
-                  //   },
-                  // });
-                  let data = {
-                    cartDetails: cartDetails,
-                    ip_address: ipAddress,
-                    user_id: user?.id,
-                    invoice_no: null,
-                  };
-                  // alert(JSON.stringify(data));
-                  // console.log("CHEckOUT", JSON.stringify(data));
-                  cartCheckout(data)
-                    .then((response) => {
-                      // console.log("cartCheckout", response.data);
-                      Navigation.navigate(SCREENS.CHECKOUT_SCREEN, {
-                        invoice: response.data.invoice_no,
-                        cartDetails,
-                        couponId,
-                        selectedPromo,
-                      });
-                    })
-                    .catch((error) => {
-                      console.log("error==>", error.message);
-                    });
-                } else {
-                  Navigation.navigate("AuthStack", {
-                    screen: SCREENS.REGISTER_SCREEN,
-                    params: {
-                      cartDetails,
-                      couponId,
-                    },
-                  });
-                }
+                handleCheckoutCart();
               }}
               buttonStyle={styles.buttonStyle}
               variant="filled"
@@ -551,15 +564,17 @@ function Index(props) {
 
   const handlePromoCodePress = async (item, i) => {
     // alert(JSON.stringify(item));
-    // console.log(item);
+    console.log(item);
     // return;
     setSelectedPromo(item);
     setCouponId(item.id);
     // setLoading(true);
     // Set item
+
     await setItem("promo", item.id.toString());
 
     getCart(item.id);
+    // return;
     setActiveIndex(i);
     setModalVisible(false);
   };

@@ -1,4 +1,4 @@
-import React, { useState, Fragment, useCallback } from "react";
+import React, { useState, Fragment, useEffect, useCallback } from "react";
 import {
   TouchableOpacity,
   Image,
@@ -40,6 +40,7 @@ function Index({
   removePlacement,
   _setshowPlacement,
 }) {
+  console.log(">>>>>>>>>", product);
   const dispatch = useDispatch();
   const TouchableProps = {
     activeOpacity: 0.5,
@@ -70,7 +71,27 @@ function Index({
   const touchableProps = {
     activeOpacity: 0.5,
   };
-
+  const placementInCartDetails = () => {
+    const found = cartItems.findIndex((item) => item?.id == product?.id);
+    if (cartItems[found]?.placements) {
+      return cartItems[found]?.placements;
+    } else {
+      return null;
+    }
+  };
+  // console.log("placementInCartDetails", placementInCartDetails());
+  const checkPlacementInCart = () => {
+    const found = cartItems.findIndex((item) => item?.id == product?.id);
+    if (cartItems[found]?.placements) return true;
+    else return false;
+  };
+  const isPlacmement = () => {
+    if (placementDetails) {
+      return Object.keys(placementDetails).length !== 0;
+    } else {
+      return false;
+    }
+  };
   const _renderItem = ({ item, index }) => {
     return (
       <View style={{ alignItems: "center" }}>
@@ -112,8 +133,7 @@ function Index({
     );
   };
 
-  // console.log("placementDetails?.idplacementDetails?.id", placementDetails);
-
+  // console.log("isPlacmement", isPlacmement());
   const renderNameDetails = () => {
     return (
       <View
@@ -123,97 +143,38 @@ function Index({
           width: metrix.HorizontalSize(380),
         }}
       >
-        {/* <View style={{ alignItems: "center" }}>
-          <View style={styles.tab}>
-            <View style={{ flexDirection: "row" }}>
-              <TouchableOpacity
-                {...TouchableProps}
-                onPress={() => setActiveTabIndex(0)}
-                style={[
-                  styles.selectedTab,
-                  {
-                    backgroundColor: activeTabIndex == 0 ? "#E0E0FC" : "white",
-                    borderRadius:
-                      activeTabIndex == 0 ? metrix.HorizontalSize(10) : 0,
-                  },
-                ]}
-              >
-                <Text
-                  numberOfLines={1}
-                  style={[
-                    styles.tabText,
-                    {
-                      color: activeTabIndex == 0 ? "#6366F1" : "#414141",
-                      fontFamily: activeTabIndex == 0 ? Fonts.IS : Fonts.IM,
-                    },
-                  ]}
-                >
-                  Continental Wallet
-                </Text>
-              </TouchableOpacity>
-              <TouchableOpacity
-                onPress={() => setActiveTabIndex(1)}
-                {...TouchableProps}
-                style={[
-                  styles.selectedTab,
-                  {
-                    backgroundColor: activeTabIndex == 1 ? "#E0E0FC" : "white",
-                    borderRadius:
-                      activeTabIndex == 1 ? metrix.HorizontalSize(10) : 0,
-                  },
-                ]}
-              >
-                <Text
-                  numberOfLines={1}
-                  style={[
-                    styles.tabText,
-                    {
-                      color: activeTabIndex == 1 ? "#6366F1" : "#414141",
-                      fontFamily: activeTabIndex == 1 ? Fonts.IS : Fonts.IM,
-                    },
-                  ]}
-                >
-                  Bi fold wallet
-                </Text>
-              </TouchableOpacity>
-              <TouchableOpacity
-                onPress={() => setActiveTabIndex(2)}
-                {...TouchableProps}
-                style={[
-                  styles.selectedTab,
-                  {
-                    backgroundColor: activeTabIndex == 2 ? "#E0E0FC" : "white",
-                    borderRadius:
-                      activeTabIndex == 2 ? metrix.HorizontalSize(10) : 0,
-                  },
-                ]}
-              >
-                <Text
-                  numberOfLines={1}
-                  style={[
-                    styles.tabText,
-                    {
-                      color: activeTabIndex == 2 ? "#6366F1" : "#414141",
-                      fontFamily: activeTabIndex == 2 ? Fonts.IS : Fonts.IM,
-                    },
-                  ]}
-                >
-                  Key Fob
-                </Text>
-              </TouchableOpacity>
-            </View>
-          </View>
-        </View> */}
         <View style={{ width: metrix.HorizontalSize(300) }}>
           <View
             style={{ flexDirection: "row", justifyContent: "space-between" }}
           >
-            <Text>Name : {placementDetails?.placementName}</Text>
-            <Text>Color : {placementDetails?.placementEmbossing}</Text>
+            <Text>
+              Name :{" "}
+              {checkPlacementInCart()
+                ? placementInCartDetails().placementName
+                : placementDetails?.placementName}
+            </Text>
+            <Text>
+              Color :
+              {checkPlacementInCart()
+                ? placementInCartDetails().placementEmbossing
+                : placementDetails?.placementEmbossing}
+            </Text>
           </View>
           <View style={styles.detailsrowContainer}>
-            <Text>Font: {placementDetails?.placementFontValue}</Text>
-            <Text>Placement : {placementDetails?.placementType}</Text>
+            <Text>
+              Font:
+              {checkPlacementInCart()
+                ? placementInCartDetails().placementFontValue
+                : placementDetails?.placementFontValue}
+              {/* {placementDetails?.placementFontValue} */}
+            </Text>
+            <Text>
+              Placement :
+              {checkPlacementInCart()
+                ? placementInCartDetails().placementType
+                : placementDetails?.placementType}
+              {/* {placementDetails?.placementType} */}
+            </Text>
           </View>
         </View>
         <View style={styles.bottomRow}>
@@ -222,7 +183,9 @@ function Index({
               Navigation.navigate(SCREENS.PRINT_NAME_SCREEN, {
                 productId: product.id,
                 product_variation_id: variantId,
-                details: placementDetails,
+                details: checkPlacementInCart()
+                  ? placementInCartDetails()
+                  : placementDetails,
               })
             }
             buttonStyle={styles.editnamebuttonStyle}
@@ -232,8 +195,14 @@ function Index({
           </Button>
           <Button
             onPress={() => {
-              _setshowPlacement();
-              removePlacement(product.id, variantId, placementDetails?.id);
+              _setshowPlacement(false);
+              removePlacement(
+                product.id,
+                variantId,
+                checkPlacementInCart()
+                  ? placementInCartDetails().id
+                  : placementDetails?.id
+              );
             }}
             buttonStyle={styles.removebuttonStyle}
             variant="outlined"
@@ -248,7 +217,10 @@ function Index({
       </View>
     );
   };
-
+  const isProductVariation = () => {
+    return product.variation_placement !== "";
+  };
+  console.log("isProductVariation>>>>>>>>>", product.variation_placement);
   const checkProductInCart = () => {
     const found = cartItems.findIndex((item) => item.id === product.id);
     // console.log("found", found);
@@ -258,10 +230,15 @@ function Index({
       return false;
     }
   };
-
+  // console.log("cartItems>>>>>>>", cartItems.length);
   const handleAddToCart = () => {
     let addProduct;
-    if (showPlacement) {
+    if (
+      showPlacement == true ||
+      checkPlacementInCart() == true ||
+      isPlacmement() == true
+    ) {
+      // console.log(">>>>>>>>>", placementDetails);
       addProduct = {
         ...product,
         quantity: quantity,
@@ -287,7 +264,7 @@ function Index({
       text: "Product Added to cart",
     });
     setshowViewName(false);
-    _setshowPlacement();
+    // _setshowPlacement();
     setQuantity(1);
     // Navigation.navigate(SCREENS.CART_DETAILS_SCREEN);
   };
@@ -660,9 +637,10 @@ function Index({
       </View>
     );
   };
-
   const renderPrintButton = () => {
-    if (!showPlacement) {
+    const condition = !isPlacmement() || checkPlacementInCart();
+
+    if (!condition || isProductVariation()) {
       if (product?.variation_placement !== null) {
         return (
           <Button
@@ -677,15 +655,28 @@ function Index({
     } else {
       return null;
     }
-    return (
-      <Button
-        buttonStyle={styles.printNameButtonStyle}
-        onPress={handlePrintMyNamePress}
-        variant="outlined"
-      >
-        Print My Name
-      </Button>
-    );
+    // return (
+    //   <Button
+    //     buttonStyle={styles.printNameButtonStyle}
+    //     onPress={handlePrintMyNamePress}
+    //     variant="outlined"
+    //   >
+    //     Print My Name 3
+    //   </Button>
+    // );
+  };
+
+  const renderShowPlacement = () => {
+    // console.log("showPlacement>>>>>", showPlacement);
+    // console.log("placementDetails>>>>>", placementDetails);
+    // console.log("checkPlacementInCart>>>>>", checkPlacementInCart());
+    if (
+      showPlacement == true ||
+      checkPlacementInCart() == true ||
+      isPlacmement() == true
+    ) {
+      return viewDetails();
+    }
   };
 
   const getImages = () => {
@@ -699,20 +690,14 @@ function Index({
   };
   const { currency, conversionRate } = useSelector((state) => state.common);
 
-  const checkPlacementInCart = () => {
-    const found = cartItems.findIndex((item) => item?.id == product?.id);
-    if (cartItems[found]?.placements) return true;
-    else return false;
-  };
-
-  useFocusEffect(
-    useCallback(() => {
-      if (checkPlacementInCart()) {
-      } else {
-        _setshowPlacement();
-      }
-    }, [])
-  );
+  // console.log("checkPlacementInCart>>>>>", placementInCartDetails());
+  useEffect(() => {
+    if (checkPlacementInCart()) {
+      _setshowPlacement(true);
+    } else {
+      _setshowPlacement(false);
+    }
+  }, [cartItems]);
 
   const renderPrice = (price) => {
     try {
@@ -730,6 +715,14 @@ function Index({
       return price;
     }
   };
+
+  useEffect(() => {
+    if (isPlacmement) {
+      setshowViewName(true);
+    } else {
+      setshowViewName(false);
+    }
+  }, []);
 
   return (
     <ScrollView
@@ -768,16 +761,18 @@ function Index({
                 </Text>
               </View>
               <View style={{}}>
-                <Button
-                  onPress={handleAddToCart}
-                  buttonStyle={{
-                    ...styles.buttonStyle,
-                    marginBottom: metrix.VerticalSize(10),
-                  }}
-                  variant="filled"
-                >
-                  {"Add To Cart"}
-                </Button>
+                {!checkProductInCart() && (
+                  <Button
+                    onPress={handleAddToCart}
+                    buttonStyle={{
+                      ...styles.buttonStyle,
+                      marginBottom: metrix.VerticalSize(10),
+                    }}
+                    variant="filled"
+                  >
+                    {"Add To Cart"}
+                  </Button>
+                )}
                 {checkProductInCart() && (
                   <Button
                     onPress={() =>
@@ -841,7 +836,7 @@ function Index({
                 {showPlacement ? "Edit My Name" : "Print My Name"}
               </Button>
             )} */}
-            {showPlacement ? viewDetails() : null}
+            {renderShowPlacement()}
           </View>
           {/* {console.log("product", product.short_desc)} */}
           <View style={styles.containerPadding}>

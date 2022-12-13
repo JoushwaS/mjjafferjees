@@ -37,7 +37,7 @@ function Index(props) {
           password,
           ip_address: ipv4,
         });
-        console.log("loginres", data);
+        // console.log("loginres", data);
         if (data?.errors) {
           showToast({
             type: "error",
@@ -57,6 +57,8 @@ function Index(props) {
           })
           .catch(() => {});
         if (props?.route?.params?.cartDetails != null) {
+          console.log("props.route.params.invoice,>>>>>", data.invoice_no);
+          return;
           Navigation.navigate(SCREENS.CHECKOUT_SCREEN, {
             invoice: data.invoice_no,
             userId: data.user.id,

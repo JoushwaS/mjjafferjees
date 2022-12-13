@@ -41,6 +41,8 @@ function Index({
   giftset_id,
 }) {
   // const dispatch = useDispatch();
+
+  // console.log("joushwa details on print my name >>>>>", details?.placmentImage);
   const [name, setName] = useState(
     details == null ? "" : details?.placementName
   );
@@ -160,6 +162,7 @@ function Index({
         type: "error",
       });
     } else {
+      // console.log(">>>>>", product);
       let data = {
         placementName: name,
         productVarientId: product_variation_id,
@@ -174,6 +177,7 @@ function Index({
         .then((response) => {
           console.log("sendProductPersonalization", response.data);
           if (response.data) {
+            console.log("image set");
             setproductImage(response.data);
           } else {
             setproductImage("");
@@ -223,6 +227,8 @@ function Index({
         type: "error",
       });
     } else {
+      console.log("productImage joushwa>", productImage);
+      // return;
       let placement = {
         placementName: name,
         productVarientId: product_variation_id,
@@ -237,6 +243,8 @@ function Index({
         placementColorName: product?.colors[activeColorIndex].color,
         productPlacementImage: productImage,
       };
+
+      // console.log("joushwa placement >>>", placement);
       // dispatch(addPlacement(productId, product_variation_id, placement));
       // Navigation.navigate(SCREENS.CART_DETAILS_SCREEN);
       if (props?.route?.params?.productDetail == true) {
@@ -249,7 +257,7 @@ function Index({
           productId,
           placementDetails: placement,
         });
-      } else if (props?.route?.params?.details) {
+      } else if (props?.route?.params?.details && productImage !== "") {
         let placement = {
           placementName: name,
           productVarientId: product_variation_id,

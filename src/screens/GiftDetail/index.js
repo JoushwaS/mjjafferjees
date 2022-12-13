@@ -178,7 +178,7 @@ function Index(props) {
           showPlacement={showPlacement}
           placementDetails={placementDetails}
           removePlacement={_removePlacement}
-          _setshowPlacement={_setshowPlacement}
+          _setshowPlacement={setshowPlacement}
           productColors={productColors}
         />
       )}

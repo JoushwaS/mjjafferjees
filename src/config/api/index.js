@@ -10,11 +10,13 @@ import { clearCart } from "../../store/actions/cart";
 import { baseURL } from "../constants";
 
 var StoredState = store.getState();
-console.log("StoredStateStoredStateStoredState", StoredState.auth.token);
+// console.log("StoredStateStoredStateStoredState", StoredState.auth.token);
 const instance = axios.create({
   baseURL,
   timeout: 10000,
   headers: {
+    "Client-Key":
+      "D718uvuu$2a$12$U057YoqgMpXOh4CZPf9YDJLPplSrIUBIN.G9w/JReY9WT",
     "Content-Type": "application/json",
     Authorization: StoredState.auth.token && `Bearer ${StoredState.auth.token}`,
   },
