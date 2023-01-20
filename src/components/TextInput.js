@@ -13,6 +13,8 @@ import CountryPicker from "react-native-country-picker-modal";
 import { ICONS } from "../assets/icons";
 
 const Input = React.forwardRef((props, ref) => {
+  // console.log("input props>>>>>>>>>>>>>", props);
+
   const [showPassword, setPassword] = useState(false);
   const [countryCode, setCountryCode] = useState("PK");
   const [countryModal, setcountryModal] = useState(false);
@@ -38,7 +40,7 @@ const Input = React.forwardRef((props, ref) => {
     props?.setCode("+" + country?.callingCode[0]);
   };
   const handleEyeBtn = () => {
-    setPassword((prev) => !prev);
+    setPassword(!showPassword);
   };
   return (
     <View style={{ marginTop: metrix.VerticalSize(20) }}>
@@ -121,14 +123,25 @@ const Input = React.forwardRef((props, ref) => {
               top: metrix.VerticalSize(15),
             }}
           >
-            <Image
-              style={{
-                height: metrix.VerticalSize(25),
-                width: metrix.VerticalSize(25),
-              }}
-              resizeMode="contain"
-              source={ICONS.eye}
-            ></Image>
+            {!showPassword && props.secureTextEntry ? (
+              <Image
+                style={{
+                  height: metrix.VerticalSize(25),
+                  width: metrix.VerticalSize(25),
+                }}
+                resizeMode="contain"
+                source={ICONS.eyeHide}
+              ></Image>
+            ) : (
+              <Image
+                style={{
+                  height: metrix.VerticalSize(25),
+                  width: metrix.VerticalSize(25),
+                }}
+                resizeMode="contain"
+                source={ICONS.eyeShow}
+              ></Image>
+            )}
           </TouchableOpacity>
         ) : null}
 

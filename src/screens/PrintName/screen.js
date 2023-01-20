@@ -42,7 +42,7 @@ function Index({
 }) {
   // const dispatch = useDispatch();
 
-  // console.log("joushwa details on print my name >>>>>", details?.placmentImage);
+  // console.log("joushwa details on print my name >>>>>", details);
   const [name, setName] = useState(
     details == null ? "" : details?.placementName
   );
@@ -50,7 +50,7 @@ function Index({
   const [activeFontIndex, setActiveFont] = useState(0);
   const [activePlacementIndex, setActivePlacement] = useState(0);
   const [productImage, setproductImage] = useState(
-    details == null ? product?.image : details?.placmentImage
+    details?.productPlacementImage
   );
   const [personalicationimage, setpersonalicationimage] = useState("");
 
@@ -126,7 +126,7 @@ function Index({
         // placemntind ? setActivePlacement(placemntind) : null;
         // colorNameind ? setActiveColor(colorNameind) : null;
       } else {
-        setproductImage(product?.image);
+        // setproductImage(product?.image);
       }
     } catch (error) {}
   }, [details, product]);
@@ -203,16 +203,12 @@ function Index({
     setName(text);
   };
   const getImage = () => {
+    console.log("image of previous placment", details);
     // if (details !== null && productImage == undefined) {
-    //   return { uri: details?.placmentImage };
+    //   return { uri: details?.productPlacementImage };
     // }
-    return { uri: productImage };
-
-    if (details) {
-      return { uri: productImage };
-    } else {
-      return { uri: details?.placmentImage };
-    }
+    const productImg = { uri: details?.productPlacementImage };
+    return productImg;
   };
 
   const submit = () => {
@@ -227,7 +223,7 @@ function Index({
         type: "error",
       });
     } else {
-      console.log("productImage joushwa>", productImage);
+      console.log("productImage joushwa>");
       // return;
       let placement = {
         placementName: name,
@@ -272,10 +268,7 @@ function Index({
           placementColorName: product?.colors[activeColorIndex].color,
           productPlacementImage: productImage,
         };
-        // console.log(
-        //   "updatePlacementupdatePlacement",
-        //   store.getState().cart.cartItems
-        // );
+
         dispatch(
           updatePlacement(
             product_variation_id,
@@ -392,7 +385,7 @@ function Index({
           //   },
           // ]}
           // resizeMode="contain"
-          source={getImage()}
+          source={{ uri: productImage }}
         />
 
         {/* <Text

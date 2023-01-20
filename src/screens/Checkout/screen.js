@@ -5,6 +5,8 @@ import React, {
   useEffect,
   useCallback,
 } from "react";
+import { useIsFocused } from "@react-navigation/native";
+
 import {
   TouchableOpacity,
   Image,
@@ -36,11 +38,46 @@ import { ActivityIndicator } from "react-native";
 import { IMAGES } from "../../assets/images";
 import { getProfile } from "../../config/api/auth";
 import { saveProfile } from "../../store/actions";
-import { getAllShippingAddress } from "../../config/api/cart";
+import { getAllShippingAddress, abandonedCart } from "../../config/api/cart";
 import { saveShippingAddress } from "../../store/actions/cart";
 
 function Index(props) {
   const dispatch = useDispatch();
+  const isFocused = useIsFocused();
+
+  console.log(
+    "checkout in screen props cartDetails",
+    props?.route?.params?.cartDetails
+  );
+  console.log(
+    "props?.route?.params?.cartDetails.data",
+    props?.route?.params?.cartDetails.data
+  );
+  console.log("checkout in screen props \n", props?.route?.params);
+  const obj1 = {
+    data: [
+      {
+        color_options: [Object],
+        each_price: "30,500.00",
+        name: "Attache Nappa leather case",
+        normal_price: 30500,
+        price: 30500,
+        product_id: 468,
+        product_images: [Array],
+        product_variation_id: 6152,
+        quantity: 1,
+        total_weight: 2.12,
+        variation_placement: null,
+      },
+    ],
+    discount: 0,
+    formatted_total: 30500,
+    invoice_no: 1672122853,
+    sub_total: 30500,
+    total: 30500,
+    total_weight: 2.12,
+  };
+  const MINUTE_MS = 4000;
 
   const TouchableProps = {
     activeOpacity: 0.5,
@@ -109,7 +146,7 @@ function Index(props) {
   const SavedshippingAddress = useSelector(
     (state) => state.auth.shippingAddress
   );
-
+  // states for checkout and abandon cart
   const user = useSelector((state) => state.auth.user);
 
   const [shippingName, setshippingName] = useState(
@@ -128,23 +165,31 @@ function Index(props) {
   const [billingName, setbillingName] = useState(
     user?.name !== null ? user?.name : ""
   );
+  const [isDeliveryChargeApply, setisDeliveryChargeApply] = useState(
+    props?.route?.params?.cartDetails?.total <= 2500
+  );
   const [billingMobile, setbillingMobile] = useState(
     user?.mobile_no !== null ? user?.mobile_no : ""
   );
   const [billingEmail, setbillingEmail] = useState(
-    user?.email !== null ? user?.email : ""
+    user?.email ? user?.email : ""
   );
-  const [search, setSearch] = useState("");
 
   const [billingAddress, setbillingAddress] = useState(
     user?.address !== null ? user?.address : ""
   );
+
+  // end
+  const [search, setSearch] = useState("");
 
   const billingNameRef = useRef();
   const billingPhoneRef = useRef();
   const billingEmailRef = useRef();
   // const billingAddressRef = useRef();
 
+  // const isDeliveryChargeApply = () => {
+  //   return props?.route?.params?.cartDetails?.total <= 2500;
+  // };
   const [shippingDetails, setshippingDetails] = useState({
     name: "",
     mobileno: "",
@@ -442,6 +487,9 @@ function Index(props) {
     }
   };
   const showShipping_BillingTrue = () => {
+    console.log({
+      freeShipping: props?.route?.params?.cartDetails?.free_shipping,
+    });
     if (props?.route?.params?.cartDetails?.free_shipping) {
       if (props?.route?.params?.cartDetails?.free_shipping == 0) {
         if (selectedBillingCity?.shipping_charges !== 0) {
@@ -472,7 +520,10 @@ function Index(props) {
         );
       }
     } else {
-      if (selectedBillingCity?.shipping_charges !== 0) {
+      if (
+        selectedBillingCity?.shipping_charges !== 0 &&
+        isDeliveryChargeApply
+      ) {
         return (
           <View style={styles.cartSummaryContainer}>
             <Text>Delivery Charges</Text>
@@ -580,19 +631,31 @@ function Index(props) {
             <TextInput
               placeholder="Enter Mobile Number"
               containLabel
+              maxLength={10}
               keyboardType="numeric"
               value={shippingMobile}
               onChangeText={(text) => setshippingMobile(text)}
               labelStyle={styles.inputViewContainer}
               label="Mobile Number"
             />
-            <TextInput
+            {/* <TextInput
               placeholder="Enter Email Address"
               containLabel
+              editable={false}
+              selectTextOnFocus={false}
               value={shippingEmail}
               onChangeText={(text) => setshippingEmail(text)}
-              labelStyle={styles.inputViewContainer}
+              // labelStyle={styles.inputViewContainer}
               label="Email Address"
+            /> */}
+
+            <TextInput
+              placeholder="Enter Email Address"
+              // editable={edit}
+              containLabel
+              label="Email Address"
+              value={shippingEmail}
+              onChangeText={(text) => setshippingEmail(text)}
             />
             <View style={styles.addressViewContainer}>
               <Text style={styles.label}>Address</Text>
@@ -668,7 +731,94 @@ function Index(props) {
       </View>
     );
   };
+  const handleAbandonCart = async () => {
+    // if (
+    //   billingName != "" &&
+    //   billingMobile != "" &&
+    //   billingEmail != "" &&
+    //   billingAddress != "" &&
+    //   selectedBillingCountry.name != "" &&
+    //   selectedBillingCity.name != ""
+    // ) {
+    if (!validateLink(billingEmail)) {
+      showToast({
+        type: "error",
+        text: "Invalid email",
+      });
+    } else if (selectedBillingCountry?.name !== "Pakistan") {
+      showToast({
+        type: "error",
+        text: "Shipping is only valid for Pakistan",
+      });
+    } else {
+      const dataAbCart = {
+        shipping: {
+          name: billingName,
+          phone: billingMobile,
+          email: billingEmail,
+          address: billingAddress,
+          country: selectedBillingCountry?.id,
+          city: selectedBillingCity?.id,
+        },
+        billing: {
+          name: billingName,
+          phone: billingMobile,
+          email: billingEmail,
+          address: billingAddress,
+          country: selectedBillingCountry?.id,
+          city: selectedBillingCity?.id,
+        },
 
+        cartDetails: {
+          sub_total: props?.route?.params?.cartDetails.sub_total,
+          discount: props?.route?.params?.cartDetails.discount,
+          total: props?.route?.params?.cartDetails.total,
+          formatted_total: props?.route?.params?.cartDetails.formatted_total,
+          data: props?.route?.params?.cartDetails.data,
+          total_weight: props?.route?.params?.cartDetails.total_weight,
+          couponId: props.route.params.couponId,
+          shipping_charges: isDeliveryChargeApply
+            ? selectedBillingCity?.shipping_charges
+            : 0,
+          couponId: props.route.params.couponId,
+        },
+        // shipping_charges: isDeliveryChargeApply
+        //   ? selectedBillingCity?.shipping_charges
+        //   : 0,
+        //   couponId: props.route.params.couponId,
+        invoice_no: props?.route?.params?.invoice,
+        paymentMode: paymentMethods[activeindex].id,
+        user_id: user.id,
+        request_source: "mobile",
+        ip_address: props?.route?.params?.ip_address,
+
+        comments: message,
+      };
+
+      console.log({
+        dataAbCart,
+      });
+
+      await abandonedCart(dataAbCart)
+        .then((res) => {
+          // showToast({
+          //   type: "success",
+          //   text: "Sent Abandon Cart Request!",
+          // });
+          console.log("sent sucess abandon cart 213 >>", res.data);
+        })
+        .catch((err) => {
+          showToast({
+            type: "error",
+            text: "Send Abandon Cart Request Failed!",
+          });
+          console.log("error abandon cart now>>>>>", err.response);
+        });
+    }
+    // } else {
+    //   console.log("field required for abandon cart");
+    // }
+  };
   const onCheckout = () => {
     if (terms == true) {
       if (sameBilling == true) {
@@ -704,39 +854,47 @@ function Index(props) {
             );
             // console.log(">>>>", props?.route?.params?.cartDetails.sub_total);
             // return;
-            Navigation.navigate(SCREENS.BILLING_ADDED, {
-              shipping: {
-                name: billingName,
-                phone: billingMobile,
-                email: billingEmail,
-                address: billingAddress,
-                country: selectedBillingCountry,
-                city: selectedBillingCity,
-              },
-              billing: {
-                name: billingName,
-                phone: billingMobile,
-                email: billingEmail,
-                address: billingAddress,
-                country: selectedBillingCountry,
-                city: selectedBillingCity,
-              },
+            Navigation.navigate(
+              SCREENS.BILLING_ADDED,
 
-              cartDetails: {
-                sub_total: props?.route?.params?.cartDetails.sub_total,
-                discount: props?.route?.params?.cartDetails.discount,
-                total: props?.route?.params?.cartDetails.total,
-                formatted_total:
-                  props?.route?.params?.cartDetails.formatted_total,
-                data: props?.route?.params?.cartDetails.data,
-              },
-              shipping_charges: selectedBillingCity?.shipping_charges,
-              invoiceno: props.route.params.invoice,
-              couponId: props.route.params.couponId,
-              paymentMode: paymentMethods[activeindex].id,
-              user_id: user.id,
-              comments: message,
-            });
+              {
+                shipping: {
+                  name: billingName,
+                  phone: billingMobile,
+                  email: billingEmail,
+                  address: billingAddress,
+                  country: selectedBillingCountry,
+                  city: selectedBillingCity,
+                },
+                billing: {
+                  name: billingName,
+                  phone: billingMobile,
+                  email: billingEmail,
+                  address: billingAddress,
+                  country: selectedBillingCountry,
+                  city: selectedBillingCity,
+                },
+
+                cartDetails: {
+                  sub_total: props?.route?.params?.cartDetails.sub_total,
+                  discount: props?.route?.params?.cartDetails.discount,
+                  total: props?.route?.params?.cartDetails.total,
+                  formatted_total:
+                    props?.route?.params?.cartDetails.formatted_total,
+                  data: props?.route?.params?.cartDetails.data,
+                },
+                shipping_charges: isDeliveryChargeApply
+                  ? selectedBillingCity?.shipping_charges
+                  : 0,
+                invoiceno: props.route.params.invoice,
+                couponId: props.route.params.couponId,
+                paymentMode: paymentMethods[activeindex].id,
+                request_source: "mobile",
+
+                user_id: user.id,
+                comments: message,
+              }
+            );
           }
         }
       } else {
@@ -833,7 +991,10 @@ function Index(props) {
             selectTextOnFocus={true}
             // onSubmitEditing={() => billingPhoneRef?.focus()}
             ref={billingNameRef}
-            onChangeText={(text) => setbillingName(text)}
+            onChangeText={(text) => {
+              console.log("change name here", text);
+              setbillingName(text);
+            }}
             containLabel
             label="Name"
           />
@@ -842,6 +1003,7 @@ function Index(props) {
             containLabel
             ref={billingPhoneRef}
             // onSubmitEditing={() => billingEmailRef?.focus()}
+            maxLength={11}
             keyboardType="numeric"
             value={billingMobile}
             onChangeText={(text) => setbillingMobile(text)}
@@ -916,9 +1078,52 @@ function Index(props) {
   };
 
   useEffect(() => {
+    // console.log({ isDeliveryChargeApply: isDeliveryChargeApply() });
     if (billingCountries) setFilterCountryBill(billingCountries);
     if (countries) setFilterCountryShip(countries);
   }, [billingCountries, countries]);
+
+  // useEffect(() => {
+  //   console.log("called abandon cart>>>> !!", {
+  //     billingName,
+  //     billingMobile,
+  //     billingEmail,
+  //     billingAddress,
+  //     selectedBillingCountry: selectedBillingCountry.name,
+  //     selectedBillingCity: selectedBillingCity.name,
+  //   });
+  //   // const interval = setInterval(function () {
+  //   //   // method to be executed;
+
+  //   // }, 1000);
+  //   (function () {
+  //     // do some stuff
+  //
+  //     setTimeout(arguments.callee, 8000);
+  //   })();
+  // }, []);
+  useEffect(() => {
+    console.log({ isFocused });
+
+    const interval = setInterval(() => {
+      console.log("Logs every 2 seconds");
+      if (isFocused) {
+        handleAbandonCart();
+      }
+    }, MINUTE_MS);
+
+    return () => clearInterval(interval); // This represents the unmount function, in which you need to clear your interval to prevent memory leaks.
+  }, [
+    isFocused,
+    billingName,
+    billingMobile,
+    billingEmail,
+    billingAddress,
+    selectedBillingCountry,
+    selectedBillingCity,
+    cart,
+    activeindex,
+  ]);
 
   // console.log("blling cityy =>> shipping", selectedBillingCity);
 
@@ -1329,21 +1534,27 @@ function Index(props) {
                   </Text>
                 ) : sameBilling == false && selectedCity.name !== "" ? (
                   <Text>
-                    {renderPrice(
-                      formatPrice(
-                        props?.route?.params?.cartDetails?.total +
-                          parseInt(selectedCity?.shipping_charges)
-                      )
-                    )}
+                    {isDeliveryChargeApply
+                      ? renderPrice(
+                          formatPrice(
+                            props?.route?.params?.cartDetails?.total +
+                              parseInt(selectedBillingCity?.shipping_charges)
+                          )
+                        )
+                      : renderPrice(formatPrice(0))}
                   </Text>
                 ) : sameBilling == true && selectedBillingCity.name !== "" ? (
                   <Text>
-                    {renderPrice(
-                      formatPrice(
-                        props?.route?.params?.cartDetails?.total +
-                          parseInt(selectedBillingCity?.shipping_charges)
-                      )
-                    )}
+                    {isDeliveryChargeApply
+                      ? renderPrice(
+                          formatPrice(
+                            props?.route?.params?.cartDetails?.total +
+                              parseInt(selectedBillingCity?.shipping_charges)
+                          )
+                        )
+                      : renderPrice(
+                          formatPrice(props?.route?.params?.cartDetails?.total)
+                        )}
                   </Text>
                 ) : (
                   <Text>

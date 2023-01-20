@@ -9,7 +9,8 @@ import {
   RefreshControl,
   FlatList,
 } from "react-native";
-import { useFocusEffect } from "@react-navigation/native";
+
+import { useFocusEffect, useIsFocused } from "@react-navigation/native";
 import { Text, Button, FastImage } from "../../components";
 // import { showToast } from "../../utils";
 import { useDispatch } from "react-redux";
@@ -28,6 +29,8 @@ import uuid from "react-native-uuid";
 import { Fonts, Colors } from "../../config/theme";
 import { addToCart } from "../../store/actions/cart";
 import { showToast } from "../../utils";
+import usePersistState from "use-persist";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 function Index({
   product,
@@ -40,7 +43,7 @@ function Index({
   removePlacement,
   _setshowPlacement,
 }) {
-  console.log(">>>>>>>>>", product);
+  console.log("variantId initial>>>>>>>>>", variantId);
   const dispatch = useDispatch();
   const TouchableProps = {
     activeOpacity: 0.5,
@@ -58,9 +61,11 @@ function Index({
   const [activeslide, setActiveSlide] = useState(0);
   const [activeTabIndex, setActiveTabIndex] = useState(0);
   const [showViewName, setshowViewName] = useState(showPlacement);
+  const isFocused = useIsFocused();
 
   const [carouselImages, setcarouselImages] = useState([]);
 
+  // const [quantity, setQuantity] = usePersistState(1);
   const [quantity, setQuantity] = useState(1);
 
   const cartItems = useSelector((state) => state.cart.cartItems);
@@ -92,6 +97,78 @@ function Index({
       return false;
     }
   };
+
+  const saveItemState = async (product, newQuantity) => {
+    let prod;
+    try {
+      if (product?.product_variation.length !== 0) {
+        prod = {
+          productId: product.id,
+          quan: newQuantity,
+          variation: variantId,
+        };
+        await AsyncStorage.setItem(
+          `product-${product.id}-variation-${variantId}`,
+          JSON.stringify(prod)
+        );
+      } else {
+        prod = {
+          productId: product.id,
+          quan: newQuantity,
+        };
+        await AsyncStorage.setItem(
+          `product-${product.id}`,
+          JSON.stringify(prod)
+        );
+      }
+      console.log(`product-${product.id}-variation-${variantId}`);
+      // showToast({
+      //   type: "success",
+      //   text: `Value Quantity to state ${newQuantity}`,
+      // });
+    } catch (error) {
+      console.log("Error saving data", error);
+    }
+  };
+
+  const loadItemState = async () => {
+    try {
+      console.log({ prodID: product.id, VAR: variantId });
+      let productState;
+      if (product?.product_variation.length !== 0) {
+        productState = await AsyncStorage.getItem(
+          `product-${product.id}-variation-${variantId}`
+        );
+        console.log("vairations available>>", productState);
+      } else {
+        productState = await AsyncStorage.getItem(`product-${product.id}`);
+      }
+      console.log("new product state >>>", { productState });
+      if (productState !== null) {
+        const product = JSON.parse(productState);
+        console.log("product state from async >>", { product });
+        setQuantity(product.quan);
+      }
+    } catch (error) {
+      console.log("Error loading data", error);
+    }
+  };
+  // useEffect(() => {
+  //   console.log("product.variation", variantId);
+
+  //   console.log("isFocused >>>>", isFocused);
+  //   if (isFocused) {
+  //     loadItemState();
+  //   }
+  // }, [isFocused, quantity, variantId]);
+
+  useFocusEffect(
+    React.useCallback(() => {
+      loadItemState();
+      // Do something when the screen is focused
+    }, [isFocused, quantity, variantId])
+  );
+
   const _renderItem = ({ item, index }) => {
     return (
       <View style={{ alignItems: "center" }}>
@@ -220,18 +297,36 @@ function Index({
   const isProductVariation = () => {
     return product.variation_placement !== "";
   };
-  console.log("isProductVariation>>>>>>>>>", product.variation_placement);
+  console.log("cartItems>>>>>>>>>", cartItems);
   const checkProductInCart = () => {
     const found = cartItems.findIndex((item) => item.id === product.id);
-    // console.log("found", found);
+    console.log("found", found);
     if (found !== -1) {
       return true;
     } else {
       return false;
     }
   };
+  const isVariationPresentInCart = () => {
+    for (let i = 0; i < cartItems.length; i++) {
+      if (
+        cartItems[i].product.id === product.id &&
+        cartItems[i].variation === variation
+      ) {
+        cartItems[i].quantity++;
+        return true;
+      }
+    }
+    cart.push({
+      product: product,
+      variation: variation,
+      quantity: 1,
+    });
+    return true;
+  };
+
   // console.log("cartItems>>>>>>>", cartItems.length);
-  const handleAddToCart = () => {
+  const handleAddToCart = async () => {
     let addProduct;
     if (
       showPlacement == true ||
@@ -258,6 +353,9 @@ function Index({
         product_variation_id: variantId,
       };
     }
+    console.log("isVariationPresentInCart >>>");
+    // isVariationPresentInCart();
+    // return;
     dispatch(addToCart(addProduct));
     showToast({
       type: "success",
@@ -266,16 +364,29 @@ function Index({
     setshowViewName(false);
     // _setshowPlacement();
     setQuantity(1);
+    if (variantId) {
+      await AsyncStorage.removeItem(
+        `product-${product.id}-variation-${variantId}`
+      );
+    } else {
+      await AsyncStorage.removeItem(`product-${product.id}`);
+    }
     // Navigation.navigate(SCREENS.CART_DETAILS_SCREEN);
   };
   const increaseQuantity = () => {
     // if (quantity < 5) {
-    setQuantity(quantity + 1);
+
+    const newQuantity = quantity + 1;
+    setQuantity(newQuantity);
+    saveItemState(product, newQuantity);
+
     // }
   };
   const decreaseQuantity = () => {
     if (quantity > 1) {
-      setQuantity(quantity - 1);
+      const newQuantity = quantity - 1;
+      setQuantity(newQuantity);
+      saveItemState(product, newQuantity);
     }
   };
   const renderColours = ({ item, index }) => {
@@ -761,29 +872,23 @@ function Index({
                 </Text>
               </View>
               <View style={{}}>
-                {!checkProductInCart() && (
-                  <Button
-                    onPress={handleAddToCart}
-                    buttonStyle={{
-                      ...styles.buttonStyle,
-                      marginBottom: metrix.VerticalSize(10),
-                    }}
-                    variant="filled"
-                  >
-                    {"Add To Cart"}
-                  </Button>
-                )}
-                {checkProductInCart() && (
-                  <Button
-                    onPress={() =>
-                      Navigation.navigate(SCREENS.CART_DETAILS_SCREEN)
+                <Button
+                  onPress={() => {
+                    handleAddToCart();
+                    return;
+                    if (!checkProductInCart()) {
+                    } else {
+                      Navigation.navigate(SCREENS.CART_DETAILS_SCREEN);
                     }
-                    buttonStyle={styles.buttonStyle}
-                    variant="filled"
-                  >
-                    {"View Cart"}
-                  </Button>
-                )}
+                  }}
+                  buttonStyle={{
+                    ...styles.buttonStyle,
+                    marginBottom: metrix.VerticalSize(10),
+                  }}
+                  variant="filled"
+                >
+                  {"Add To Cart"}
+                </Button>
               </View>
             </View>
           </View>

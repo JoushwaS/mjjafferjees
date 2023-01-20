@@ -17,6 +17,9 @@ import {
   ActivityIndicator,
   RefreshControl,
 } from "react-native";
+import Navigation from "../../navigation/root";
+import { SCREENS } from "../../config/constants/screens";
+
 import { store } from "../../store";
 import Modal from "../../screens/ProductsListing/modal";
 import { useFocusEffect } from "@react-navigation/native";
@@ -28,9 +31,15 @@ import { styles } from "./style";
 import { ICONS } from "../../assets/icons";
 import metrix from "../../config/metrix";
 import { getAllCitiesList } from "../../config/api/general";
+import { cartCheckout } from "../../config/api/cart";
 import { updateProfile, getProfile } from "../../config/api/auth";
 import Navigator from "../../navigation/root";
-import { showToast, placeHolderBase64 } from "../../utils";
+import {
+  showToast,
+  placeHolderBase64,
+  checkProfileComplete,
+  checkObject,
+} from "../../utils";
 import { saveProfile } from "../../store/actions";
 import { Fonts, Colors } from "../../config/theme";
 import { NetworkInfo } from "react-native-network-info";
@@ -39,6 +48,11 @@ import { IMAGES } from "../../assets/images";
 import { hideloader, showloader } from "../../store/actions/common";
 
 function Index(props) {
+  console.log("props in profile screen\n ", props?.route?.params?.params);
+  console.log(
+    "props in profile screen cart received\n ",
+    props?.route?.params?.params?.cartDetails
+  );
   const dispatch = useDispatch();
   const [isCountryOpen, setCountryOpen] = useState(false);
   const [isCityOpen, setCityOpen] = useState(false);
@@ -284,7 +298,57 @@ function Index(props) {
       });
   };
   // console.log("profileprofile=>>>>>profileprofile", profile);
+  const checkOutCartScreen = async () => {
+    const { cartDetails, user_id, couponId, selectedPromo, sub_total } =
+      props?.route?.params?.params;
+    console.log({ checkoutCart: cartDetails });
+    let data = {
+      cartDetails: cartDetails,
+      ip_address: ipAddress,
+      user_id: user_id,
+      invoice_no: null,
+    };
+    console.log("checkoutCart>>>>>>>>>>>>>", data);
+    // return;
+    await cartCheckout(data)
+      .then((response) => {
+        console.log("response in get invoice cartDetail>>>>>", response.data);
 
+        if (response.data.invoice_no) {
+          console.log("redirect to checkout \n", {
+            invoice: response.data.invoice_no,
+            cartDetails,
+            couponId,
+            selectedPromo,
+            sub_total,
+          });
+          console.log(`cartDetails>>>>>>>>\n${cartDetails.data}`);
+          // return;
+          // Navigation.navigate("CHECKOUT_SCREEN", {
+          //   screen: SCREENS.CHECKOUT_SCREEN,
+          //   params: {
+          //     invoice: response.data.invoice_no,
+          //     cartDetails: props?.route?.params?.params?.cartDetails,
+          //     couponId: props?.route?.params?.params.couponId,
+          //     selectedPromo: props?.route?.params?.params?.selectedPromo,
+          //     sub_total: props?.route?.params?.params?.sub_total,
+          //   },
+          // });
+          Navigation.navigate(SCREENS.CHECKOUT_SCREEN, {
+            invoice: response.data.invoice_no,
+            cartDetails: props?.route?.params?.params?.cartDetails,
+            couponId: props?.route?.params?.params.couponId,
+            selectedPromo: props?.route?.params?.params?.selectedPromo,
+            sub_total: props?.route?.params?.params?.sub_total,
+          });
+        } else {
+          console.log("no invoice number in profile page ", response.data);
+        }
+      })
+      .catch((error) => {
+        console.log("error==>", error.message);
+      });
+  };
   const update = async () => {
     // var formData = new FormData();
     // formData.append("name", name);
@@ -306,7 +370,7 @@ function Index(props) {
       let formData = {
         name: name,
         email: email,
-        gender: gender,
+        // gender: gender,
         phone: mobile,
         address: Address,
         user_id: userDetails?.id,
@@ -314,60 +378,146 @@ function Index(props) {
         city_id: selectedCity?.id,
         ip_address: ipAddress,
       };
-      if (profile.base64) {
-        console.log("base 64 img is true");
-        formData["image"] = `data:${profile?.type};base64,${profile.base64}`;
-      } else {
-        formData["image"] = placeHolderBase64;
-      }
-      console.log("formdata", formData);
-      // return;
-      const { data: updateProfileData } = await updateProfile(formData);
-      // console.log("updateProfileData", updateProfileData);
-      dispatch(hideloader());
-      setTimeout(() => {
-        // console.log("err", updateProfileData?.errors[err[0]][0]);
-        if (updateProfileData.errors) {
-          const err = Object?.keys(updateProfileData?.errors);
-          showToast({
-            type: "error",
-            text:
-              updateProfileData?.errors[err[0]][0] || "Input Validation failed",
-          });
-        } else {
-          var StoredState = store.getState();
-          let params = {
-            id: StoredState.auth?.user?.id,
-          };
-          getProfile(params)
-            .then((res) => {
-              console.log("res.data.data", res.data.data);
-              dispatch(saveProfile(res.data.data[0]));
-            })
-            .catch((error) => {
-              console.log("StoredState.errorerror", error);
-              if (token !== null) {
-                showToast({
-                  text: "Login to see your profile!",
-                  type: "error",
+
+      const cartDetails = props?.route?.params?.params?.cartDetails;
+      if (cartDetails) {
+        const isCompleteProfileSave = checkProfileComplete(formData);
+
+        console.log({ isCompleteProfileSave });
+        if (isCompleteProfileSave) {
+          if (profile.base64) {
+            console.log("base 64 img is true");
+            formData[
+              "image"
+            ] = `data:${profile?.type};base64,${profile.base64}`;
+          } else {
+            formData["image"] = placeHolderBase64;
+          }
+
+          const { data: updateProfileData } = await updateProfile(formData);
+          dispatch(hideloader());
+          setTimeout(async () => {
+            // console.log("err", updateProfileData?.errors[err[0]][0]);
+            if (updateProfileData.errors) {
+              console.log("updateProfileData errors>>", updateProfileData);
+              const err = Object?.keys(updateProfileData?.errors);
+              showToast({
+                type: "error",
+                text:
+                  updateProfileData?.errors[err[0]][0] ||
+                  "Input Validation failed",
+              });
+            } else {
+              console.log("changed profile info ");
+              console.log({ updateProfileData });
+              var StoredState = store.getState();
+              let params = {
+                id: StoredState.auth?.user?.id,
+              };
+              await getProfile(params)
+                .then((res) => {
+                  console.log("res.data.data", res.data.data);
+                  dispatch(saveProfile(res.data.data[0]));
+                })
+                .catch((error) => {
+                  console.log("StoredState.errorerror", error);
+                  if (token !== null) {
+                    showToast({
+                      text: "Login to see your profile!",
+                      type: "error",
+                    });
+                  } else {
+                    showToast({
+                      text: "Something went wrong ",
+                      type: "error",
+                    });
+                  }
+
+                  Navigator.goBack();
                 });
-              } else {
+              if (updateProfileData) {
+                checkOutCartScreen();
                 showToast({
-                  text: "Something went wrong ",
-                  type: "error",
+                  type: "success",
+                  text: "Profile Updated Successfully",
                 });
               }
-
-              Navigator.goBack();
+            }
+          }, 500);
+        } else {
+          dispatch(hideloader());
+          setTimeout(() => {
+            showToast({
+              type: "error",
+              text: "All Fields Are Mandatory!",
             });
-          showToast({
-            type: "success",
-            text: "Profile Updated Successfully",
-          });
+          }, 500);
         }
-      }, 500);
+      }
+      // if there is not cart info pass from previous screen
+      else {
+        if (profile.base64) {
+          console.log("base 64 img is true");
+          formData["image"] = `data:${profile?.type};base64,${profile.base64}`;
+        } else {
+          formData["image"] = placeHolderBase64;
+        }
+        console.log("formdata with out cart", formData);
+        // return;
+        const { data: updateProfileData } = await updateProfile(formData);
+        // console.log("updateProfileData", updateProfileData);
+        dispatch(hideloader());
+        setTimeout(() => {
+          // console.log("err", updateProfileData?.errors[err[0]][0]);
+          if (updateProfileData.errors) {
+            const err = Object?.keys(updateProfileData?.errors);
+            showToast({
+              type: "error",
+              text:
+                updateProfileData?.errors[err[0]][0] ||
+                "Input Validation failed",
+            });
+          } else {
+            showToast({
+              type: "success",
+              text: "Profile Updated Successfully",
+            });
+            Navigator.goBack();
+
+            var StoredState = store.getState();
+            let params = {
+              id: StoredState.auth?.user?.id,
+            };
+            getProfile(params)
+              .then((res) => {
+                console.log("res.data.data", res.data.data);
+                dispatch(saveProfile(res.data.data[0]));
+              })
+              .catch((error) => {
+                console.log("StoredState.errorerror", error);
+                if (token !== null) {
+                  showToast({
+                    text: "Login to see your profile!",
+                    type: "error",
+                  });
+                } else {
+                  showToast({
+                    text: "Something went wrong ",
+                    type: "error",
+                  });
+                }
+
+                Navigator.goBack();
+              });
+            showToast({
+              type: "success",
+              text: "Profile Updated Successfully",
+            });
+          }
+        }, 500);
+      }
     } catch (error) {
-      console.log("err", error.message);
+      console.log("err update profile", error.message);
       dispatch(hideloader());
       setTimeout(() => {
         showToast({
@@ -413,6 +563,39 @@ function Index(props) {
       setFilterCities(list);
     }
   };
+
+  useEffect(() => {
+    const cartAvail = props?.route?.params?.params?.cartDetails;
+    if (userDetails && cartAvail) {
+      // console.l;
+      const { address, city_id, country_id, mobile_no, name } = userDetails;
+
+      const user = {
+        address,
+        city_id,
+        country_id,
+        mobile_no,
+        name,
+      };
+
+      const isProfileComplete = checkObject(user);
+      console.log("joushwa at profile", {
+        cartAvail,
+        isProfileComplete,
+        userDetails,
+      });
+
+      if (!isProfileComplete) {
+        showToast({
+          type: "error",
+          text: "Please Complete your Profile!",
+        });
+      }
+    } else {
+      console.log("");
+    }
+  }, [userDetails]);
+
   return (
     <View style={styles.container}>
       <ImagePicker
@@ -557,13 +740,14 @@ function Index(props) {
             value={email}
             onChangeText={(text) => setEmail(text)}
           />
-          <Text style={[styles.label]}>Select Gender</Text>
+          {/* <Text style={[styles.label]}>Select Gender</Text>
 
-          {renderGenderSelection()}
+          {renderGenderSelection()} */}
 
           <TextInput
             placeholder="Enter Mobile Number"
             containLabel
+            maxLength={11}
             keyboardType="numeric"
             value={mobile}
             onChangeText={(text) => setMobile(text)}

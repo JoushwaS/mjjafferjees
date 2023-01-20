@@ -33,7 +33,19 @@ export const showToast = ({
     },
   });
 };
-
+export const checkProfileComplete = (obj) => {
+  for (var propName in obj) {
+    if (
+      obj[propName] === null ||
+      obj[propName] === undefined ||
+      obj[propName] === ""
+    ) {
+      return false;
+    } else {
+      return true;
+    }
+  }
+};
 export const validateLink = (link) => {
   return emailRegex.test(link);
 };
@@ -41,12 +53,25 @@ export const colorTrace = (msg, color) => {
   console.log("%c" + msg, "color:" + color + ";font-weight:bold;");
 };
 export const formatPrice = (n) => {
-  const parts = n.toString().split(".");
-  const numberPart = parts[0];
+  const parts = n?.toString().split(".");
+  const numberPart = parts[0] ? parts[0] : "";
   const thousands = /\B(?=(\d{3})+(?!\d))/g;
-  return numberPart.replace(thousands, ",");
+  return numberPart?.replace(thousands, ",");
 };
 
+export const checkObject = (obj) => {
+  for (var propName in obj) {
+    if (
+      obj[propName] === null ||
+      obj[propName] === undefined ||
+      obj[propName] === ""
+    ) {
+      return false;
+    } else {
+      return true;
+    }
+  }
+};
 export const setItem = async (key, value) =>
   await AsyncStorage.setItem(key, value);
 export const getItem = async (key) => await AsyncStorage.getItem(key);

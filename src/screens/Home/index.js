@@ -58,11 +58,14 @@ function Index(props) {
     getHomeData();
   }, []);
 
-  const getHomeData = () => {
+  const getHomeData = async () => {
     // dispatch(showloader());
-    HomeData()
-      .then((response) => {
+    await HomeData()
+      .then(async (response) => {
         // filtering data to check active status
+        setRefreshing(false);
+
+        console.log("response.data.data.category", response.data.data.category);
         let filterStatus = response.data.data.category.filter((item) => {
           return item?.status === "Active";
         });
@@ -80,14 +83,17 @@ function Index(props) {
         dispatch(getHome(response.data.data));
 
         setfiltercategories(finalData);
-        getAllCountriesList()
+
+        await getAllCountriesList()
           .then((response) => {
             dispatch(getCountries(response.data?.data));
           })
-          .catch(() => {});
+          .catch(() => {
+            dispatch(hideloader());
+          });
         setRefreshing(false);
 
-        getColorsData()
+        await getColorsData()
           .then((response) => {
             dispatch(getColors(response.data?.data));
             dispatch(hideloader());
@@ -104,7 +110,7 @@ function Index(props) {
       });
   };
   const onRefresh = async () => {
-    await setRefreshing(true);
+    setRefreshing(true);
 
     await getHomeData();
   };

@@ -5,7 +5,7 @@ export const RegisterUser = (data) => {
 };
 
 export const RegisterNow = (data) => {
-  return Axios.post("/api/register  ", data);
+  return Axios.post("/api/register", data);
 };
 
 export const loginUser = (data) => {
@@ -25,7 +25,6 @@ export const setNewPassword = (data) => {
 };
 
 export const updateProfile = (formData) => {
-  // console.log("formDataaaa", formData);
   return Axios.post("/api/saveProfile", formData);
 };
 

@@ -14,7 +14,11 @@ import metrix from "../../config/metrix";
 import { NetworkInfo } from "react-native-network-info";
 import { userSignUp } from "../../store/actions";
 import { getWishlist } from "../../config/api/products";
-import { getWishlistProducts } from "../../store/actions/common";
+import {
+  getWishlistProducts,
+  hideloader,
+  showloader,
+} from "../../store/actions/common";
 import { useDispatch } from "react-redux";
 import axios from "axios";
 import { getCoupons, verifyCart, cartCheckout } from "../../config/api/cart";
@@ -23,28 +27,60 @@ import { baseURL } from "../../config/constants";
 
 function Index(props) {
   const dispatch = useDispatch();
-
+  console.log(
+    "cartDetails props?.route?.params?.params>>>\n",
+    props?.route?.params?.params?.cartDetails
+  );
+  const obj2 = {
+    data: [
+      {
+        color_options: [Object],
+        each_price: "30,500.00",
+        name: "Attache Nappa leather case",
+        normal_price: 30500,
+        price: 30500,
+        product_id: 468,
+        product_images: [Array],
+        product_variation_id: 6152,
+        quantity: 1,
+        total_weight: 2.12,
+        variation_placement: null,
+      },
+    ],
+    discount: 0,
+    formatted_total: 30500,
+    invoice_no: 1672122853,
+    sub_total: 30500,
+    total: 30500,
+    total_weight: 2.12,
+  };
   const onSubmit = async () => {
+    dispatch(showloader());
     try {
       if (step === 1) {
         if (email) {
-          const { data } = await axios.post(baseURL + "/api/register", {
+          const { data } = await RegisterNow({
             email,
             ip_address: ipv4,
           });
+          console.log("register response >>", data);
           if (data?.data) {
             showToast({
               type: "success",
               text: data.data,
             });
+            dispatch(hideloader());
             setStep(2);
           } else {
+            console.log("register errrr >>.", data);
             showToast({
               type: "error",
               text: data?.errors?.email[0] || "Something went wrong",
             });
+            dispatch(hideloader());
           }
         } else {
+          dispatch(hideloader());
           showToast({
             type: "error",
             text: "Please enter your email",
@@ -68,6 +104,7 @@ function Index(props) {
           }
           if (data?.user) {
             dispatch(userSignUp(data));
+            dispatch(hideloader());
           }
           let params = {
             userId: data?.user?.id,
@@ -79,7 +116,7 @@ function Index(props) {
             .catch(() => {});
           if (props?.route?.params?.cartDetails != null) {
             if (data.token !== null) {
-              console.log("here joushwa >>>>>", data.user.id);
+              console.log("completed register now screen >>>>>");
 
               const data2 = {
                 cartDetails: props.route?.params?.cartDetails,
@@ -87,35 +124,26 @@ function Index(props) {
                 user_id: data.user.id,
                 invoice_no: null,
               };
-              console.log(">>>>>>>>>>>>>>>", data2);
+              console.log(
+                "redirect to profile after signup>>>>>>>>>>>>>>>",
+                data2
+              );
               // return;
-              cartCheckout(data2)
-                .then((response) => {
-                  console.log("response jjoushwa>>>>>", response.data);
-                  console.log("cartCheckout", response.data);
-
-                  if (response.data.invoice_no) {
-                    Navigation.navigate(SCREENS.CHECKOUT_SCREEN, {
-                      invoice: response.data.invoice_no,
-                      cartDetails: props.route?.params?.cartDetails,
-                      couponId: props.route?.params?.couponId,
-                      // selectedPromo,
-                    });
-                  } else {
-                    console.log(response.data);
-                  }
-                })
-                .catch((error) => {
-                  console.log("error==>", error.message);
-                });
+              Navigation.navigate("PROFILE", {
+                screen: SCREENS.PROFILE,
+                params: {
+                  cartDetails: props.route?.params?.cartDetails,
+                  couponId: props.route?.params?.couponIdcouponId
+                    ? props.route?.params?.couponId
+                    : "",
+                  ip_address: ipv4,
+                  user_id: data.user?.id,
+                  selectedPromo: props.route?.params?.selectedPromo
+                    ? props.route?.params?.selectedPromo
+                    : "",
+                },
+              });
             }
-            return;
-            Navigation.navigate(SCREENS.CHECKOUT_SCREEN, {
-              invoice: data.invoice_no,
-              userId: data.user.id,
-              cartDetails: props.route?.params?.cartDetails,
-              couponId: props.route?.params?.couponId,
-            });
           } else {
             showToast({
               text: "Logged in successfully",
@@ -132,6 +160,7 @@ function Index(props) {
       }
     } catch (error) {
       console.log("error", error.response);
+      dispatch(hideloader());
       showToast({
         type: "error",
         text: error?.response?.data?.error || error.message,
@@ -198,7 +227,24 @@ function Index(props) {
           }}
         >
           <TouchableOpacity
-            onPress={() => Navigation.navigate(SCREENS.REGISTER_SCREEN)}
+            onPress={() => {
+              Navigation.navigate("REGISTER_SCREEN", {
+                screen: SCREENS.REGISTER_SCREEN,
+                params: {
+                  cartDetails: props.route?.params?.cartDetails,
+                  couponId: props.route?.params?.couponIdcouponId
+                    ? props.route?.params?.couponId
+                    : "",
+                  ip_address: ipv4,
+                  // user_id: data.user?.id,
+                  selectedPromo: props.route?.params?.selectedPromo
+                    ? props.route?.params?.selectedPromo
+                    : "",
+                },
+              });
+
+              // Navigation.navigate(SCREENS.REGISTER_SCREEN)
+            }}
             activeOpacity={0.5}
           >
             <Text style={styles.resetText}>Already have an account? Login</Text>

@@ -5,6 +5,10 @@ import React, {
   useCallback,
   useEffect,
 } from "react";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+
+import { useIsFocused } from "@react-navigation/native";
+
 import {
   TouchableOpacity,
   Image,
@@ -16,8 +20,16 @@ import {
   TextInput,
   FlatList,
 } from "react-native";
+import { getAllShippingAddress, abandonedCart } from "../../config/api/cart";
+
 import { Text, Button, CustomInput, CustomInputCoupon } from "../../components";
-import { showToast, setItem, getItem, removeItem } from "../../utils";
+import {
+  showToast,
+  validateLink,
+  setItem,
+  getItem,
+  removeItem,
+} from "../../utils";
 import { IMAGES } from "../../assets/images";
 import { styles } from "./style";
 import { useFocusEffect } from "@react-navigation/native";
@@ -46,10 +58,13 @@ import { Colors } from "../../config/theme";
 
 function Index(props) {
   const dispatch = useDispatch();
+  const MINUTE_MS = 4000;
+  const isFocused = useIsFocused();
+
   const cartItems = useSelector((state) => state.cart.cartItems);
   const token = useSelector((state) => state.auth.token);
   const user = useSelector((state) => state.auth.user);
-
+  // console.log("cartItems Joushwa >>", cartItems);
   // const _cart = useSelector((state) => state.cart.cart);
   const placements = useSelector((state) => state.cart.placement);
 
@@ -77,13 +92,47 @@ function Index(props) {
     activeOpacity: 0.5,
   };
 
+  const [shippingName, setshippingName] = useState(
+    store.getState().auth.shipping !== null ? __shipping?.shipping_name : ""
+  );
+  const [shippingMobile, setshippingMobile] = useState(
+    store.getState().auth.shipping !== null ? __shipping?.shipping_mobile : ""
+  );
+  const [shippingEmail, setshippingEmail] = useState(
+    store.getState().auth.shipping !== null ? __shipping?.shipping_email : ""
+  );
+  const [shippingAddress, setshippingAddress] = useState(
+    store.getState().auth.shipping !== null ? __shipping?.shipping_address : ""
+  );
+
+  const [billingName, setbillingName] = useState(
+    user?.name !== null ? user?.name : ""
+  );
+  const [isDeliveryChargeApply, setisDeliveryChargeApply] = useState(
+    props?.route?.params?.cartDetails?.total <= 2500
+  );
+  const [billingMobile, setbillingMobile] = useState(
+    user?.mobile_no !== null ? user?.mobile_no : ""
+  );
+  const [billingEmail, setbillingEmail] = useState(
+    user?.email ? user?.email : ""
+  );
+
+  const [billingAddress, setbillingAddress] = useState(
+    user?.address !== null ? user?.address : ""
+  );
+
   const handleRemovePromo = async () => {
+    setLoading(true);
+
     setcouponValid(false);
     setCouponId(0);
     setSelectedPromo("");
     setActiveIndex(-1);
     getCart();
-    await removeItem("promo");
+    await removeItem("promo").then((res) => {
+      // setLoading(false);
+    });
   };
 
   const getAllCoupons = () => {
@@ -122,6 +171,91 @@ function Index(props) {
       return errorText;
     }
   };
+
+  //  handle Abandon cart
+
+  const handleAbandonCart = async () => {
+    console.log("function abandon called");
+    console.log({ user });
+    const { address, city_id, country_id, mobile_no, name } = user;
+
+    const isProfileComplete = checkProfileComplete({
+      address,
+      city_id,
+      country_id,
+      mobile_no,
+      name,
+    });
+    console.log({ isComPro: isProfileComplete });
+    if (isProfileComplete) {
+      const dataAbCart = {
+        shipping: {
+          name: billingName,
+          phone: billingMobile,
+          email: billingEmail,
+          address: billingAddress,
+          city: user?.city_id,
+          country: user?.country_id,
+        },
+        billing: {
+          name: billingName,
+          phone: billingMobile,
+          email: billingEmail,
+          address: billingAddress,
+          city: user?.city_id,
+          country: user?.country_id,
+        },
+
+        cartDetails: {
+          sub_total: cartDetails?.sub_total,
+          discount: cartDetails?.discount,
+          total: cartDetails?.total,
+          formatted_total: cartDetails?.formatted_total,
+          data: cartDetails?.data,
+          total_weight: cartDetails?.total_weight,
+          couponId: couponId,
+          shipping_charges: isDeliveryChargeApply
+            ? selectedBillingCity?.shipping_charges
+            : 0,
+        },
+        // shipping_charges: isDeliveryChargeApply
+        //   ? selectedBillingCity?.shipping_charges
+        //   : 0,
+        //   couponId: props.route.params.couponId,
+        invoice_no: cartDetails?.invoice_no,
+        paymentMode: "",
+        user_id: user?.id,
+        request_source: "mobile",
+        ip_address: ipAddress,
+
+        comments: " ",
+      };
+
+      console.log({
+        dataAbCart,
+      });
+
+      await abandonedCart(dataAbCart)
+        .then((res) => {
+          // showToast({
+          //   type: "success",
+          //   text: "Sent Abandon Cart Request Cart Page!",
+          // });
+          console.log("sent sucess abandon cart in cart page 69 >>", res.data);
+        })
+        .catch((err) => {
+          showToast({
+            type: "error",
+            text: "Send Abandon Cart Request Failed!",
+          });
+          console.log(
+            "error abandon cart now  in cart page>>>>>",
+            err.response
+          );
+        });
+    }
+  };
+
   // console.log("log in cart details<>>>>", placements);
   const getCart = async (_couponId) => {
     // console.log("_couple id joushwa<>>>>", couponId);
@@ -162,10 +296,21 @@ function Index(props) {
     data = {
       cart: cart,
       placements,
+      invoice_no: null,
     };
+    const id = await getItem("promo");
 
-    const couponCondition = couponId ? couponId : _couponId ? _couponId : null;
+    console.log({ couponSelectStored: id });
+    const couponCondition = couponId
+      ? couponId
+      : id
+      ? id
+      : _couponId
+      ? _couponId
+      : null;
+    console.log({ couponCondition });
 
+    // if (couponCondition) {
     await verifyCart(data, couponCondition)
       .then((response) => {
         console.log("joushwa here true", response);
@@ -175,13 +320,10 @@ function Index(props) {
           }
         }
         setLoading(false);
-        // console.log(
-        //   "verifyCart=>>response.data",
-        //   JSON.stringify(response.data.data)
-        // );
-        // alert(JSON.stringify(response.data.data));
+
         setCart(response.data?.data);
         setCartDetails(response.data);
+        console.log("response verify cart cartDetails screen", response.data);
         setLoading(false);
         dispatch(hideloader());
         // return response;
@@ -202,53 +344,100 @@ function Index(props) {
           });
         }, 500);
       });
+    // } else {
+    // showToast({
+    //   text: "Coupon Not Found",
+    //   type: "error",
+    // });
+    // }
     // }
   };
-  const handleCheckoutCart = () => {
+  const checkProfileComplete = (obj) => {
+    for (var propName in obj) {
+      if (
+        obj[propName] === null ||
+        obj[propName] === undefined ||
+        obj[propName] === ""
+      ) {
+        return false;
+      } else {
+        return true;
+      }
+    }
+  };
+  const handleCheckoutCart = async () => {
     dispatch(_verifyCart(cartDetails));
+
+    // return;
     if (token !== null) {
+      const { address, city_id, country_id, mobile_no, name } = user;
+      const userDetails = { address, city_id, country_id, mobile_no, name };
+      const isProfileComplete = checkProfileComplete(userDetails);
+      console.log("isProfileComplete here>>>", isProfileComplete);
+      console.log("token here>>>", token);
       // Navigation.navigate("AuthStack", {
       //   screen: SCREENS.REGISTER_SCREEN,
       //   params: {
       //     cartDetails,
       //   },
       // });
-      let data = {
-        cartDetails: cartDetails,
-        ip_address: ipAddress,
-        user_id: user?.id,
-        invoice_no: null,
-      };
-      // alert(JSON.stringify(data));
-      // console.log("CHEckOUT", JSON.stringify(data));
-      cartCheckout(data)
-        .then((response) => {
-          console.log("response jjoushwa>>>>>", response.data);
-          // console.log("cartCheckout", response.data);
 
-          // return;
-          if (response.data.invoice_no) {
-            Navigation.navigate(SCREENS.CHECKOUT_SCREEN, {
-              invoice: response.data.invoice_no,
-              cartDetails,
-              couponId,
-              selectedPromo,
-            });
-          } else {
-            console.log(response.data);
-          }
-        })
-        .catch((error) => {
-          console.log("error==>", error.message);
+      if (!isProfileComplete) {
+        // console.log(" profile not completed\n", cartDetails);
+
+        // return;
+        Navigation.navigate("PROFILE", {
+          screen: SCREENS.PROFILE,
+          params: {
+            cartDetails: cartDetails,
+            couponId: couponId ? couponId : "",
+            ip_address: ipAddress,
+            user_id: user?.id,
+            selectedPromo: selectedPromo ? selectedPromo : "",
+          },
         });
+      } else {
+        let data = {
+          cartDetails: cartDetails,
+          ip_address: ipAddress,
+          user_id: user?.id,
+          invoice_no: null,
+        };
+        // alert(JSON.stringify(data));
+        // console.log("CHEckOUT", JSON.stringify(data));
+        await cartCheckout(data)
+          .then((response) => {
+            console.log("response jjoushwa>>>>>", response.data);
+            // console.log("cartCheckout", response.data);
+
+            // return;
+            if (response.data.invoice_no) {
+              Navigation.navigate(SCREENS.CHECKOUT_SCREEN, {
+                invoice: response.data.invoice_no,
+                cartDetails,
+                couponId,
+                selectedPromo,
+                ip_address: ipAddress,
+              });
+            } else {
+              console.log(response.data);
+            }
+          })
+          .catch((error) => {
+            console.log("error==>", error.message);
+          });
+      }
     } else {
-      console.log("here 2");
+      console.log("navigate to login");
+      console.log("cart Details>>", cartDetails);
       // return;
       Navigation.navigate("AuthStack", {
         screen: SCREENS.REGISTER_SCREEN,
         params: {
-          cartDetails,
-          couponId,
+          cartDetails: cartDetails,
+          couponId: couponId ? couponId : "",
+          ip_address: ipAddress,
+          selectedPromo,
         },
       });
     }
@@ -311,7 +500,7 @@ function Index(props) {
   };
 
   const footer = () => {
-    if (cartItems.length > 0) {
+    if (cartItems?.length > 0) {
       return (
         <View>
           {/* <TouchableOpacity
@@ -370,9 +559,12 @@ function Index(props) {
                   {renderPriceComma(formatPrice(cartDetails?.sub_total))}
                 </Text>
               </View>
-              {cartDetails?.discount !== 0 ? (
+              {cartDetails.discount !== 0 && couponValid ? (
                 <View style={styles.cartSummaryContainer}>
-                  <Text>Discount {renderDis(selectedPromo)}</Text>
+                  <Text>
+                    Discount
+                    {/* {renderDis(selectedPromo)} */}
+                  </Text>
                   <Text>{renderPrice(formatPrice(cartDetails?.discount))}</Text>
                 </View>
               ) : null}
@@ -413,7 +605,7 @@ function Index(props) {
       return null;
     }
   };
-  const removeProduct = (
+  const removeProduct = async (
     id,
     product_variation_id,
     hasPlacement,
@@ -423,6 +615,13 @@ function Index(props) {
       removeFromCart(id, product_variation_id, hasPlacement, placements)
     );
     getCart(couponId);
+    if (product_variation_id) {
+      await AsyncStorage.removeItem(
+        `product-${id}-variation-${product_variation_id}`
+      );
+    } else {
+      await AsyncStorage.removeItem(`product-${id}`);
+    }
   };
   const updateCart = (
     id,
@@ -564,7 +763,7 @@ function Index(props) {
 
   const handlePromoCodePress = async (item, i) => {
     // alert(JSON.stringify(item));
-    console.log(item);
+    console.log("set selected promo code >>>", item);
     // return;
     setSelectedPromo(item);
     setCouponId(item.id);
@@ -610,20 +809,52 @@ function Index(props) {
   };
 
   const renderCoupon = (item, i) => {
-    if (item?.type == "Percentage") {
-      return (
-        <Text key={i.toString()} style={styles.modalText}>
-          {`${item?.code} - ${Math.round(item?.discount)}% Off`}
-        </Text>
-      );
+    // console.log("render coupon selected info", item);
+    // console.log("render coupon cartDetails here", cartDetails.coupon_code);
+    if (cartDetails.coupon_code && couponValid) {
+      if (cartDetails?.type == "Percentage") {
+        return (
+          <Text key={i.toString()} style={styles.modalText}>
+            {`${cartDetails.coupon_code} - ${Math.round(
+              cartDetails.discount
+            )}% Off`}
+          </Text>
+        );
+      } else {
+        return (
+          <Text key={i.toString()} style={styles.modalText}>
+            {`${cartDetails?.coupon_code} - ${renderPrice(
+              Math.round(cartDetails?.discount)
+            )} Off`}
+          </Text>
+        );
+      }
     } else {
-      return (
-        <Text key={i.toString()} style={styles.modalText}>
-          {`${item?.code} - ${renderPrice(Math.round(item?.discount))} Off`}
-        </Text>
-      );
+      if (item?.type == "Percentage") {
+        return (
+          <Text key={i.toString()} style={styles.modalText}>
+            {`${item?.code} - ${Math.round(item?.discount)}% Off`}
+          </Text>
+        );
+      } else {
+        return (
+          <Text key={i.toString()} style={styles.modalText}>
+            {`${item?.code} - ${renderPrice(Math.round(item?.discount))} Off`}
+          </Text>
+        );
+      }
     }
   };
+  useEffect(() => {
+    // console.log({ isFocused });
+    const intervalId = setInterval(() => {
+      // Function to call every 2 seconds
+      if (user && isFocused) {
+        handleAbandonCart();
+      }
+    }, MINUTE_MS);
+    return () => clearInterval(intervalId);
+  }, [cartDetails, user, couponId, isFocused]);
 
   return (
     <View style={styles.ContainerPadding}>
@@ -656,21 +887,24 @@ function Index(props) {
             style={styles.sortOptions}
           >
             {coupons.length > 0 ? (
-              coupons.map((item, i) => (
-                <TouchableOpacity
-                  {...touchableProps}
-                  onPress={() => handlePromoCodePress(item, i)}
-                  key={i.toString()}
-                  style={styles.rowContainer}
-                >
-                  <View style={styles.circle}>
-                    {activeindex === i && (
-                      <View style={styles.innerCircle}></View>
-                    )}
-                  </View>
-                  {renderCoupon(item, i)}
-                </TouchableOpacity>
-              ))
+              coupons?.map((item, i) => {
+                // console.log("item coupon list", item);
+                return (
+                  <TouchableOpacity
+                    {...touchableProps}
+                    onPress={() => handlePromoCodePress(item, i)}
+                    key={i.toString()}
+                    style={styles.rowContainer}
+                  >
+                    <View style={styles.circle}>
+                      {activeindex === i && (
+                        <View style={styles.innerCircle}></View>
+                      )}
+                    </View>
+                    {renderCoupon(item, i)}
+                  </TouchableOpacity>
+                );
+              })
             ) : (
               <Text style={styles.noCoupons}>No Coupons found</Text>
             )}

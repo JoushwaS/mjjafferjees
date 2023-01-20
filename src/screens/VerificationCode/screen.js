@@ -18,6 +18,7 @@ import { showToast } from "../../utils";
 import Navigation from "../../navigation/root";
 import { useDispatch } from "react-redux";
 import { userSignUp } from "../../store/actions";
+import { showloader, hideloader } from "../../store/actions/common";
 import { getWishlist } from "../../config/api/products";
 import { getWishlistProducts } from "../../store/actions/common";
 import { NetworkInfo } from "react-native-network-info";
@@ -26,6 +27,7 @@ function Index(props) {
   const touchableProps = {
     activeOpacity: 0.5,
   };
+
   const code1Ref = useRef();
   const code2Ref = useRef();
   const code3Ref = useRef();
@@ -174,6 +176,7 @@ function Index(props) {
   };
 
   const verifyEmail = async () => {
+    dispatch(showloader());
     if (email) {
       try {
         const { data } = await sendOTP({ email });
@@ -185,19 +188,26 @@ function Index(props) {
           return;
         }
         if (data?.status == 200) {
+          dispatch(hideloader());
+
+          console.log("verify email>>>", data);
+          // return;
           setStep(2);
           showToast({
             type: "success",
             text: data.data,
           });
+          dispatch(hideloader());
         }
       } catch (error) {
+        dispatch(hideloader());
         showToast({
           type: "error",
           text: error.response?.data?.error || error.message,
         });
       }
     } else {
+      dispatch(hideloader());
       showToast({
         type: "error",
         text: "Please enter your email",

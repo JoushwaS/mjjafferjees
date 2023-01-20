@@ -18,6 +18,8 @@ import { getWishlistProducts } from "../../store/actions/common";
 import { useDispatch } from "react-redux";
 
 function Index(props) {
+  console.log("props in login screen\n ", props?.route?.params.cartDetails);
+
   const dispatch = useDispatch();
   const touchableProps = {
     activeOpacity: 0.5,
@@ -28,7 +30,19 @@ function Index(props) {
       setipv4(ipv4Address);
     });
   }, []);
-
+  const checkProfileComplete = (obj) => {
+    for (var propName in obj) {
+      if (
+        obj[propName] === null ||
+        obj[propName] === undefined ||
+        obj[propName] === ""
+      ) {
+        return false;
+      } else {
+        return true;
+      }
+    }
+  };
   const onSubmit = async () => {
     try {
       if (email && password) {
@@ -37,7 +51,7 @@ function Index(props) {
           password,
           ip_address: ipv4,
         });
-        // console.log("loginres", data);
+        console.log("loginres", data);
         if (data?.errors) {
           showToast({
             type: "error",
@@ -55,16 +69,51 @@ function Index(props) {
           .then((response) => {
             dispatch(getWishlistProducts(response?.data?.data?.data));
           })
-          .catch(() => {});
+          .catch((err) => {
+            console.log("err", err);
+          });
         if (props?.route?.params?.cartDetails != null) {
           console.log("props.route.params.invoice,>>>>>", data.invoice_no);
-          return;
-          Navigation.navigate(SCREENS.CHECKOUT_SCREEN, {
-            invoice: data.invoice_no,
-            userId: data.user.id,
-            cartDetails: props.route?.params?.cartDetails,
-            couponId: props.route?.params?.couponId,
-          });
+          if (data?.user) {
+            const { token, address, city_id, country_id, mobile_no, name } =
+              data?.user;
+            const userDetails = {
+              address,
+              city_id,
+              country_id,
+              mobile_no,
+              name,
+            };
+            const isProfileComplete = checkProfileComplete(userDetails);
+            console.log("isProfileComplete here>>>", isProfileComplete);
+            console.log("token here>>>", token);
+            if (!isProfileComplete) {
+              console.log(" profile not completed register screen");
+              console.log(
+                " props?.route?.params?.cartDetails",
+                props?.route?.params?.cartDetails
+              );
+              // return;
+              Navigation.navigate("PROFILE", {
+                screen: SCREENS.PROFILE,
+                params: {
+                  cartDetails: props?.route?.params?.cartDetails,
+                  // couponId: couponId ? couponId : "",
+                  ip_address: props?.route?.params?.ip_address,
+                  user_id: data.user?.id,
+                },
+              });
+            } else {
+              Navigation.navigate(SCREENS.CHECKOUT_SCREEN, {
+                invoice: data.invoice_no,
+                userId: data.user.id,
+                cartDetails: props.route?.params?.cartDetails,
+                couponId: props.route?.params?.couponId,
+              });
+            }
+          }
+
+          // return;
         } else {
           showToast({
             text: "Logged in successfully",

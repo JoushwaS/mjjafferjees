@@ -78,7 +78,7 @@ function Index({
         justifyContent: "center",
         borderBottomLeftRadius: metrix.HorizontalSize(30),
         borderBottomRightRadius: metrix.HorizontalSize(30),
-        height: Metrix.VerticalSize(100),
+        height: Metrix.VerticalSize(110),
       }}
     >
       <View style={{ ...containerStyle, ...styles.container }}>
@@ -191,15 +191,15 @@ const styles = StyleSheet.create({
   },
   logo: {
     height: Metrix.VerticalSize(60),
-    width: Metrix.HorizontalSize(100),
+    width: Metrix.HorizontalSize(110),
   },
   backIcon: {
-    height: Metrix.HorizontalSize(15),
-    width: Metrix.HorizontalSize(15),
+    height: Metrix.HorizontalSize(20),
+    width: Metrix.HorizontalSize(25),
   },
   menuIcon: {
-    height: Metrix.HorizontalSize(20),
-    width: Metrix.HorizontalSize(20),
+    height: Metrix.HorizontalSize(25),
+    width: Metrix.HorizontalSize(25),
   },
   text: {
     fontWeight: "bold",
@@ -210,6 +210,8 @@ const styles = StyleSheet.create({
     // position: 'absolute',
     // right: 0,
     // zIndex: 250,
+    height: Metrix.HorizontalSize(20),
+    width: Metrix.HorizontalSize(25),
   },
   leftIcon: {
     justifyContent: "center",

@@ -6,6 +6,8 @@ export const getCoupons = (data) => {
 
 export const verifyCart = (data, couponId) => {
   // let data = data;
+
+  console.log("verifycart data >>>", { data, couponId });
   let temp = {
     cart: [
       {
@@ -26,6 +28,10 @@ export const verifyCart = (data, couponId) => {
   // return;
   if (couponId) {
     data.coupon_id = couponId;
+    data.currency = "PKR";
+
+    data.currencySymbol = "Rs";
+    data.exchangeRates = "1";
   }
   return Axios.post("/api/verify_cart", {
     data,
@@ -39,6 +45,10 @@ export const placeOrder = (data) => {
 export const cartCheckout = (data) => {
   // console.log("dataaa cart", data);
   return Axios.post("/api/cartCheckout", data);
+};
+export const abandonedCart = (data) => {
+  console.log("abandonedCart ", data);
+  return Axios.post("/api/saveCartDetails", data);
 };
 
 export const getOrders = (params) => {

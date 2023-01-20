@@ -107,6 +107,7 @@ function Index({ banners, categories, onRefresh, refreshing }) {
   };
 
   const renderCategories = ({ item, index }) => {
+    // console.log("render cat>>>>>", item);
     if (item?.length) {
       return (
         <View style={styles.categoryViewStyle}>
@@ -311,7 +312,6 @@ function Index({ banners, categories, onRefresh, refreshing }) {
               }
             }
             showsHorizontalScrollIndicator={false}
-            showsVerticalScrollIndicator={false}
             keyExtractor={(item, index) => index.toString()}
             renderItem={renderCategories}
           ></FlatList>

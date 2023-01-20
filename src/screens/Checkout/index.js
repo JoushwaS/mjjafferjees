@@ -9,7 +9,7 @@ function Index(props) {
   const categories = useSelector((state) => state.cart.cart);
   const shippingAddress = useSelector((state) => state.auth.shippingAddress);
 
-  console.log("state.authstate.authpropsprops", shippingAddress);
+  // console.log("state.authstate.authpropsprops", shippingAddress);
 
   return (
     <View
