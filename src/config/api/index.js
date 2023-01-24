@@ -27,6 +27,8 @@ instance.interceptors.request.use(
     // console.log("REQUEST :", config);
     if (store.getState().auth?.token !== null) {
       let accessToken = store.getState().auth?.token;
+
+      console.log("joushwa here aaccessToken");
       if (accessToken) {
         config.headers["Authorization"] = `Bearer ${accessToken}`;
       }
@@ -45,12 +47,12 @@ instance.interceptors.request.use(
 
 instance.interceptors.response.use(
   (response) => {
-    // console.log("RESPONSE :", response?.data);
+    console.log("RESPONSE :  at config api", response?.data);
 
     return response;
   },
   (error) => {
-    // console.log("RESPONSE FAILURE:", error?.response);
+    console.log("RESPONSE FAILURE  ", error);
     if (error?.response?.data?.status == 403) {
       store.dispatch(hideloader());
       store.dispatch(clearCart());

@@ -18,11 +18,12 @@ export default styles = StyleSheet.create({
   resetText: {
     fontFamily: Fonts.IR,
     paddingTop: metrix.VerticalSize(25),
+    textDecorationLine: "underline",
   },
   headingText: {
     textAlign: "center",
     marginVertical: metrix.VerticalSize(25),
-    fontSize: metrix.CustomFontSize(18),
+    fontSize: metrix.CustomFontSize(20),
     fontFamily: Fonts.IS,
     marginBottom: metrix.VerticalSize(40),
   },

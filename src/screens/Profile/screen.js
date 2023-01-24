@@ -175,10 +175,10 @@ function Index(props) {
           dispatch(hideloader());
         })
         .catch((error) => {
-          // console.log("StoredState.errorerror", error);
+          console.log(" 1 >>>>>>>", error);
           if (token !== null) {
             showToast({
-              text: "Login to see your profile!",
+              text: "Login to see your profile! 1",
               type: "error",
             });
           } else {
@@ -281,10 +281,10 @@ function Index(props) {
       })
       .catch((error) => {
         dispatch(hideloader());
-        console.log("StoredState.errorerror", error);
+        console.log(" 2 >>>>>>>", error);
         if (token !== null) {
           showToast({
-            text: "Login to see your profile!",
+            text: "Login to see your profile! 2",
             type: "error",
           });
         } else {
@@ -420,10 +420,10 @@ function Index(props) {
                   dispatch(saveProfile(res.data.data[0]));
                 })
                 .catch((error) => {
-                  console.log("StoredState.errorerror", error);
+                  console.log(" 3 >>>>>>>", error);
                   if (token !== null) {
                     showToast({
-                      text: "Login to see your profile!",
+                      text: "Login to see your profile! 3",
                       type: "error",
                     });
                   } else {
@@ -494,10 +494,10 @@ function Index(props) {
                 dispatch(saveProfile(res.data.data[0]));
               })
               .catch((error) => {
-                console.log("StoredState.errorerror", error);
+                console.log(" 4 >>>>>>>", error);
                 if (token !== null) {
                   showToast({
-                    text: "Login to see your profile!",
+                    text: "Login to see your profile! 4",
                     type: "error",
                   });
                 } else {

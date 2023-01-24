@@ -241,7 +241,7 @@ function Index(props) {
           //   type: "success",
           //   text: "Sent Abandon Cart Request Cart Page!",
           // });
-          console.log("sent sucess abandon cart in cart page 69 >>", res.data);
+          console.log("sent sucess abandon cart in cart page 100 >>", res.data);
         })
         .catch((err) => {
           showToast({

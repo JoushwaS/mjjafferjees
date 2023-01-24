@@ -191,7 +191,9 @@ function Index(props) {
           }}
         >
           <Image source={ICONS.logopurple} style={styles.logo} />
-          <Text style={styles.headingText}>Register Now</Text>
+          {step == 1 ? (
+            <Text style={styles.headingText}>Register Now</Text>
+          ) : null}
         </View>
         {step == 1 ? (
           <TextInput
