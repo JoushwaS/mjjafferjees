@@ -47,7 +47,7 @@ export const cartCheckout = (data) => {
   return Axios.post("/api/cartCheckout", data);
 };
 export const abandonedCart = (data) => {
-  console.log("abandonedCart ", data);
+  // console.log("abandonedCart ", data);
   return Axios.post("/api/saveCartDetails", data);
 };
 

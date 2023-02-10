@@ -46,13 +46,10 @@ function Index(props) {
   const isFocused = useIsFocused();
 
   console.log(
-    "checkout in screen props cartDetails",
-    props?.route?.params?.cartDetails
+    "props?.route?.params?.cartDetails?.discount",
+    props?.route?.params?.cartDetails?.discount
   );
-  console.log(
-    "props?.route?.params?.cartDetails.data",
-    props?.route?.params?.cartDetails.data
-  );
+
   console.log("checkout in screen props \n", props?.route?.params);
   const obj1 = {
     data: [
@@ -247,7 +244,9 @@ function Index(props) {
           >
             {activeindex == index && <View style={styles.innerCircle}></View>}
           </TouchableOpacity>
-          <Text style={styles.paymentText}>{item?.name}</Text>
+          <TouchableOpacity onPress={() => setActiveIndex(index)}>
+            <Text style={styles.paymentText}>{item?.name}</Text>
+          </TouchableOpacity>
         </View>
       );
     });
@@ -1215,7 +1214,11 @@ function Index(props) {
   };
 
   const renderDis = () => {
-    if (props.route?.params?.selectedPromo?.type == "Percentage") {
+    console.log(
+      "props.route?.params?.selectedPromo>>",
+      props.route?.params?.selectedPromo
+    );
+    if (props.route?.params?.selectedPromo == "Percentage") {
       return (
         <Text>
           ({Math.round(props.route?.params?.selectedPromo?.discount)}%)

@@ -64,7 +64,7 @@ function Index(props) {
   const cartItems = useSelector((state) => state.cart.cartItems);
   const token = useSelector((state) => state.auth.token);
   const user = useSelector((state) => state.auth.user);
-  // console.log("cartItems Joushwa >>", cartItems);
+  // console.log("current user >>", user);
   // const _cart = useSelector((state) => state.cart.cart);
   const placements = useSelector((state) => state.cart.placement);
 
@@ -123,16 +123,16 @@ function Index(props) {
   );
 
   const handleRemovePromo = async () => {
+    await removeItem("promo");
     setLoading(true);
 
     setcouponValid(false);
     setCouponId(0);
     setSelectedPromo("");
     setActiveIndex(-1);
-    getCart();
-    await removeItem("promo").then((res) => {
-      // setLoading(false);
-    });
+    getCart(couponId);
+
+    console.log("cartDetails after remove promo>>>", cartDetails);
   };
 
   const getAllCoupons = () => {
@@ -188,6 +188,7 @@ function Index(props) {
     });
     console.log({ isComPro: isProfileComplete });
     if (isProfileComplete) {
+      console.log();
       const dataAbCart = {
         shipping: {
           name: billingName,
@@ -231,9 +232,9 @@ function Index(props) {
         comments: " ",
       };
 
-      console.log({
-        dataAbCart,
-      });
+      // console.log({
+      //   dataAbCart,
+      // });
 
       await abandonedCart(dataAbCart)
         .then((res) => {
@@ -258,7 +259,7 @@ function Index(props) {
 
   // console.log("log in cart details<>>>>", placements);
   const getCart = async (_couponId) => {
-    // console.log("_couple id joushwa<>>>>", couponId);
+    console.log("_couple id joushwa<>>>>", _couponId);
     // return;
     var data = {};
     var cart = [];
@@ -283,16 +284,7 @@ function Index(props) {
       }
       cart.push(obj);
     });
-    //   cart.push({
-    //     product_id: val?.id,
-    //     quantity: val?.quantity,
-    //     name: val?.name,
-    //     product_variation_id: val?.product_variation_id,
-    //     placements: val?.placements,
-    //     variation_placement: val?.variation_placement,
-    //     placementImage: val?.placmentImage,
-    //   });
-    // });
+
     data = {
       cart: cart,
       placements,
@@ -300,17 +292,24 @@ function Index(props) {
     };
     const id = await getItem("promo");
 
-    console.log({ couponSelectStored: id });
-    const couponCondition = couponId
-      ? couponId
-      : id
-      ? id
-      : _couponId
-      ? _couponId
-      : null;
-    console.log({ couponCondition });
+    console.log("new promo", { couponSelectStored: id });
+    // const couponCondition = couponId ? couponId : null;
+    let couponCondition;
+    if (id) {
+      console.log("condition  coupon id", id);
+      couponCondition = id;
+    } else if (_couponId) {
+      console.log("condition  coupon _couponId", id);
+      couponCondition = _couponId;
+    } else if (couponId) {
+      console.log("condition  coupon couponId", id);
+      couponCondition = couponId;
+    }
+
+    console.log("coupon condition final", { couponCondition });
 
     // if (couponCondition) {
+
     await verifyCart(data, couponCondition)
       .then((response) => {
         console.log("joushwa here true", response);
@@ -404,7 +403,8 @@ function Index(props) {
           invoice_no: null,
         };
         // alert(JSON.stringify(data));
-        // console.log("CHEckOUT", JSON.stringify(data));
+        console.log("checkout cart data here >>>", cartDetails);
+
         await cartCheckout(data)
           .then((response) => {
             console.log("response jjoushwa>>>>>", response.data);
@@ -855,6 +855,17 @@ function Index(props) {
     }, MINUTE_MS);
     return () => clearInterval(intervalId);
   }, [cartDetails, user, couponId, isFocused]);
+
+  useEffect(() => {
+    if (user) {
+      setbillingName(user?.name);
+      setbillingMobile(user?.mobile_no);
+      setbillingEmail(user?.email);
+      setbillingAddress(user?.address);
+    }
+
+    return () => {};
+  }, [user]);
 
   return (
     <View style={styles.ContainerPadding}>
