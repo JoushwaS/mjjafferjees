@@ -11,6 +11,14 @@ import Loader from "./components/Loader";
 // import SplashScreen from "react-native-splash-screen";
 
 function App() {
+  // Override console.log with an empty function
+  console.log = () => {};
+
+  // Override console.warn with an empty function
+  console.warn = () => {};
+
+  // Override console.error with an empty function
+  console.error = () => {};
   return (
     <SafeAreaProvider
       style={

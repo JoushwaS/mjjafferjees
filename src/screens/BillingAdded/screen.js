@@ -1,4 +1,4 @@
-import React, { Fragment, useState } from "react";
+import React, { Fragment, useState, useEffect } from "react";
 import {
   TouchableOpacity,
   Image,
@@ -12,7 +12,7 @@ import Navigation from "../../navigation/root";
 import { useDispatch, useSelector } from "react-redux";
 import { clearCart } from "../../store/actions/cart";
 import { NetworkInfo } from "react-native-network-info";
-import { colorTrace } from "../../utils/index";
+import { colorTrace, getItemParsed } from "../../utils/index";
 import metrix from "../../config/metrix";
 import OrderCompleted from "../OrderCompletedPopup/screen";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
@@ -60,6 +60,8 @@ function Index(props) {
   const [shipping, setshippingAdded] = useState(false);
   const [billing, setbillingAdded] = useState(false);
   const [filterVisible, setFilterVisible] = useState(false);
+  const [invoiceNumber, setinvoiceNumber] = useState("");
+  const [disableSubmit, setdisableSubmit] = useState(false);
 
   const renderPaymentmethods = () => {
     return paymentMethods.map((item, index) => {
@@ -106,6 +108,11 @@ function Index(props) {
       </View>
     );
   };
+  useEffect(() => {
+    if (props.route.params.invoiceno) {
+      setinvoiceNumber(props.route.params.invoiceno);
+    }
+  }, [props.route.params.invoiceno]);
 
   const renderShippingDetails = () => {
     return (
@@ -235,74 +242,88 @@ function Index(props) {
 
   const _placeOrder = async () => {
     // let ipAddress;
-    NetworkInfo.getIPV4Address().then((ipv4Address) => {
-      console.log("ip address", ipv4Address);
-      setIpAddressState(ipv4Address);
-    });
-
-    console.log("hello>>>>>>>>>>>", {
-      ipAddressState,
-      invoice: _invoice,
-    });
-    let data = {
-      shipping: {
-        ..._shipping,
-        country: _shipping.country.id,
-        city: _shipping.city.id,
-      },
-      billing: {
-        ..._billing,
-        country: _billing.country.id,
-        city: _billing.city.id,
-      },
-      user_id: props.route.params.user_id,
-      ip_address: ipAddressState,
-
-      cartDetails: {
-        ...cart,
-        shipping_charges: props?.route?.params?.shipping_charges,
-        coupon_id: props.route.params.couponId,
-      },
-      request_source: "mobile",
-      payment_method: props.route.params.paymentMode,
-      comments: props.route.params.comments,
-      invoice_no: _invoice,
-    };
-    console.log("data??????????==>", data);
-    // return;
-    await placeOrder(data)
-      .then((res) => {
-        // console.log("res_placeOrder", res.data);
-        removeItem("promo");
-        let params = {
-          id: props.route.params.user_id,
-        };
-        getProfile(params).then((res) => {
-          dispatch(saveProfile(res.data.data[0]));
-        });
-        if (
-          props.route.params.paymentMode == 1 ||
-          props.route.params.paymentMode == 3
-        ) {
-          dispatch(clearCart());
-
-          Navigation.navigate(SCREENS.ORDER_COMPLETED_POPUP, {
-            orderid: res.data.data.preview_order_id,
-          });
-        } else {
-          Navigation.navigate(SCREENS.WEB_PAYMENT, {
-            orderId: res.data.data.order_id,
-            preview_order_id: res.data.data.preview_order_id,
-          });
-        }
-      })
-      .catch((e) => {
-        console.log("error log>>>", e);
-        showToast({
-          text: e.response.data.error || e.message,
-          type: "error",
-        });
+    console.log("disableSubmit", disableSubmit);
+    if (disableSubmit) {
+      return;
+    } else {
+      NetworkInfo.getIPV4Address().then((ipv4Address) => {
+        console.log("ip address", ipv4Address);
+        setIpAddressState(ipv4Address);
       });
+
+      console.log("hello>>>>>>>>>>>", {
+        ipAddressState,
+        invoice: _invoice,
+      });
+      let data = {
+        shipping: {
+          ..._shipping,
+          country: _shipping.country.id,
+          city: _shipping.city.id,
+        },
+        billing: {
+          ..._billing,
+          country: _billing.country.id,
+          city: _billing.city.id,
+        },
+        user_id: props.route.params.user_id,
+        ip_address: ipAddressState,
+
+        cartDetails: {
+          ...cart,
+          shipping_charges: props?.route?.params?.shipping_charges,
+          coupon_id: props.route.params.couponId,
+        },
+        request_source: "mobile",
+        payment_method: props.route.params.paymentMode,
+        comments: props.route.params.comments,
+        invoice_no: invoiceNumber,
+      };
+      console.log("data??????????==>", data?.invoice);
+      // return;
+
+      const invoice_no = getItemParsed("invoice_no");
+      console.log("invoice_no>>>>>>>>>>>>>>>>>>", invoiceNumber);
+      // return;
+      setdisableSubmit(true);
+      if (invoiceNumber) {
+        await placeOrder(data)
+          .then((res) => {
+            // console.log("res_placeOrder", res.data);
+            removeItem("promo");
+            let params = {
+              id: props.route.params.user_id,
+            };
+            getProfile(params).then((res) => {
+              dispatch(saveProfile(res.data.data[0]));
+            });
+            if (
+              props.route.params.paymentMode == 1 ||
+              props.route.params.paymentMode == 3
+            ) {
+              dispatch(clearCart());
+
+              Navigation.navigate(SCREENS.ORDER_COMPLETED_POPUP, {
+                orderid: res.data.data.preview_order_id,
+              });
+            } else {
+              Navigation.navigate(SCREENS.WEB_PAYMENT, {
+                orderId: res.data.data.order_id,
+                preview_order_id: res.data.data.preview_order_id,
+              });
+            }
+          })
+          .catch((e) => {
+            console.log("error log place order>>>", e.response);
+            showToast({
+              text: e.response.data.error || e.message,
+              type: "error",
+            });
+          });
+      } else {
+        console.log("invoice not found");
+      }
+    }
   };
 
   return (
@@ -349,6 +370,7 @@ function Index(props) {
           {/* {markAddressSame()} */}
           <View style={styles.buttonPadding}>
             <Button
+              disabled={disableSubmit}
               // onPress={() => setFilterVisible(true)}
               onPress={
                 () => _placeOrder()

@@ -8,17 +8,18 @@ import styles from "./style";
 import { ICONS } from "../../assets/icons";
 import { SCREENS } from "../../config/constants/screens";
 import { loginUser } from "../../config/api/auth";
-import { showToast } from "../../utils";
+import { showToast, setItem } from "../../utils";
 import _ from "lodash";
 import metrix from "../../config/metrix";
 import { NetworkInfo } from "react-native-network-info";
 import { userSignUp } from "../../store/actions";
 import { getWishlist } from "../../config/api/products";
+import { verifyCart, cartCheckout } from "../../config/api/cart";
 import { getWishlistProducts } from "../../store/actions/common";
 import { useDispatch } from "react-redux";
 
 function Index(props) {
-  console.log("props in login screen\n ", props?.route?.params.cartDetails);
+  console.log("props in login screen lst\n ", props?.route?.params.cartDetails);
 
   const dispatch = useDispatch();
   const touchableProps = {
@@ -85,8 +86,7 @@ function Index(props) {
               name,
             };
             const isProfileComplete = checkProfileComplete(userDetails);
-            console.log("isProfileComplete here>>>", isProfileComplete);
-            console.log("token here>>>", token);
+
             if (!isProfileComplete) {
               console.log(" profile not completed register screen");
               console.log(
@@ -104,12 +104,47 @@ function Index(props) {
                 },
               });
             } else {
-              Navigation.navigate(SCREENS.CHECKOUT_SCREEN, {
-                invoice: data.invoice_no,
-                userId: data.user.id,
+              let objectcartCheckOut = {
                 cartDetails: props.route?.params?.cartDetails,
-                couponId: props.route?.params?.couponId,
-              });
+                ip_address: ipv4,
+                user_id: data?.user?.id,
+                invoice_no: null,
+              };
+              console.log("data>>>", objectcartCheckOut);
+              // Navigation.navigate(SCREENS.CHECKOUT_SCREEN, {
+              //   invoice: data.invoice_no
+              //     ? data.invoice_no
+              //     : props.route?.params?.cartDetails.invoice_no,
+              //   userId: data?.user?.id,
+              //   cartDetails: props.route?.params?.cartDetails,
+              //   couponId: props.route?.params?.couponId,
+              // });
+              // return;
+              await cartCheckout(objectcartCheckOut)
+                .then(async (response) => {
+                  console.log("response login cart checkout", response.data);
+                  // console.log("cartCheckout", response.data);
+                  await setItem(
+                    "invoice_no",
+                    response.data.invoice_no.toString()
+                  );
+
+                  // return;
+                  if (response.data.invoice_no) {
+                    Navigation.navigate(SCREENS.CHECKOUT_SCREEN, {
+                      invoice: response.data.invoice_no,
+                      cartDetails: props.route?.params?.cartDetails,
+                      couponId: props.route?.params?.couponId,
+
+                      ip_address: ipv4,
+                    });
+                  } else {
+                    console.log(response.data);
+                  }
+                })
+                .catch((error) => {
+                  console.log("error==>", error?.message);
+                });
             }
           }
 
@@ -169,6 +204,7 @@ function Index(props) {
           placeholder="Enter your email"
           containLabel
           value={email}
+          type="email"
           onChangeText={(text) => setEmail(text)}
           label="Email"
         />

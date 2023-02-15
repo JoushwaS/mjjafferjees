@@ -199,6 +199,7 @@ function Index(props) {
           <TextInput
             placeholder="Enter your email"
             containLabel
+            type="email"
             value={email}
             onChangeText={(text) => setEmail(text)}
             label="Email"

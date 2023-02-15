@@ -186,9 +186,9 @@ function Index(props) {
       mobile_no,
       name,
     });
-    console.log({ isComPro: isProfileComplete });
+    // console.log({ isComPro: isProfileComplete });
     if (isProfileComplete) {
-      console.log();
+      // console.log();
       const dataAbCart = {
         shipping: {
           name: billingName,
@@ -406,9 +406,10 @@ function Index(props) {
         console.log("checkout cart data here >>>", cartDetails);
 
         await cartCheckout(data)
-          .then((response) => {
+          .then(async (response) => {
             console.log("response jjoushwa>>>>>", response.data);
             // console.log("cartCheckout", response.data);
+            await setItem("invoice_no", response.data.invoice_no.toString());
 
             // return;
             if (response.data.invoice_no) {
@@ -431,6 +432,9 @@ function Index(props) {
       console.log("navigate to login");
       console.log("cart Details>>", cartDetails);
       // return;
+      if (cartDetails?.invoice_no) {
+        await setItem("invoice_no", cartDetails?.invoice_no.toString());
+      }
       Navigation.navigate("AuthStack", {
         screen: SCREENS.REGISTER_SCREEN,
         params: {

@@ -107,7 +107,7 @@ function Index({ banners, categories, onRefresh, refreshing }) {
   };
 
   const renderCategories = ({ item, index }) => {
-    // console.log("render cat>>>>>", item);
+    console.log("render cat>>>>>", item);
     if (item?.length) {
       return (
         <View style={styles.categoryViewStyle}>

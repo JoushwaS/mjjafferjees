@@ -28,7 +28,7 @@ import { Colors } from "../../config/theme";
 import { SCREENS } from "../../config/constants/screens";
 import { useDispatch, useSelector } from "react-redux";
 import { getAllCitiesList } from "../../config/api/general";
-import { validateLink } from "../../utils";
+import { getItemParsed, validateLink } from "../../utils";
 import { formatPrice } from "../../utils/index";
 
 // import style from "../OrderCompletedPopup/style";
@@ -51,29 +51,29 @@ function Index(props) {
   );
 
   console.log("checkout in screen props \n", props?.route?.params);
-  const obj1 = {
-    data: [
-      {
-        color_options: [Object],
-        each_price: "30,500.00",
-        name: "Attache Nappa leather case",
-        normal_price: 30500,
-        price: 30500,
-        product_id: 468,
-        product_images: [Array],
-        product_variation_id: 6152,
-        quantity: 1,
-        total_weight: 2.12,
-        variation_placement: null,
-      },
-    ],
-    discount: 0,
-    formatted_total: 30500,
-    invoice_no: 1672122853,
-    sub_total: 30500,
-    total: 30500,
-    total_weight: 2.12,
-  };
+
+  //   data: [
+  //     {
+  //       color_options: [Object],
+  //       each_price: "30,500.00",
+  //       name: "Attache Nappa leather case",
+  //       normal_price: 30500,
+  //       price: 30500,
+  //       product_id: 468,
+  //       product_images: [Array],
+  //       product_variation_id: 6152,
+  //       quantity: 1,
+  //       total_weight: 2.12,
+  //       variation_placement: null,
+  //     },
+  //   ],
+  //   discount: 0,
+  //   formatted_total: 30500,
+  //   invoice_no: 1672122853,
+  //   sub_total: 30500,
+  //   total: 30500,
+  //   total_weight: 2.12,
+  // };
   const MINUTE_MS = 4000;
 
   const TouchableProps = {
@@ -117,7 +117,7 @@ function Index(props) {
   const [showCityBillingLoader, setshowCityBillingLoader] = useState(false);
   const [showCountryBillingLoader, setshowCountryBillingLoader] =
     useState(false);
-
+  const [disableSubmit, setdisableSubmit] = useState(false);
   const [showCityShippingLoader, setshowCityShippingLoader] = useState(false);
   const [refreshing, setrefreshing] = useState(true);
 
@@ -818,7 +818,7 @@ function Index(props) {
     //   console.log("field required for abandon cart");
     // }
   };
-  const onCheckout = () => {
+  const onCheckout = async () => {
     if (terms == true) {
       if (sameBilling == true) {
         if (
@@ -845,55 +845,54 @@ function Index(props) {
               text: "Shipping is only valid for Pakistan",
             });
           } else {
-            // alert(JSON.stringify(user));
             console.log("here 1");
             console.log(
               "props.route.params.invoice>>>>>>>>>>>>>>>>>>>>",
               props.route.params.invoice
             );
-            // console.log(">>>>", props?.route?.params?.cartDetails.sub_total);
-            // return;
-            Navigation.navigate(
-              SCREENS.BILLING_ADDED,
+            if (props.route.params.invoice) {
+              Navigation.navigate(
+                SCREENS.BILLING_ADDED,
 
-              {
-                shipping: {
-                  name: billingName,
-                  phone: billingMobile,
-                  email: billingEmail,
-                  address: billingAddress,
-                  country: selectedBillingCountry,
-                  city: selectedBillingCity,
-                },
-                billing: {
-                  name: billingName,
-                  phone: billingMobile,
-                  email: billingEmail,
-                  address: billingAddress,
-                  country: selectedBillingCountry,
-                  city: selectedBillingCity,
-                },
+                {
+                  shipping: {
+                    name: billingName,
+                    phone: billingMobile,
+                    email: billingEmail,
+                    address: billingAddress,
+                    country: selectedBillingCountry,
+                    city: selectedBillingCity,
+                  },
+                  billing: {
+                    name: billingName,
+                    phone: billingMobile,
+                    email: billingEmail,
+                    address: billingAddress,
+                    country: selectedBillingCountry,
+                    city: selectedBillingCity,
+                  },
 
-                cartDetails: {
-                  sub_total: props?.route?.params?.cartDetails.sub_total,
-                  discount: props?.route?.params?.cartDetails.discount,
-                  total: props?.route?.params?.cartDetails.total,
-                  formatted_total:
-                    props?.route?.params?.cartDetails.formatted_total,
-                  data: props?.route?.params?.cartDetails.data,
-                },
-                shipping_charges: isDeliveryChargeApply
-                  ? selectedBillingCity?.shipping_charges
-                  : 0,
-                invoiceno: props.route.params.invoice,
-                couponId: props.route.params.couponId,
-                paymentMode: paymentMethods[activeindex].id,
-                request_source: "mobile",
+                  cartDetails: {
+                    sub_total: props?.route?.params?.cartDetails.sub_total,
+                    discount: props?.route?.params?.cartDetails.discount,
+                    total: props?.route?.params?.cartDetails.total,
+                    formatted_total:
+                      props?.route?.params?.cartDetails.formatted_total,
+                    data: props?.route?.params?.cartDetails.data,
+                  },
+                  shipping_charges: isDeliveryChargeApply
+                    ? selectedBillingCity?.shipping_charges
+                    : 0,
+                  invoiceno: props.route.params.invoice,
+                  couponId: props.route.params.couponId,
+                  paymentMode: paymentMethods[activeindex].id,
+                  request_source: "mobile",
 
-                user_id: user.id,
-                comments: message,
-              }
-            );
+                  user_id: user.id,
+                  comments: message,
+                }
+              );
+            }
           }
         }
       } else {
@@ -944,30 +943,33 @@ function Index(props) {
               props.route.params.invoice
             );
             // return;
-            Navigation.navigate(SCREENS.BILLING_ADDED, {
-              shipping: {
-                name: shippingName,
-                phone: shippingMobile,
-                email: shippingEmail,
-                address: shippingAddress,
-                country: selectedCountry,
-                city: selectedCity,
-              },
-              billing: {
-                name: billingName,
-                phone: billingMobile,
-                email: billingEmail,
-                address: billingAddress,
-                country: selectedBillingCountry,
-                city: selectedBillingCity,
-              },
-              invoiceno: props.route.params.invoice,
-              couponId: props.route.params.couponId,
-              shipping_charges: selectedCity?.shipping_charges,
-              paymentMode: paymentMethods[activeindex].id,
-              comments: message,
-              user_id: user.id,
-            });
+            const invoice_number = await getItemParsed("invoice_no");
+            if (props.route.params.invoice) {
+              Navigation.navigate(SCREENS.BILLING_ADDED, {
+                shipping: {
+                  name: shippingName,
+                  phone: shippingMobile,
+                  email: shippingEmail,
+                  address: shippingAddress,
+                  country: selectedCountry,
+                  city: selectedCity,
+                },
+                billing: {
+                  name: billingName,
+                  phone: billingMobile,
+                  email: billingEmail,
+                  address: billingAddress,
+                  country: selectedBillingCountry,
+                  city: selectedBillingCity,
+                },
+                invoiceno: props.route.params.invoice,
+                couponId: props.route.params.couponId,
+                shipping_charges: selectedCity?.shipping_charges,
+                paymentMode: paymentMethods[activeindex].id,
+                comments: message,
+                user_id: user.id,
+              });
+            }
           }
         }
       }
@@ -1575,7 +1577,7 @@ function Index(props) {
               buttonStyle={styles.buttonStyle}
               variant="filled"
             >
-              Proceed
+              Next
             </Button>
           </View>
         </View>

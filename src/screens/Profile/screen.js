@@ -736,6 +736,7 @@ function Index(props) {
             placeholder="Enter Email Address"
             editable={false}
             containLabel
+            type="email"
             label="Email Address"
             value={email}
             onChangeText={(text) => setEmail(text)}
